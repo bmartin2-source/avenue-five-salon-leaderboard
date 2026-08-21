@@ -44,7 +44,7 @@ export default function HomePage() {
           <ul className="meta-list">
             <li>Product name: High Five Competition. Avenue Five Institute branding stays.</li>
             <li>Columns left to right: Cosmetology, Barbering, Esthetics, Nail Technology.</li>
-            <li>High Five winners are the top five in each program at each campus.</li>
+            <li>Each program column lists ~10 students. High Five winners are ranks 1–5 only; 6–10 are quieter.</li>
             <li>Rank = service $ + retail $. TOTAL is large; S: and R: sit under it.</li>
             <li>Opted-in names are first name + last initial. Others show Student + ID.</li>
             <li>Current dummy cycle: July 20 – August 28, week 5 of 6.</li>

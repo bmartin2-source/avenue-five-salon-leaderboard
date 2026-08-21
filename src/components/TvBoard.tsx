@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   CAMPUS_LABELS,
   PROGRAMS,
@@ -20,6 +20,8 @@ import { data } from "@/lib/data";
 import { readConsentOverrides } from "@/lib/session";
 
 const SLIDE_MS = 9000;
+const VISIBLE_ROWS = 10;
+const ROW_HEIGHT = 54;
 
 export type TvMode = "slideshow" | "north" | "south";
 
@@ -58,11 +60,11 @@ function RankRow({
   const visualRank = phase === "from" ? student.previousRank : student.rank;
   const y = (visualRank - 1) * rowHeight;
   const moved = student.rankDelta > 0 ? "moved-up" : student.rankDelta < 0 ? "moved-down" : "";
-  const highFiveClass = student.campusRank === 1
+  const highFiveClass = student.rank === 1
     ? "high-five-lead"
-    : student.highFive
+    : student.rank <= 5
       ? "high-five-set"
-      : "";
+      : "rank-rest";
 
   return (
     <article
@@ -74,20 +76,18 @@ function RankRow({
         <RankArrow delta={student.rankDelta} />
       </div>
       <div className="who">
-        <div className="name">{student.displayName}</div>
-        <div className="meta">
-          {showCampus ? <span>{student.campus === "north" ? "North" : "South"}</span> : null}
-          <span className="badges">
-            {student.highFive ? <span className="badge highfive">High Five</span> : null}
-            {student.badges.mostRetail ? <span className="badge retail">Most retail</span> : null}
-            {student.badges.mostServices ? <span className="badge service">Most services</span> : null}
-          </span>
-        </div>
+        <span className="name">{student.displayName}</span>
+        {showCampus ? <span className="campus-tag">{student.campus === "north" ? "N" : "S"}</span> : null}
       </div>
-      <div className="money">
-        <div className="total">{formatMoney(student.total)}</div>
-        <div className="split">
-          S:{formatMoney(student.service)}&nbsp;&nbsp;R:{formatMoney(student.retail)}
+      <div className="end">
+        {student.rank <= 5 ? <span className="badge highfive">High Five</span> : null}
+        {student.badges.mostRetail ? <span className="badge retail">Retail</span> : null}
+        {student.badges.mostServices ? <span className="badge service">Services</span> : null}
+        <div className="money">
+          <div className="total">{formatMoney(student.total)}</div>
+          <div className="split">
+            S:{formatMoney(student.service)}&nbsp;&nbsp;R:{formatMoney(student.retail)}
+          </div>
         </div>
       </div>
     </article>
@@ -103,34 +103,18 @@ function ProgramColumn({
   rows: RankedStudent[];
   showCampus?: boolean;
 }) {
-  const visible = rows.slice(0, 6);
+  const visible = rows.slice(0, VISIBLE_ROWS);
   const phase = useAnimatedRanks(visible);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [rowHeight, setRowHeight] = useState(120);
-
-  useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
-    const update = () => {
-      const next = Math.floor(el.clientHeight / Math.max(visible.length, 1));
-      if (next > 0) setRowHeight(next);
-    };
-    update();
-    const observer = new ResizeObserver(update);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [visible.length]);
-
   return (
     <section className={`program-col ${program}`}>
       <header>
         <div>
           <h2>{PROGRAM_LABELS[program]}</h2>
-          <p className="highfive-label">High Five winners</p>
+          <p className="highfive-label">High Five = ranks 1–5</p>
         </div>
-        <span className="count">Top 5 / campus</span>
+        <span className="count">{rows.length}</span>
       </header>
-      <div className="track" ref={trackRef}>
+      <div className="track" style={{ height: visible.length * ROW_HEIGHT }}>
         {visible.map((student, index) => (
           <RankRow
             key={student.id}
@@ -138,7 +122,7 @@ function ProgramColumn({
             index={index}
             showCampus={showCampus}
             phase={phase}
-            rowHeight={rowHeight}
+            rowHeight={ROW_HEIGHT}
           />
         ))}
       </div>

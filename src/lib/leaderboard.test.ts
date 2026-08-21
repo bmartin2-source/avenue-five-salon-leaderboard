@@ -140,15 +140,27 @@ describe("rankStudents", () => {
     assert.equal(mostServices[0]?.id, "AFI-3");
   });
 
-  it("marks High Five winners as the top five at each campus and program", () => {
-    const north = rankStudents(fixtures, { program: "cosmetology", campus: "north" });
-    assert.equal(north[0].highFive, true);
-    assert.equal(north[0].campusRank, 1);
-    const institute = rankStudents(fixtures, { program: "cosmetology" });
-    const southLead = institute.find((student) => student.id === "AFI-3");
-    assert.equal(southLead?.rank, 1);
-    assert.equal(southLead?.campusRank, 1);
-    assert.equal(southLead?.highFive, true);
+  it("marks High Five winners as ranks 1–5 only", () => {
+    const extras: StudentRecord[] = Array.from({ length: 6 }, (_, index) => ({
+      id: `AFI-N${index}`,
+      firstName: "Pat",
+      lastName: "North",
+      lastInitial: "N",
+      optedIn: index % 2 === 0,
+      program: "cosmetology",
+      campus: "north",
+      service: 80 - index,
+      retail: 10,
+      previousRank: index + 3,
+    }));
+    const north = rankStudents([...fixtures, ...extras], { program: "cosmetology", campus: "north" });
+    assert.equal(north.length, 8);
+    assert.deepEqual(
+      north.map((student) => student.highFive),
+      [true, true, true, true, true, false, false, false],
+    );
+    assert.equal(north[0].rank, 1);
+    assert.equal(north[5].rank, 6);
   });
 });
 

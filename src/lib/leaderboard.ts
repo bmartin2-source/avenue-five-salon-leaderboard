@@ -216,7 +216,7 @@ export function rankStudents(
       previousRank,
       rankDelta: previousRank - rank,
       displayName: displayName(student),
-      highFive: campusRank <= HIGH_FIVE_SIZE,
+      highFive: rank <= HIGH_FIVE_SIZE,
       badges: {
         mostRetail: student.retail === maxRetail && maxRetail > 0,
         mostServices: student.service === maxService && maxService > 0,

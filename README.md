@@ -49,7 +49,7 @@ Auth is a client-side stub against `data/leaderboard.json`. It is not production
 
 - Four programs, ranked **only within program**, left to right: Cosmetology, Barbering, Esthetics, Nail Technology.
 - Campus boards rank inside that campus + program. The all-institute slide still ranks within program, then tags North/South.
-- High Five winners are the **top five at each program at each campus**. Rank 1 is the strong lead; ranks 2–5 are a quieter High Five set.
+- Each campus program column lists about 10 dummy students as slim HUD-style rows. High Five winners are **ranks 1–5** only (gold chip / stronger row). Ranks 6–10 stay visible and quieter. Rank 1 is a bit stronger, same row height.
 - Score is `total = service $ + retail $`.
 - TOTAL is the large TV number. Under it: `S:$200  R:$100`.
 - Opted-in display: first name + last initial. Opted-out: `Student` + student ID.

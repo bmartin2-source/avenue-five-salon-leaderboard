@@ -342,11 +342,11 @@ export function StudentDashboard() {
             </div>
           </div>
           {board.map((row) => {
-            const highFiveClass = row.campusRank === 1
+            const highFiveClass = row.rank === 1
               ? "high-five-lead"
-              : row.highFive
+              : row.rank <= 5
                 ? "high-five-set"
-                : "";
+                : "rank-rest";
             return (
               <div className={`student-row ${row.id === student.id ? "me" : ""} ${highFiveClass}`} key={row.id}>
                 <div className="rank-cluster">

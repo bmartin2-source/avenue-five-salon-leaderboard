@@ -328,10 +328,10 @@ h2,
 
 .program-col {
   min-width: 0;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 6px 6px 4px;
+  border-radius: 8px;
+  padding: 4px 0 2px;
   display: grid;
   grid-template-rows: auto 1fr;
   min-height: 0;
@@ -340,8 +340,9 @@ h2,
 .program-col header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 2px 6px 6px;
+  align-items: baseline;
+  padding: 0 8px 4px;
+  border-bottom: 1px solid var(--line);
 }
 
 .program-col h2 {
@@ -379,31 +380,34 @@ h2,
   position: absolute;
   left: 0;
   right: 0;
-  height: var(--row-h);
+  height: 54px;
   display: grid;
-  grid-template-columns: 76px minmax(0, 1fr) auto;
-  gap: 8px;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  gap: 6px;
   align-items: center;
-  padding: 4px 8px;
-  border-radius: 10px;
-  background: rgba(13, 11, 16, 0.55);
-  border: 1px solid transparent;
+  padding: 0 8px;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(232, 214, 176, 0.1);
   transition:
     transform 780ms cubic-bezier(0.22, 1, 0.36, 1),
     background 420ms ease,
-    border-color 420ms ease,
-    box-shadow 420ms ease;
+    opacity 420ms ease;
 }
 
 .row.high-five-lead,
 .row.rank-1 {
-  background: linear-gradient(180deg, rgba(212, 179, 122, 0.28), rgba(212, 179, 122, 0.08));
-  border-color: rgba(212, 179, 122, 0.45);
+  background: rgba(212, 179, 122, 0.2);
 }
 
 .row.high-five-set {
-  background: linear-gradient(180deg, rgba(212, 179, 122, 0.12), rgba(212, 179, 122, 0.04));
-  border-color: rgba(212, 179, 122, 0.2);
+  background: rgba(212, 179, 122, 0.1);
+}
+
+.row.rank-rest {
+  opacity: 0.58;
+  background: transparent;
 }
 
 .row.moved-up {
@@ -422,8 +426,10 @@ h2,
 }
 
 .rank {
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 34px;
+  font-family: var(--font-sans), "Avenir Next", "Segoe UI", sans-serif;
+  font-size: 26px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
   line-height: 1;
   color: var(--gold);
 }
@@ -439,15 +445,34 @@ h2,
 
 .who {
   min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
 }
 
 .who .name {
   font-size: 24px;
   white-space: nowrap;
-  overflow: hidden;
+  overflow: visible;
   font-weight: 750;
   letter-spacing: -0.02em;
   line-height: 1.05;
+}
+
+.end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  min-width: 0;
+}
+
+.campus-tag {
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  flex: none;
 }
 
 .student-page .topbar h1,
@@ -472,26 +497,29 @@ h2,
 
 .money {
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .money .total {
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 26px;
+  font-family: var(--font-sans), "Avenir Next", "Segoe UI", sans-serif;
+  font-size: 22px;
+  font-weight: 750;
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
 }
 
 .money .split {
-  margin-top: 4px;
+  margin-top: 2px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 11px;
   letter-spacing: 0.02em;
+  line-height: 1;
 }
 
 .badges {
   display: flex;
   gap: 5px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .badge {
@@ -499,8 +527,9 @@ h2,
   letter-spacing: 0.08em;
   text-transform: uppercase;
   border-radius: 999px;
-  padding: 2px 6px;
+  padding: 1px 5px;
   border: 1px solid var(--line);
+  flex: none;
 }
 
 .badge.up { color: var(--up); border-color: rgba(143, 212, 164, 0.35); }
@@ -699,6 +728,10 @@ h2,
   background: rgba(212, 179, 122, 0.08);
   border-radius: 12px;
   border-bottom-color: transparent;
+}
+
+.student-row.rank-rest {
+  opacity: 0.6;
 }
 
 .topbar {
