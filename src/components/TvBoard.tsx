@@ -22,14 +22,13 @@ export type TvMode = "slideshow" | "north" | "south";
 
 function useAnimatedRanks(rows: RankedStudent[]) {
   const [phase, setPhase] = useState<"from" | "to">("from");
+  const key = rows.map((row) => `${row.id}:${row.rank}:${row.previousRank}`).join("|");
 
   useEffect(() => {
     setPhase("from");
-    const frame = window.requestAnimationFrame(() => {
-      window.setTimeout(() => setPhase("to"), 160);
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [rows]);
+    const timer = window.setTimeout(() => setPhase("to"), 160);
+    return () => window.clearTimeout(timer);
+  }, [key]);
 
   return phase;
 }
