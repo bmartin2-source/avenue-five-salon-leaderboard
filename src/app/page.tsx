@@ -18,19 +18,19 @@ export default function HomePage() {
             <p className="kicker">Unlisted TV</p>
             <h2>Break-room board</h2>
             <p>
-              Private slideshow: North campus, South campus, then an all-institute
-              comparison. Sponsor ticker on the bottom. Arrow keys change slides.
+              Private slideshow: North Austin Campus, South Austin Campus, then an
+              all-institute comparison. Sponsor ticker on the bottom. Arrow keys change slides.
             </p>
           </Link>
           <Link className="card" href="/tv/north">
             <p className="kicker">Campus board</p>
-            <h2>North campus</h2>
-            <p>Locked North view. Four programs, ranked only within program.</p>
+            <h2>North Austin Campus</h2>
+            <p>Locked North Austin view. Four programs, ranked only within program.</p>
           </Link>
           <Link className="card" href="/tv/south">
             <p className="kicker">Campus board</p>
-            <h2>South campus</h2>
-            <p>Locked South view. Same ranking rules, dummy data only.</p>
+            <h2>South Austin Campus</h2>
+            <p>Locked South Austin view. Same ranking rules, dummy data only.</p>
           </Link>
           <Link className="card" href="/login">
             <p className="kicker">Student web</p>

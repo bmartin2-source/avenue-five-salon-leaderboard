@@ -93,11 +93,11 @@ export function LoginForm() {
         <div className="dummy-accounts" style={{ marginTop: 22 }}>
           <p className="kicker">Dummy accounts</p>
           <p className="hint">
-            <code>AFI-2401</code> / <code>Reyes</code> · Jordan · Cosmetology, North, opted in
+            <code>AFI-2401</code> / <code>Reyes</code> · Jordan · Cosmetology, North Austin Campus, opted in
             <br />
-            <code>AFI-2402</code> / <code>Cruz</code> · opted out · Esthetics, South
+            <code>AFI-2402</code> / <code>Cruz</code> · opted out · Esthetics, South Austin Campus
             <br />
-            <code>AFI-2403</code> / <code>Miles</code> · Casey · Barbering, North
+            <code>AFI-2403</code> / <code>Miles</code> · Casey · Barbering, North Austin Campus
           </p>
         </div>
       </div>
@@ -357,7 +357,7 @@ export function StudentDashboard() {
                 <div>
                   <div className="name">{row.displayName}</div>
                   <div className="hint">
-                    {row.campus === "north" ? "North" : "South"}
+                    {row.campus === "north" ? "North Austin Campus" : "South Austin Campus"}
                     {row.highFive ? " · High Five" : ""}
                     {row.badges.mostRetail ? " · Most retail" : ""}
                     {row.badges.mostServices ? " · Most services" : ""}

@@ -84,8 +84,13 @@ export const PROGRAM_LABELS: Record<Program, string> = {
 };
 
 export const CAMPUS_LABELS: Record<Campus, string> = {
-  north: "North Campus",
-  south: "South Campus",
+  north: "North Austin Campus",
+  south: "South Austin Campus",
+};
+
+export const CAMPUS_SHORT: Record<Campus, string> = {
+  north: "N Austin",
+  south: "S Austin",
 };
 
 export function studentTotal(student: Pick<StudentRecord, "service" | "retail">): number {

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   CAMPUS_LABELS,
+  CAMPUS_SHORT,
   PROGRAMS,
   PROGRAM_LABELS,
   campusTotals,
@@ -20,8 +21,7 @@ import { data } from "@/lib/data";
 import { readConsentOverrides } from "@/lib/session";
 
 const SLIDE_MS = 9000;
-const VISIBLE_ROWS = 10;
-const ROW_HEIGHT = 54;
+const MIN_ROW_HEIGHT = 50;
 
 export type TvMode = "slideshow" | "north" | "south";
 
@@ -77,7 +77,7 @@ function RankRow({
       </div>
       <div className="who">
         <span className="name">{student.displayName}</span>
-        {showCampus ? <span className="campus-tag">{student.campus === "north" ? "N" : "S"}</span> : null}
+        {showCampus ? <span className="campus-tag">{CAMPUS_SHORT[student.campus]}</span> : null}
       </div>
       <div className="end">
         {student.rank <= 5 ? <span className="badge highfive">High Five</span> : null}
@@ -103,7 +103,25 @@ function ProgramColumn({
   rows: RankedStudent[];
   showCampus?: boolean;
 }) {
-  const visible = rows.slice(0, VISIBLE_ROWS);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [fit, setFit] = useState({ count: 15, rowHeight: 52 });
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const update = () => {
+      const height = el.clientHeight;
+      const count = Math.max(1, Math.floor(height / MIN_ROW_HEIGHT));
+      const rowHeight = Math.max(MIN_ROW_HEIGHT, Math.floor(height / count));
+      setFit({ count, rowHeight });
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const visible = rows.slice(0, fit.count);
   const phase = useAnimatedRanks(visible);
   return (
     <section className={`program-col ${program}`}>
@@ -114,7 +132,7 @@ function ProgramColumn({
         </div>
         <span className="count">{rows.length}</span>
       </header>
-      <div className="track" style={{ height: visible.length * ROW_HEIGHT }}>
+      <div className="track" ref={trackRef}>
         {visible.map((student, index) => (
           <RankRow
             key={student.id}
@@ -122,7 +140,7 @@ function ProgramColumn({
             index={index}
             showCampus={showCampus}
             phase={phase}
-            rowHeight={ROW_HEIGHT}
+            rowHeight={fit.rowHeight}
           />
         ))}
       </div>
@@ -167,7 +185,7 @@ function InstituteScoreboard() {
     <div className="scoreboard">
       <div className="score north">
         <div>
-          <div className="campus">North</div>
+          <div className="campus">North Austin Campus</div>
           <div className="program-leads" style={{ justifyContent: "flex-start", marginTop: 2 }}>
             S:{formatMoney(north.service)} · R:{formatMoney(north.retail)}
           </div>
@@ -177,7 +195,7 @@ function InstituteScoreboard() {
       <div className="vs">VS</div>
       <div className="score south">
         <div>
-          <div className="campus">South</div>
+          <div className="campus">South Austin Campus</div>
           <div className="program-leads" style={{ justifyContent: "flex-end", marginTop: 2 }}>
             S:{formatMoney(south.service)} · R:{formatMoney(south.retail)}
           </div>
@@ -205,7 +223,7 @@ function Board({ campus, institute }: { campus?: Campus; institute?: boolean }) 
       ? CAMPUS_LABELS[campus]
       : "High Five";
   const subtitle = institute
-    ? "High Five awards are the top five in each program at each campus"
+    ? "North Austin Campus vs South Austin Campus · High Five is ranks 1–5 in each program at each campus"
     : "Private High Five Competition · ranked only within program";
 
   return (
@@ -281,9 +299,7 @@ export function TvBoard({ mode }: { mode: TvMode }) {
             <span key={item.key} className={`dot ${slideIndex === index ? "on" : ""}`} />
           ))}
         </div>
-      ) : (
-        <div className="tv-dots" />
-      )}
+      ) : null}
       <SponsorTicker />
     </main>
   );
