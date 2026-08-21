@@ -158,19 +158,26 @@ export function formatMoney(amount: number): string {
   return `$${amount.toLocaleString("en-US")}`;
 }
 
-/** Shrink page size so the last page is not a 1–2 row leftover. */
-export function balancedPageSize(length: number, maxPageSize: number) {
+const MIN_LAST_PAGE_ROWS = 8;
+
+/**
+ * Page size for a TV column. Leftovers under ~8 rows stay on the previous
+ * page when they still fit at the standard row height. Never shrink the
+ * page just to manufacture a short last page.
+ */
+export function balancedPageSize(
+  length: number,
+  maxPageSize: number,
+  trackHeight = maxPageSize * 50,
+  minRowHeight = 50,
+) {
   const max = Math.max(1, Math.floor(maxPageSize) || 1);
   if (length <= max) return max;
-  const minTail = 5;
-  const floor = Math.max(8, Math.floor(max * 0.65));
-  let size = max;
-  while (size > floor) {
-    const remainder = length % size;
-    if (remainder === 0 || remainder >= minTail) return size;
-    size -= 1;
+  const remainder = length % max;
+  if (remainder > 0 && remainder < MIN_LAST_PAGE_ROWS && length * minRowHeight <= trackHeight) {
+    return length;
   }
-  return size;
+  return max;
 }
 
 /** TV list paging: which ranks belong on a page, wrapping in both directions. */

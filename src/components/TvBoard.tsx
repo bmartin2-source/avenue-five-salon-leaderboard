@@ -128,13 +128,11 @@ function ProgramColumn({
     onFit?.(fit.count);
   }, [fit.count, onFit]);
 
-  const pageSize = balancedPageSize(rows.length, fit.count);
+  const pageSize = balancedPageSize(rows.length, fit.count, fit.height, MIN_ROW_HEIGHT);
   const pageWindow = listPageWindow(rows.length, pageSize, listPage);
   const visible = rows.slice(pageWindow.start, pageWindow.end);
-  const rowHeight = Math.max(
-    MIN_ROW_HEIGHT,
-    Math.floor(fit.height / Math.max(visible.length, 1)),
-  );
+  const rowSlots = visible.length > fit.count ? visible.length : fit.count;
+  const rowHeight = Math.max(MIN_ROW_HEIGHT, Math.floor(fit.height / rowSlots));
   const rangeLabel = rows.length
     ? `${pageWindow.start + 1}–${pageWindow.end} of ${rows.length}`
     : "0";
@@ -262,7 +260,10 @@ function Board({
   );
   const maxPages = Math.max(
     1,
-    ...PROGRAMS.map((program) => listPageWindow(boards[program].length, pageSize, 0).pageCount),
+    ...PROGRAMS.map((program) => {
+      const size = balancedPageSize(boards[program].length, pageSize);
+      return listPageWindow(boards[program].length, size, 0).pageCount;
+    }),
   );
   const title = allTime
     ? "ALL-TIME"

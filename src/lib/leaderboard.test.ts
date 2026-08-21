@@ -292,10 +292,20 @@ describe("campusTotals", () => {
 });
 
 describe("balancedPageSize", () => {
-  it("keeps a 1–2 row leftover on the previous page by shrinking page size", () => {
-    assert.equal(balancedPageSize(17, 15), 12);
-    assert.equal(balancedPageSize(17, 16), 12);
-    assert.equal(balancedPageSize(12, 16), 16);
+  it("keeps a leftover under 8 rows on the previous page when it still fits", () => {
+    assert.equal(balancedPageSize(17, 15, 860, 50), 17);
+    assert.equal(balancedPageSize(17, 16, 860, 50), 17);
+    assert.equal(balancedPageSize(12, 16, 860, 50), 16);
+  });
+
+  it("does not invent a tiny last page by shrinking a 17-row Nail Technology list", () => {
+    assert.equal(balancedPageSize(17, 12, 860, 50), 17);
+  });
+
+  it("keeps a real second page when the leftover is at least 8 rows", () => {
+    assert.equal(balancedPageSize(29, 17, 860, 50), 17);
+    assert.equal(listPageWindow(29, 17, 1).start, 17);
+    assert.equal(listPageWindow(29, 17, 1).end, 29);
   });
 });
 
