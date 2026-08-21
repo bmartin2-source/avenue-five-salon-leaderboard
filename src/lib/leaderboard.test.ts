@@ -15,6 +15,7 @@ import {
   formatPoints,
   listPageWindow,
   rankStudents,
+  tvStageScale,
   studentPoints,
   type StudentRecord,
 } from "./leaderboard.ts";
@@ -287,6 +288,20 @@ describe("campusTotals", () => {
     assert.equal(north.total, 200 + 100 + 180 + 90 + 900 + 10);
     assert.equal(north.byProgram.cosmetology.total, 570);
     assert.equal(north.byProgram.nailTechnology.total, 910);
+  });
+});
+
+describe("tvStageScale", () => {
+  it("letterboxes a 1280×800 desktop so the 16:9 stage fits", () => {
+    const scale = tvStageScale(1280, 800);
+    assert.equal(scale, 1280 / 1920);
+    assert.ok(1080 * scale <= 800);
+    assert.equal(1920 * scale, 1280);
+  });
+
+  it("is 1 on a 1920×1080 TV and can grow on 4K", () => {
+    assert.equal(tvStageScale(1920, 1080), 1);
+    assert.equal(tvStageScale(3840, 2160), 2);
   });
 });
 

@@ -13,6 +13,9 @@ import {
   formatPoints,
   listPageWindow,
   rankAllPrograms,
+  TV_STAGE_HEIGHT,
+  TV_STAGE_WIDTH,
+  tvStageScale,
   resolveCycle,
   type Campus,
   type Program,
@@ -339,6 +342,28 @@ function Board({
   );
 }
 
+function useTvStageScale() {
+  const [scale, setScale] = useState<number | null>(null);
+
+  useEffect(() => {
+    document.documentElement.classList.add("tv-lock");
+    const update = () => {
+      setScale(tvStageScale(window.innerWidth, window.innerHeight));
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(document.documentElement);
+    window.addEventListener("resize", update);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", update);
+      document.documentElement.classList.remove("tv-lock");
+    };
+  }, []);
+
+  return scale;
+}
+
 export function TvBoard({ mode }: { mode: TvMode }) {
   const slides: Array<{ key: string; campus?: Campus; institute?: boolean }> =
     mode === "slideshow"
@@ -386,33 +411,47 @@ export function TvBoard({ mode }: { mode: TvMode }) {
   }, [slides.length, showAllTime]);
 
   const slide = slides[index];
+  const scale = useTvStageScale();
 
   return (
-    <main className={`tv-shell ${showAllTime ? "all-time" : ""}`}>
-      {showAllTime ? (
-        <Board
-          key="alltime"
-          allTime
-          institute
-          onPageCycle={() => setShowAllTime(false)}
-        />
-      ) : (
-        <Board
-          key={slide.key}
-          campus={slide.campus}
-          institute={slide.institute}
-          onPageCycle={mode === "slideshow" ? advanceSlide : undefined}
-        />
-      )}
-      {mode === "slideshow" ? (
-        <div className="tv-dots" aria-hidden>
-          {slides.map((item, slideIndex) => (
-            <span key={item.key} className={`dot ${!showAllTime && slideIndex === index ? "on" : ""}`} />
-          ))}
-          <span className={`dot alltime ${showAllTime ? "on" : ""}`} />
-        </div>
-      ) : null}
-      <SponsorTicker />
-    </main>
+    <div className="tv-frame">
+      <div
+        className="tv-stage"
+        style={{
+          width: TV_STAGE_WIDTH,
+          height: TV_STAGE_HEIGHT,
+          ...(scale != null
+            ? { transform: `translate(-50%, -50%) scale(${scale})` }
+            : {}),
+        }}
+      >
+        <main className={`tv-shell ${showAllTime ? "all-time" : ""}`}>
+          {showAllTime ? (
+            <Board
+              key="alltime"
+              allTime
+              institute
+              onPageCycle={() => setShowAllTime(false)}
+            />
+          ) : (
+            <Board
+              key={slide.key}
+              campus={slide.campus}
+              institute={slide.institute}
+              onPageCycle={mode === "slideshow" ? advanceSlide : undefined}
+            />
+          )}
+          {mode === "slideshow" ? (
+            <div className="tv-dots" aria-hidden>
+              {slides.map((item, slideIndex) => (
+                <span key={item.key} className={`dot ${!showAllTime && slideIndex === index ? "on" : ""}`} />
+              ))}
+              <span className={`dot alltime ${showAllTime ? "on" : ""}`} />
+            </div>
+          ) : null}
+          <SponsorTicker />
+        </main>
+      </div>
+    </div>
   );
 }

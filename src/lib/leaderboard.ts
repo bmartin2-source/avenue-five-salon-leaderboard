@@ -158,6 +158,16 @@ export function formatMoney(amount: number): string {
   return `$${amount.toLocaleString("en-US")}`;
 }
 
+export const TV_STAGE_WIDTH = 1920;
+export const TV_STAGE_HEIGHT = 1080;
+
+/** Uniform scale so a 1920×1080 TV stage fits any viewport without clipping a column. */
+export function tvStageScale(viewportWidth: number, viewportHeight: number) {
+  const width = Math.max(1, viewportWidth);
+  const height = Math.max(1, viewportHeight);
+  return Math.min(width / TV_STAGE_WIDTH, height / TV_STAGE_HEIGHT);
+}
+
 const MIN_LAST_PAGE_ROWS = 8;
 
 /** Inclusive rank ranges for a TV column. Remainders of 1–7 stay on the previous page. */
