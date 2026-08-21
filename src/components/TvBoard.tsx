@@ -11,6 +11,7 @@ import {
   formatCycleRange,
   formatMoney,
   formatPoints,
+  balancedPageSize,
   listPageWindow,
   rankAllPrograms,
   resolveCycle,
@@ -63,23 +64,26 @@ function RankRow({
     >
       <div className="rank-cluster">
         <div className="rank">{student.rank}</div>
-        {allTime ? null : <RankArrow delta={student.rankDelta} />}
+        <div className="rank-side">
+          {allTime ? null : <RankArrow delta={student.rankDelta} />}
+          {student.rank <= 5 ? (
+            <span className={`rank-mark ${allTime ? "alltime" : "highfive"}`}>
+              {allTime ? "AT" : "HF"}
+            </span>
+          ) : null}
+        </div>
       </div>
       <div className="who">
         <span className="name">{student.displayName}</span>
         {showCampus ? <span className="campus-tag">{CAMPUS_SHORT[student.campus]}</span> : null}
       </div>
-      <div className="end">
-        {student.rank <= 5 ? (
-          <span className={`badge ${allTime ? "alltime" : "highfive"}`}>
-            {allTime ? "All-Time" : "High Five"}
-          </span>
-        ) : null}
-        <div className="money">
-          <div className="total">{formatPoints(student.points)}</div>
-          <div className="split">
-            S:{formatMoney(dollars.service)}&nbsp;&nbsp;R:{formatMoney(dollars.retail)}
-          </div>
+      <div className="money">
+        <div className="total">
+          {student.points.toLocaleString("en-US")}
+          <span className="pts"> pts</span>
+        </div>
+        <div className="split">
+          S:{formatMoney(dollars.service)}&nbsp;&nbsp;R:{formatMoney(dollars.retail)}
         </div>
       </div>
     </article>
@@ -123,8 +127,9 @@ function ProgramColumn({
     onFit?.(fit.count);
   }, [fit.count, onFit]);
 
-  const pageWindow = listPageWindow(rows.length, fit.count, listPage);
-  const shiftY = pageWindow.page * fit.count * fit.rowHeight;
+  const pageSize = balancedPageSize(rows.length, fit.count);
+  const pageWindow = listPageWindow(rows.length, pageSize, listPage);
+  const shiftY = pageWindow.page * pageSize * fit.rowHeight;
   const rangeLabel = rows.length
     ? `${pageWindow.start + 1}–${pageWindow.end} of ${rows.length}`
     : "0";

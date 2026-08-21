@@ -158,6 +158,21 @@ export function formatMoney(amount: number): string {
   return `$${amount.toLocaleString("en-US")}`;
 }
 
+/** Shrink page size so the last page is not a 1–2 row leftover. */
+export function balancedPageSize(length: number, maxPageSize: number) {
+  const max = Math.max(1, Math.floor(maxPageSize) || 1);
+  if (length <= max) return max;
+  const minTail = 5;
+  const floor = Math.max(8, Math.floor(max * 0.65));
+  let size = max;
+  while (size > floor) {
+    const remainder = length % size;
+    if (remainder === 0 || remainder >= minTail) return size;
+    size -= 1;
+  }
+  return size;
+}
+
 /** TV list paging: which ranks belong on a page, wrapping in both directions. */
 export function listPageWindow(length: number, pageSize: number, listPage: number) {
   const size = Math.max(1, Math.floor(pageSize) || 1);

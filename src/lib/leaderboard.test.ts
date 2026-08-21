@@ -13,6 +13,7 @@ import {
   formatMoney,
   fridayBefore,
   formatPoints,
+  balancedPageSize,
   listPageWindow,
   rankStudents,
   studentPoints,
@@ -287,6 +288,14 @@ describe("campusTotals", () => {
     assert.equal(north.total, 200 + 100 + 180 + 90 + 900 + 10);
     assert.equal(north.byProgram.cosmetology.total, 570);
     assert.equal(north.byProgram.nailTechnology.total, 910);
+  });
+});
+
+describe("balancedPageSize", () => {
+  it("keeps a 1–2 row leftover on the previous page by shrinking page size", () => {
+    assert.equal(balancedPageSize(17, 15), 12);
+    assert.equal(balancedPageSize(17, 16), 12);
+    assert.equal(balancedPageSize(12, 16), 16);
   });
 });
 

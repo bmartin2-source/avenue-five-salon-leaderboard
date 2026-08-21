@@ -409,14 +409,15 @@ h2,
   right: 0;
   height: 50px;
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr) auto;
-  gap: 6px;
+  grid-template-columns: 54px minmax(0, 1fr) 88px;
+  gap: 8px;
   align-items: center;
   padding: 0 8px;
   border-radius: 0;
   background: transparent;
   border: 0;
   border-bottom: 1px solid rgba(232, 214, 176, 0.1);
+  overflow: hidden;
   transition:
     background 420ms ease,
     opacity 420ms ease;
@@ -454,8 +455,8 @@ h2,
 
 .rank-cluster {
   display: flex;
-  align-items: baseline;
-  gap: 6px;
+  align-items: center;
+  gap: 4px;
   min-width: 0;
 }
 
@@ -466,19 +467,41 @@ h2,
   font-variant-numeric: tabular-nums;
   line-height: 1;
   color: var(--gold);
+  width: 28px;
+}
+
+.rank-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 0;
 }
 
 .rank-arrow {
-  font-size: 16px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0;
+  line-height: 1;
 }
+
+.rank-mark {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.rank-mark.highfive { color: var(--gold-hot); }
+.rank-mark.alltime { color: #c9d7e6; }
 
 .rank-arrow.up { color: var(--up); }
 .rank-arrow.down { color: var(--down); }
 
 .who {
   min-width: 0;
+  overflow: hidden;
   display: flex;
   align-items: baseline;
   gap: 6px;
@@ -487,26 +510,21 @@ h2,
 .who .name {
   font-size: 24px;
   white-space: nowrap;
-  overflow: visible;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-weight: 750;
   letter-spacing: -0.02em;
-  line-height: 1.05;
-}
-
-.end {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 5px;
+  line-height: 1.1;
   min-width: 0;
 }
 
 .campus-tag {
   color: var(--muted);
-  font-size: 11px;
-  letter-spacing: 0.08em;
+  font-size: 10px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   flex: none;
+  overflow: hidden;
 }
 
 .student-page .topbar h1,
@@ -532,22 +550,33 @@ h2,
 .money {
   text-align: right;
   font-variant-numeric: tabular-nums;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .money .total {
   font-family: var(--font-sans), "Avenir Next", "Segoe UI", sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 750;
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.money .pts {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0;
+  color: var(--muted);
 }
 
 .money .split {
-  margin-top: 2px;
+  margin-top: 3px;
   color: var(--muted);
   font-size: 11px;
   letter-spacing: 0.02em;
-  line-height: 1;
+  line-height: 1.15;
+  white-space: nowrap;
 }
 
 .badges {
