@@ -37,16 +37,18 @@ function RankArrow({ delta }: { delta: number }) {
 
 function RankRow({
   student,
+  index,
   showCampus,
   rowHeight,
   allTime,
 }: {
   student: RankedStudent;
+  index: number;
   showCampus?: boolean;
   rowHeight: number;
   allTime?: boolean;
 }) {
-  const y = (student.rank - 1) * rowHeight;
+  const y = index * rowHeight;
   const moved = !allTime && student.rankDelta > 0 ? "moved-up" : !allTime && student.rankDelta < 0 ? "moved-down" : "";
   const leadClass = student.rank === 1
     ? allTime ? "all-time-lead" : "high-five-lead"
@@ -106,7 +108,7 @@ function ProgramColumn({
   allTime?: boolean;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
-  const [fit, setFit] = useState({ count: 15, rowHeight: 52 });
+  const [fit, setFit] = useState({ count: 15, height: 780 });
 
   useEffect(() => {
     const el = trackRef.current;
@@ -114,8 +116,7 @@ function ProgramColumn({
     const update = () => {
       const height = el.clientHeight;
       const count = Math.max(1, Math.floor(height / MIN_ROW_HEIGHT));
-      const rowHeight = Math.max(MIN_ROW_HEIGHT, Math.floor(height / count));
-      setFit({ count, rowHeight });
+      setFit({ count, height });
     };
     update();
     const observer = new ResizeObserver(update);
@@ -129,7 +130,11 @@ function ProgramColumn({
 
   const pageSize = balancedPageSize(rows.length, fit.count);
   const pageWindow = listPageWindow(rows.length, pageSize, listPage);
-  const shiftY = pageWindow.page * pageSize * fit.rowHeight;
+  const visible = rows.slice(pageWindow.start, pageWindow.end);
+  const rowHeight = Math.max(
+    MIN_ROW_HEIGHT,
+    Math.floor(fit.height / Math.max(visible.length, 1)),
+  );
   const rangeLabel = rows.length
     ? `${pageWindow.start + 1}–${pageWindow.end} of ${rows.length}`
     : "0";
@@ -146,16 +151,14 @@ function ProgramColumn({
         <span className="count">{rangeLabel}</span>
       </header>
       <div className="track" ref={trackRef}>
-        <div
-          className="track-shift"
-          style={{ transform: `translateY(-${shiftY}px)` }}
-        >
-          {rows.map((student) => (
+        <div className="track-shift" key={`${pageWindow.page}-${pageSize}`}>
+          {visible.map((student, index) => (
             <RankRow
               key={student.id}
               student={student}
+              index={index}
               showCampus={showCampus}
-              rowHeight={fit.rowHeight}
+              rowHeight={rowHeight}
               allTime={allTime}
             />
           ))}
