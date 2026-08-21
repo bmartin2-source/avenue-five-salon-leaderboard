@@ -31,6 +31,8 @@ export type StudentRecord = {
 };
 
 export const HIGH_FIVE_SIZE = 5;
+export const SERVICE_POINTS_PER_DOLLAR = 1;
+export const RETAIL_POINTS_PER_DOLLAR = 5;
 
 export type Sponsor = {
   id: string;
@@ -58,6 +60,7 @@ export type LeaderboardData = {
 };
 
 export type RankedStudent = StudentRecord & {
+  points: number;
   total: number;
   rank: number;
   campusRank: number;
@@ -65,10 +68,6 @@ export type RankedStudent = StudentRecord & {
   rankDelta: number;
   displayName: string;
   highFive: boolean;
-  badges: {
-    mostRetail: boolean;
-    mostServices: boolean;
-  };
 };
 
 export type BoardScope = {
@@ -93,8 +92,30 @@ export const CAMPUS_SHORT: Record<Campus, string> = {
   south: "S Austin",
 };
 
-export function studentTotal(student: Pick<StudentRecord, "service" | "retail">): number {
+export function studentDollarTotal(student: Pick<StudentRecord, "service" | "retail">): number {
   return student.service + student.retail;
+}
+
+/** Ranking score: 1 pt per $1 service, 5 pts per $1 retail. */
+export function studentPoints(student: Pick<StudentRecord, "service" | "retail">): number {
+  return (
+    student.service * SERVICE_POINTS_PER_DOLLAR +
+    student.retail * RETAIL_POINTS_PER_DOLLAR
+  );
+}
+
+export function formatPoints(amount: number): string {
+  return `${amount.toLocaleString("en-US")} pts`;
+}
+
+function compareByPoints(a: StudentRecord, b: StudentRecord): number {
+  const pointDiff = studentPoints(b) - studentPoints(a);
+  if (pointDiff !== 0) return pointDiff;
+  const retailDiff = b.retail - a.retail;
+  if (retailDiff !== 0) return retailDiff;
+  const serviceDiff = b.service - a.service;
+  if (serviceDiff !== 0) return serviceDiff;
+  return a.id.localeCompare(b.id);
 }
 
 export function displayName(student: Pick<StudentRecord, "id" | "firstName" | "lastInitial" | "optedIn">): string {
@@ -207,16 +228,8 @@ export function rankStudents(
       return true;
     })
     .slice()
-    .sort((a, b) => {
-      const totalDiff = studentTotal(b) - studentTotal(a);
-      if (totalDiff !== 0) return totalDiff;
-      const serviceDiff = b.service - a.service;
-      if (serviceDiff !== 0) return serviceDiff;
-      return a.id.localeCompare(b.id);
-    });
+    .sort(compareByPoints);
 
-  const maxRetail = Math.max(0, ...list.map((student) => student.retail));
-  const maxService = Math.max(0, ...list.map((student) => student.service));
   const campusRankById = campusProgramRanks(students);
 
   return list.map((student, index) => {
@@ -225,17 +238,14 @@ export function rankStudents(
     const campusRank = campusRankById.get(student.id) ?? rank;
     return {
       ...student,
-      total: studentTotal(student),
+      points: studentPoints(student),
+      total: studentPoints(student),
       rank,
       campusRank,
       previousRank,
       rankDelta: previousRank - rank,
       displayName: displayName(student),
       highFive: rank <= HIGH_FIVE_SIZE,
-      badges: {
-        mostRetail: student.retail === maxRetail && maxRetail > 0,
-        mostServices: student.service === maxService && maxService > 0,
-      },
     };
   });
 }
@@ -247,13 +257,7 @@ function campusProgramRanks(students: StudentRecord[]): Map<string, number> {
       const list = students
         .filter((student) => student.campus === campus && student.program === program)
         .slice()
-        .sort((a, b) => {
-          const totalDiff = studentTotal(b) - studentTotal(a);
-          if (totalDiff !== 0) return totalDiff;
-          const serviceDiff = b.service - a.service;
-          if (serviceDiff !== 0) return serviceDiff;
-          return a.id.localeCompare(b.id);
-        });
+        .sort(compareByPoints);
       list.forEach((student, index) => ranks.set(student.id, index + 1));
     }
   }
@@ -276,13 +280,33 @@ export function campusTotals(students: StudentRecord[], campus: Campus) {
       const programStudents = subset.filter((student) => student.program === program);
       const service = programStudents.reduce((sum, student) => sum + student.service, 0);
       const retail = programStudents.reduce((sum, student) => sum + student.retail, 0);
-      return [program, { service, retail, total: service + retail, count: programStudents.length }];
+      return [
+        program,
+        {
+          service,
+          retail,
+          points: studentPoints({ service, retail }),
+          total: service + retail,
+          count: programStudents.length,
+        },
+      ];
     }),
-  ) as Record<Program, { service: number; retail: number; total: number; count: number }>;
+  ) as Record<
+    Program,
+    { service: number; retail: number; points: number; total: number; count: number }
+  >;
 
   const service = subset.reduce((sum, student) => sum + student.service, 0);
   const retail = subset.reduce((sum, student) => sum + student.retail, 0);
-  return { campus, service, retail, total: service + retail, count: subset.length, byProgram };
+  return {
+    campus,
+    service,
+    retail,
+    points: studentPoints({ service, retail }),
+    total: service + retail,
+    count: subset.length,
+    byProgram,
+  };
 }
 
 export function findStudentByLogin(

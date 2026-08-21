@@ -1,9 +1,13 @@
 {
   "meta": {
     "dummy": true,
-    "notice": "Fictional opted-in students only. Institute totals: Cosmetology 50, Esthetics 70, Barbering 20, Nail Technology 40, split unevenly across North Austin and South Austin.",
+    "notice": "Fictional opted-in students only. Ranked by points (1 pt per $1 service, 5 pts per $1 retail). Institute totals: Cosmetology 50, Esthetics 70, Barbering 20, Nail Technology 40, split unevenly across North Austin and South Austin.",
     "roster": {
       "basis": "institute-totals",
+      "scoring": {
+        "servicePointsPerDollar": 1,
+        "retailPointsPerDollar": 5
+      },
       "programs": {
         "cosmetology": 50,
         "esthetics": 70,
@@ -85,9 +89,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 903,
-      "retail": 124,
-      "previousRank": 2
+      "service": 962,
+      "retail": 578,
+      "previousRank": 12
     },
     {
       "id": "AFI-3101",
@@ -97,9 +101,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 912,
-      "retail": 155,
-      "previousRank": 3
+      "service": 2235,
+      "retail": 58,
+      "previousRank": 1
     },
     {
       "id": "AFI-3102",
@@ -109,9 +113,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 831,
-      "retail": 26,
-      "previousRank": 4
+      "service": 1436,
+      "retail": 166,
+      "previousRank": 9
     },
     {
       "id": "AFI-3103",
@@ -121,9 +125,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 840,
-      "retail": 57,
-      "previousRank": 5
+      "service": 793,
+      "retail": 117,
+      "previousRank": 23
     },
     {
       "id": "AFI-3104",
@@ -133,9 +137,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 849,
-      "retail": 88,
-      "previousRank": 6
+      "service": 934,
+      "retail": 518,
+      "previousRank": 15
     },
     {
       "id": "AFI-3105",
@@ -145,9 +149,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 768,
-      "retail": 119,
-      "previousRank": 7
+      "service": 2167,
+      "retail": 47,
+      "previousRank": 2
     },
     {
       "id": "AFI-3106",
@@ -157,9 +161,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 777,
+      "service": 1392,
       "retail": 150,
-      "previousRank": 8
+      "previousRank": 11
     },
     {
       "id": "AFI-3107",
@@ -169,9 +173,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 786,
-      "retail": 21,
-      "previousRank": 9
+      "service": 757,
+      "retail": 91,
+      "previousRank": 24
     },
     {
       "id": "AFI-3108",
@@ -181,9 +185,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 705,
-      "retail": 52,
-      "previousRank": 10
+      "service": 906,
+      "retail": 458,
+      "previousRank": 19
     },
     {
       "id": "AFI-3109",
@@ -193,9 +197,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 714,
-      "retail": 83,
-      "previousRank": 11
+      "service": 2099,
+      "retail": 36,
+      "previousRank": 4
     },
     {
       "id": "AFI-3110",
@@ -205,9 +209,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 648,
-      "retail": 129,
-      "previousRank": 12
+      "service": 1397,
+      "retail": 169,
+      "previousRank": 10
     },
     {
       "id": "AFI-3111",
@@ -217,9 +221,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 657,
-      "retail": 160,
-      "previousRank": 13
+      "service": 730,
+      "retail": 100,
+      "previousRank": 25
     },
     {
       "id": "AFI-3112",
@@ -229,9 +233,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 666,
-      "retail": 31,
-      "previousRank": 14
+      "service": 927,
+      "retail": 413,
+      "previousRank": 21
     },
     {
       "id": "AFI-3113",
@@ -241,9 +245,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 585,
-      "retail": 62,
-      "previousRank": 15
+      "service": 2040,
+      "retail": 40,
+      "previousRank": 5
     },
     {
       "id": "AFI-3114",
@@ -253,9 +257,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 594,
-      "retail": 93,
-      "previousRank": 16
+      "service": 1353,
+      "retail": 153,
+      "previousRank": 14
     },
     {
       "id": "AFI-3115",
@@ -265,9 +269,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 603,
-      "retail": 124,
-      "previousRank": 17
+      "service": 694,
+      "retail": 74,
+      "previousRank": 26
     },
     {
       "id": "AFI-3116",
@@ -277,8 +281,8 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 522,
-      "retail": 155,
+      "service": 899,
+      "retail": 513,
       "previousRank": 18
     },
     {
@@ -289,9 +293,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 531,
-      "retail": 26,
-      "previousRank": 19
+      "service": 1972,
+      "retail": 29,
+      "previousRank": 6
     },
     {
       "id": "AFI-3118",
@@ -301,9 +305,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 540,
-      "retail": 57,
-      "previousRank": 20
+      "service": 1309,
+      "retail": 207,
+      "previousRank": 13
     },
     {
       "id": "AFI-3119",
@@ -313,9 +317,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 459,
-      "retail": 88,
-      "previousRank": 21
+      "service": 658,
+      "retail": 98,
+      "previousRank": 27
     },
     {
       "id": "AFI-3120",
@@ -325,9 +329,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 489,
-      "retail": 130,
-      "previousRank": 22
+      "service": 892,
+      "retail": 464,
+      "previousRank": 20
     },
     {
       "id": "AFI-3121",
@@ -337,9 +341,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 408,
-      "retail": 161,
-      "previousRank": 23
+      "service": 1925,
+      "retail": 39,
+      "previousRank": 7
     },
     {
       "id": "AFI-3122",
@@ -349,9 +353,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 417,
-      "retail": 32,
-      "previousRank": 24
+      "service": 1286,
+      "retail": 142,
+      "previousRank": 17
     },
     {
       "id": "AFI-3123",
@@ -361,9 +365,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 426,
-      "retail": 63,
-      "previousRank": 25
+      "service": 643,
+      "retail": 73,
+      "previousRank": 28
     },
     {
       "id": "AFI-3124",
@@ -373,9 +377,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 345,
-      "retail": 94,
-      "previousRank": 26
+      "service": 864,
+      "retail": 404,
+      "previousRank": 22
     },
     {
       "id": "AFI-3125",
@@ -385,9 +389,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 354,
-      "retail": 125,
-      "previousRank": 27
+      "service": 1857,
+      "retail": 28,
+      "previousRank": 8
     },
     {
       "id": "AFI-3126",
@@ -397,9 +401,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 363,
-      "retail": 156,
-      "previousRank": 28
+      "service": 1242,
+      "retail": 196,
+      "previousRank": 16
     },
     {
       "id": "AFI-3127",
@@ -409,8 +413,8 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 282,
-      "retail": 27,
+      "service": 607,
+      "retail": 97,
       "previousRank": 29
     },
     {
@@ -421,9 +425,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "north",
-      "service": 1860,
-      "retail": 420,
-      "previousRank": 4
+      "service": 1680,
+      "retail": 520,
+      "previousRank": 3
     },
     {
       "id": "AFI-3128",
@@ -433,9 +437,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 703,
-      "retail": 20,
-      "previousRank": 2
+      "service": 890,
+      "retail": 426,
+      "previousRank": 12
     },
     {
       "id": "AFI-3129",
@@ -445,9 +449,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 712,
-      "retail": 51,
-      "previousRank": 3
+      "service": 2083,
+      "retail": 34,
+      "previousRank": 1
     },
     {
       "id": "AFI-3130",
@@ -457,9 +461,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 721,
-      "retail": 82,
-      "previousRank": 4
+      "service": 1412,
+      "retail": 152,
+      "previousRank": 7
     },
     {
       "id": "AFI-3131",
@@ -469,9 +473,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 640,
-      "retail": 113,
-      "previousRank": 5
+      "service": 705,
+      "retail": 103,
+      "previousRank": 17
     },
     {
       "id": "AFI-3132",
@@ -481,9 +485,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 649,
-      "retail": 144,
-      "previousRank": 6
+      "service": 862,
+      "retail": 526,
+      "previousRank": 11
     },
     {
       "id": "AFI-3133",
@@ -493,9 +497,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 658,
-      "retail": 175,
-      "previousRank": 7
+      "service": 2015,
+      "retail": 68,
+      "previousRank": 2
     },
     {
       "id": "AFI-3134",
@@ -505,9 +509,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 577,
-      "retail": 46,
-      "previousRank": 8
+      "service": 1368,
+      "retail": 206,
+      "previousRank": 6
     },
     {
       "id": "AFI-3135",
@@ -517,9 +521,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 586,
+      "service": 669,
       "retail": 77,
-      "previousRank": 9
+      "previousRank": 20
     },
     {
       "id": "AFI-3136",
@@ -529,9 +533,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 595,
-      "retail": 108,
-      "previousRank": 10
+      "service": 834,
+      "retail": 466,
+      "previousRank": 14
     },
     {
       "id": "AFI-3137",
@@ -541,9 +545,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 514,
-      "retail": 139,
-      "previousRank": 11
+      "service": 1947,
+      "retail": 57,
+      "previousRank": 3
     },
     {
       "id": "AFI-3138",
@@ -553,9 +557,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 476,
-      "retail": 73,
-      "previousRank": 12
+      "service": 1357,
+      "retail": 203,
+      "previousRank": 8
     },
     {
       "id": "AFI-3139",
@@ -565,9 +569,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 485,
-      "retail": 104,
-      "previousRank": 13
+      "service": 706,
+      "retail": 74,
+      "previousRank": 18
     },
     {
       "id": "AFI-3140",
@@ -577,9 +581,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 494,
-      "retail": 135,
-      "previousRank": 14
+      "service": 839,
+      "retail": 469,
+      "previousRank": 13
     },
     {
       "id": "AFI-3141",
@@ -589,9 +593,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 413,
-      "retail": 166,
-      "previousRank": 15
+      "service": 1952,
+      "retail": 44,
+      "previousRank": 4
     },
     {
       "id": "AFI-3142",
@@ -601,9 +605,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 422,
-      "retail": 37,
-      "previousRank": 16
+      "service": 1313,
+      "retail": 187,
+      "previousRank": 9
     },
     {
       "id": "AFI-3143",
@@ -613,9 +617,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 431,
-      "retail": 68,
-      "previousRank": 17
+      "service": 670,
+      "retail": 98,
+      "previousRank": 19
     },
     {
       "id": "AFI-3144",
@@ -625,9 +629,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 350,
-      "retail": 99,
-      "previousRank": 18
+      "service": 811,
+      "retail": 409,
+      "previousRank": 15
     },
     {
       "id": "AFI-3145",
@@ -637,9 +641,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 359,
-      "retail": 130,
-      "previousRank": 19
+      "service": 1884,
+      "retail": 33,
+      "previousRank": 5
     },
     {
       "id": "AFI-3146",
@@ -649,9 +653,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 368,
-      "retail": 161,
-      "previousRank": 20
+      "service": 1269,
+      "retail": 171,
+      "previousRank": 10
     },
     {
       "id": "AFI-3147",
@@ -661,8 +665,8 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 287,
-      "retail": 32,
+      "service": 634,
+      "retail": 72,
       "previousRank": 21
     },
     {
@@ -673,9 +677,9 @@
       "optedIn": true,
       "program": "cosmetology",
       "campus": "south",
-      "service": 317,
-      "retail": 74,
-      "previousRank": 21
+      "service": 804,
+      "retail": 360,
+      "previousRank": 16
     },
     {
       "id": "AFI-3149",
@@ -685,9 +689,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 818,
-      "retail": 99,
-      "previousRank": 2
+      "service": 971,
+      "retail": 565,
+      "previousRank": 13
     },
     {
       "id": "AFI-3150",
@@ -697,9 +701,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 831,
-      "retail": 130,
-      "previousRank": 3
+      "service": 2304,
+      "retail": 53,
+      "previousRank": 1
     },
     {
       "id": "AFI-3151",
@@ -709,9 +713,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 754,
+      "service": 1453,
       "retail": 161,
-      "previousRank": 4
+      "previousRank": 9
     },
     {
       "id": "AFI-3152",
@@ -721,9 +725,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 767,
-      "retail": 32,
-      "previousRank": 5
+      "service": 846,
+      "retail": 112,
+      "previousRank": 25
     },
     {
       "id": "AFI-3153",
@@ -733,9 +737,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 780,
-      "retail": 63,
-      "previousRank": 6
+      "service": 943,
+      "retail": 505,
+      "previousRank": 16
     },
     {
       "id": "AFI-3154",
@@ -745,9 +749,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 703,
-      "retail": 94,
-      "previousRank": 7
+      "service": 2236,
+      "retail": 42,
+      "previousRank": 3
     },
     {
       "id": "AFI-3155",
@@ -757,9 +761,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 716,
-      "retail": 125,
-      "previousRank": 8
+      "service": 1409,
+      "retail": 145,
+      "previousRank": 11
     },
     {
       "id": "AFI-3156",
@@ -769,9 +773,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 729,
-      "retail": 156,
-      "previousRank": 9
+      "service": 810,
+      "retail": 86,
+      "previousRank": 26
     },
     {
       "id": "AFI-3157",
@@ -781,9 +785,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 652,
-      "retail": 27,
-      "previousRank": 10
+      "service": 915,
+      "retail": 445,
+      "previousRank": 20
     },
     {
       "id": "AFI-3158",
@@ -793,9 +797,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 665,
-      "retail": 58,
-      "previousRank": 11
+      "service": 2168,
+      "retail": 31,
+      "previousRank": 5
     },
     {
       "id": "AFI-3159",
@@ -805,8 +809,8 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 639,
-      "retail": 90,
+      "service": 1396,
+      "retail": 150,
       "previousRank": 12
     },
     {
@@ -817,9 +821,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 652,
-      "retail": 121,
-      "previousRank": 13
+      "service": 745,
+      "retail": 71,
+      "previousRank": 27
     },
     {
       "id": "AFI-3161",
@@ -829,9 +833,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 575,
-      "retail": 152,
-      "previousRank": 14
+      "service": 878,
+      "retail": 546,
+      "previousRank": 17
     },
     {
       "id": "AFI-3162",
@@ -841,9 +845,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 588,
-      "retail": 23,
-      "previousRank": 15
+      "service": 2211,
+      "retail": 71,
+      "previousRank": 2
     },
     {
       "id": "AFI-3163",
@@ -853,9 +857,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 601,
-      "retail": 54,
-      "previousRank": 16
+      "service": 1352,
+      "retail": 204,
+      "previousRank": 10
     },
     {
       "id": "AFI-3164",
@@ -865,9 +869,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 524,
-      "retail": 85,
-      "previousRank": 17
+      "service": 709,
+      "retail": 95,
+      "previousRank": 28
     },
     {
       "id": "AFI-3165",
@@ -877,9 +881,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 537,
-      "retail": 116,
-      "previousRank": 18
+      "service": 850,
+      "retail": 486,
+      "previousRank": 21
     },
     {
       "id": "AFI-3166",
@@ -889,9 +893,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 550,
-      "retail": 147,
-      "previousRank": 19
+      "service": 2143,
+      "retail": 60,
+      "previousRank": 4
     },
     {
       "id": "AFI-3167",
@@ -901,9 +905,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 473,
-      "retail": 178,
-      "previousRank": 20
+      "service": 1308,
+      "retail": 188,
+      "previousRank": 14
     },
     {
       "id": "AFI-3168",
@@ -913,9 +917,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 486,
-      "retail": 49,
-      "previousRank": 21
+      "service": 673,
+      "retail": 119,
+      "previousRank": 29
     },
     {
       "id": "AFI-3169",
@@ -925,8 +929,8 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 430,
-      "retail": 91,
+      "service": 843,
+      "retail": 437,
       "previousRank": 22
     },
     {
@@ -937,9 +941,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 443,
-      "retail": 122,
-      "previousRank": 23
+      "service": 2096,
+      "retail": 70,
+      "previousRank": 6
     },
     {
       "id": "AFI-3171",
@@ -949,9 +953,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 456,
-      "retail": 153,
-      "previousRank": 24
+      "service": 1285,
+      "retail": 193,
+      "previousRank": 15
     },
     {
       "id": "AFI-3172",
@@ -961,9 +965,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 379,
-      "retail": 24,
-      "previousRank": 25
+      "service": 658,
+      "retail": 94,
+      "previousRank": 30
     },
     {
       "id": "AFI-3173",
@@ -973,9 +977,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 392,
-      "retail": 55,
-      "previousRank": 26
+      "service": 815,
+      "retail": 377,
+      "previousRank": 24
     },
     {
       "id": "AFI-3174",
@@ -985,9 +989,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 405,
-      "retail": 86,
-      "previousRank": 27
+      "service": 2028,
+      "retail": 59,
+      "previousRank": 7
     },
     {
       "id": "AFI-3175",
@@ -997,9 +1001,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 328,
-      "retail": 117,
-      "previousRank": 28
+      "service": 1241,
+      "retail": 177,
+      "previousRank": 18
     },
     {
       "id": "AFI-3176",
@@ -1009,9 +1013,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 341,
-      "retail": 148,
-      "previousRank": 29
+      "service": 622,
+      "retail": 118,
+      "previousRank": 31
     },
     {
       "id": "AFI-3177",
@@ -1021,9 +1025,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 354,
-      "retail": 179,
-      "previousRank": 30
+      "service": 787,
+      "retail": 477,
+      "previousRank": 23
     },
     {
       "id": "AFI-3178",
@@ -1033,9 +1037,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 277,
-      "retail": 50,
-      "previousRank": 31
+      "service": 1960,
+      "retail": 48,
+      "previousRank": 8
     },
     {
       "id": "AFI-3179",
@@ -1045,9 +1049,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "north",
-      "service": 311,
-      "retail": 92,
-      "previousRank": 31
+      "service": 1218,
+      "retail": 182,
+      "previousRank": 19
     },
     {
       "id": "AFI-3180",
@@ -1057,9 +1061,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 938,
-      "retail": 155,
-      "previousRank": 2
+      "service": 1147,
+      "retail": 669,
+      "previousRank": 11
     },
     {
       "id": "AFI-3181",
@@ -1069,9 +1073,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 951,
-      "retail": 26,
-      "previousRank": 3
+      "service": 2440,
+      "retail": 29,
+      "previousRank": 2
     },
     {
       "id": "AFI-3182",
@@ -1081,9 +1085,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 964,
-      "retail": 57,
-      "previousRank": 4
+      "service": 1621,
+      "retail": 147,
+      "previousRank": 14
     },
     {
       "id": "AFI-3183",
@@ -1093,9 +1097,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 887,
-      "retail": 88,
-      "previousRank": 5
+      "service": 918,
+      "retail": 98,
+      "previousRank": 31
     },
     {
       "id": "AFI-3184",
@@ -1105,9 +1109,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 900,
-      "retail": 119,
-      "previousRank": 6
+      "service": 1119,
+      "retail": 609,
+      "previousRank": 15
     },
     {
       "id": "AFI-3185",
@@ -1117,9 +1121,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 913,
-      "retail": 150,
-      "previousRank": 7
+      "service": 2372,
+      "retail": 63,
+      "previousRank": 3
     },
     {
       "id": "AFI-3186",
@@ -1129,9 +1133,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 836,
-      "retail": 21,
-      "previousRank": 8
+      "service": 1577,
+      "retail": 201,
+      "previousRank": 13
     },
     {
       "id": "AFI-3187",
@@ -1141,9 +1145,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 849,
-      "retail": 52,
-      "previousRank": 9
+      "service": 882,
+      "retail": 72,
+      "previousRank": 34
     },
     {
       "id": "AFI-3188",
@@ -1153,9 +1157,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 862,
-      "retail": 83,
-      "previousRank": 10
+      "service": 971,
+      "retail": 549,
+      "previousRank": 22
     },
     {
       "id": "AFI-3189",
@@ -1165,9 +1169,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 785,
-      "retail": 114,
-      "previousRank": 11
+      "service": 2304,
+      "retail": 52,
+      "previousRank": 5
     },
     {
       "id": "AFI-3190",
@@ -1177,9 +1181,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 773,
-      "retail": 130,
-      "previousRank": 12
+      "service": 1548,
+      "retail": 160,
+      "previousRank": 16
     },
     {
       "id": "AFI-3191",
@@ -1189,9 +1193,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 786,
-      "retail": 161,
-      "previousRank": 13
+      "service": 881,
+      "retail": 91,
+      "previousRank": 32
     },
     {
       "id": "AFI-3192",
@@ -1201,9 +1205,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 709,
-      "retail": 32,
-      "previousRank": 14
+      "service": 1038,
+      "retail": 474,
+      "previousRank": 23
     },
     {
       "id": "AFI-3193",
@@ -1213,9 +1217,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 722,
-      "retail": 63,
-      "previousRank": 15
+      "service": 2411,
+      "retail": 61,
+      "previousRank": 1
     },
     {
       "id": "AFI-3194",
@@ -1225,9 +1229,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 735,
-      "retail": 94,
-      "previousRank": 16
+      "service": 1504,
+      "retail": 144,
+      "previousRank": 18
     },
     {
       "id": "AFI-3195",
@@ -1237,9 +1241,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 658,
-      "retail": 125,
-      "previousRank": 17
+      "service": 845,
+      "retail": 115,
+      "previousRank": 33
     },
     {
       "id": "AFI-3196",
@@ -1249,9 +1253,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 671,
-      "retail": 156,
-      "previousRank": 18
+      "service": 1010,
+      "retail": 574,
+      "previousRank": 20
     },
     {
       "id": "AFI-3197",
@@ -1261,9 +1265,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 684,
-      "retail": 27,
-      "previousRank": 19
+      "service": 2343,
+      "retail": 50,
+      "previousRank": 4
     },
     {
       "id": "AFI-3198",
@@ -1273,9 +1277,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 607,
-      "retail": 58,
-      "previousRank": 20
+      "service": 1460,
+      "retail": 198,
+      "previousRank": 17
     },
     {
       "id": "AFI-3199",
@@ -1285,9 +1289,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 620,
+      "service": 809,
       "retail": 89,
-      "previousRank": 21
+      "previousRank": 35
     },
     {
       "id": "AFI-3200",
@@ -1297,9 +1301,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 564,
-      "retail": 131,
-      "previousRank": 22
+      "service": 883,
+      "retail": 525,
+      "previousRank": 24
     },
     {
       "id": "AFI-3201",
@@ -1309,9 +1313,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 577,
-      "retail": 162,
-      "previousRank": 23
+      "service": 2016,
+      "retail": 60,
+      "previousRank": 6
     },
     {
       "id": "AFI-3202",
@@ -1321,9 +1325,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 590,
-      "retail": 33,
-      "previousRank": 24
+      "service": 1437,
+      "retail": 203,
+      "previousRank": 19
     },
     {
       "id": "AFI-3203",
@@ -1333,9 +1337,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 513,
-      "retail": 64,
-      "previousRank": 25
+      "service": 654,
+      "retail": 114,
+      "previousRank": 36
     },
     {
       "id": "AFI-3204",
@@ -1345,9 +1349,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 526,
-      "retail": 95,
-      "previousRank": 26
+      "service": 855,
+      "retail": 465,
+      "previousRank": 27
     },
     {
       "id": "AFI-3205",
@@ -1357,9 +1361,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 539,
-      "retail": 126,
-      "previousRank": 27
+      "service": 1948,
+      "retail": 49,
+      "previousRank": 7
     },
     {
       "id": "AFI-3206",
@@ -1369,9 +1373,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 462,
-      "retail": 157,
-      "previousRank": 28
+      "service": 1393,
+      "retail": 187,
+      "previousRank": 21
     },
     {
       "id": "AFI-3207",
@@ -1381,9 +1385,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 475,
-      "retail": 28,
-      "previousRank": 29
+      "service": 618,
+      "retail": 88,
+      "previousRank": 38
     },
     {
       "id": "AFI-3208",
@@ -1393,9 +1397,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 488,
-      "retail": 59,
-      "previousRank": 30
+      "service": 827,
+      "retail": 405,
+      "previousRank": 29
     },
     {
       "id": "AFI-3209",
@@ -1405,9 +1409,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 411,
-      "retail": 90,
-      "previousRank": 31
+      "service": 1880,
+      "retail": 38,
+      "previousRank": 8
     },
     {
       "id": "AFI-3210",
@@ -1417,9 +1421,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 445,
-      "retail": 132,
-      "previousRank": 32
+      "service": 1210,
+      "retail": 192,
+      "previousRank": 25
     },
     {
       "id": "AFI-3211",
@@ -1429,9 +1433,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 368,
-      "retail": 163,
-      "previousRank": 33
+      "service": 603,
+      "retail": 113,
+      "previousRank": 37
     },
     {
       "id": "AFI-3212",
@@ -1441,9 +1445,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 381,
-      "retail": 34,
-      "previousRank": 34
+      "service": 820,
+      "retail": 356,
+      "previousRank": 30
     },
     {
       "id": "AFI-3213",
@@ -1453,9 +1457,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 394,
-      "retail": 65,
-      "previousRank": 35
+      "service": 1833,
+      "retail": 48,
+      "previousRank": 10
     },
     {
       "id": "AFI-3214",
@@ -1465,9 +1469,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 317,
-      "retail": 96,
-      "previousRank": 36
+      "service": 1166,
+      "retail": 176,
+      "previousRank": 26
     },
     {
       "id": "AFI-3215",
@@ -1477,9 +1481,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 330,
-      "retail": 127,
-      "previousRank": 37
+      "service": 567,
+      "retail": 87,
+      "previousRank": 39
     },
     {
       "id": "AFI-3216",
@@ -1489,9 +1493,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 343,
-      "retail": 158,
-      "previousRank": 38
+      "service": 792,
+      "retail": 456,
+      "previousRank": 28
     },
     {
       "id": "AFI-3217",
@@ -1501,9 +1505,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 266,
-      "retail": 29,
-      "previousRank": 39
+      "service": 1765,
+      "retail": 37,
+      "previousRank": 12
     },
     {
       "id": "AFI-2402",
@@ -1513,9 +1517,9 @@
       "optedIn": true,
       "program": "esthetics",
       "campus": "south",
-      "service": 1580,
-      "retail": 310,
-      "previousRank": 3
+      "service": 1420,
+      "retail": 480,
+      "previousRank": 9
     },
     {
       "id": "AFI-3218",
@@ -1525,9 +1529,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 538,
-      "retail": 53,
-      "previousRank": 2
+      "service": 929,
+      "retail": 485,
+      "previousRank": 6
     },
     {
       "id": "AFI-3219",
@@ -1537,9 +1541,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 547,
-      "retail": 84,
-      "previousRank": 3
+      "service": 1992,
+      "retail": 67,
+      "previousRank": 1
     },
     {
       "id": "AFI-3220",
@@ -1549,9 +1553,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 466,
-      "retail": 35,
-      "previousRank": 4
+      "service": 1255,
+      "retail": 195,
+      "previousRank": 5
     },
     {
       "id": "AFI-3221",
@@ -1561,9 +1565,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 475,
-      "retail": 66,
-      "previousRank": 5
+      "service": 686,
+      "retail": 106,
+      "previousRank": 11
     },
     {
       "id": "AFI-3222",
@@ -1573,9 +1577,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 484,
-      "retail": 97,
-      "previousRank": 6
+      "service": 901,
+      "retail": 425,
+      "previousRank": 9
     },
     {
       "id": "AFI-3223",
@@ -1585,9 +1589,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 403,
-      "retail": 48,
-      "previousRank": 7
+      "service": 1924,
+      "retail": 56,
+      "previousRank": 2
     },
     {
       "id": "AFI-3224",
@@ -1597,9 +1601,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 412,
-      "retail": 79,
-      "previousRank": 8
+      "service": 1211,
+      "retail": 179,
+      "previousRank": 7
     },
     {
       "id": "AFI-3225",
@@ -1609,9 +1613,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 331,
-      "retail": 30,
-      "previousRank": 9
+      "service": 650,
+      "retail": 80,
+      "previousRank": 12
     },
     {
       "id": "AFI-3226",
@@ -1621,8 +1625,8 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 340,
-      "retail": 61,
+      "service": 753,
+      "retail": 365,
       "previousRank": 10
     },
     {
@@ -1633,9 +1637,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 349,
-      "retail": 92,
-      "previousRank": 11
+      "service": 1856,
+      "retail": 45,
+      "previousRank": 4
     },
     {
       "id": "AFI-3228",
@@ -1645,9 +1649,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 297,
-      "retail": 72,
-      "previousRank": 12
+      "service": 1202,
+      "retail": 182,
+      "previousRank": 8
     },
     {
       "id": "AFI-2403",
@@ -1657,9 +1661,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "north",
-      "service": 1320,
-      "retail": 760,
-      "previousRank": 2
+      "service": 1180,
+      "retail": 790,
+      "previousRank": 3
     },
     {
       "id": "AFI-3229",
@@ -1669,9 +1673,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "south",
-      "service": 426,
-      "retail": 29,
-      "previousRank": 2
+      "service": 889,
+      "retail": 357,
+      "previousRank": 6
     },
     {
       "id": "AFI-3230",
@@ -1681,9 +1685,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "south",
-      "service": 435,
-      "retail": 60,
-      "previousRank": 3
+      "service": 1912,
+      "retail": 43,
+      "previousRank": 1
     },
     {
       "id": "AFI-3231",
@@ -1693,9 +1697,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "south",
-      "service": 354,
-      "retail": 91,
-      "previousRank": 4
+      "service": 1279,
+      "retail": 181,
+      "previousRank": 3
     },
     {
       "id": "AFI-3232",
@@ -1705,9 +1709,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "south",
-      "service": 363,
-      "retail": 42,
-      "previousRank": 5
+      "service": 638,
+      "retail": 92,
+      "previousRank": 7
     },
     {
       "id": "AFI-3233",
@@ -1717,9 +1721,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "south",
-      "service": 372,
-      "retail": 73,
-      "previousRank": 6
+      "service": 861,
+      "retail": 457,
+      "previousRank": 5
     },
     {
       "id": "AFI-3234",
@@ -1729,9 +1733,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "south",
-      "service": 291,
-      "retail": 24,
-      "previousRank": 7
+      "service": 1844,
+      "retail": 32,
+      "previousRank": 2
     },
     {
       "id": "AFI-3235",
@@ -1741,9 +1745,9 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "south",
-      "service": 300,
-      "retail": 55,
-      "previousRank": 8
+      "service": 1235,
+      "retail": 165,
+      "previousRank": 4
     },
     {
       "id": "AFI-3236",
@@ -1753,8 +1757,8 @@
       "optedIn": true,
       "program": "barbering",
       "campus": "south",
-      "service": 309,
-      "retail": 86,
+      "service": 602,
+      "retail": 116,
       "previousRank": 8
     },
     {
@@ -1765,9 +1769,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 612,
-      "retail": 137,
-      "previousRank": 2
+      "service": 933,
+      "retail": 519,
+      "previousRank": 6
     },
     {
       "id": "AFI-3238",
@@ -1777,9 +1781,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 621,
-      "retail": 168,
-      "previousRank": 3
+      "service": 2166,
+      "retail": 31,
+      "previousRank": 1
     },
     {
       "id": "AFI-3239",
@@ -1789,9 +1793,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 630,
-      "retail": 39,
-      "previousRank": 4
+      "service": 1439,
+      "retail": 209,
+      "previousRank": 5
     },
     {
       "id": "AFI-3240",
@@ -1801,9 +1805,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 549,
-      "retail": 70,
-      "previousRank": 5
+      "service": 680,
+      "retail": 110,
+      "previousRank": 14
     },
     {
       "id": "AFI-3241",
@@ -1813,9 +1817,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 558,
-      "retail": 101,
-      "previousRank": 6
+      "service": 905,
+      "retail": 459,
+      "previousRank": 10
     },
     {
       "id": "AFI-3242",
@@ -1825,9 +1829,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 567,
-      "retail": 132,
-      "previousRank": 7
+      "service": 2098,
+      "retail": 65,
+      "previousRank": 2
     },
     {
       "id": "AFI-3243",
@@ -1837,8 +1841,8 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 486,
-      "retail": 163,
+      "service": 1235,
+      "retail": 193,
       "previousRank": 8
     },
     {
@@ -1849,9 +1853,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 495,
-      "retail": 34,
-      "previousRank": 9
+      "service": 644,
+      "retail": 84,
+      "previousRank": 15
     },
     {
       "id": "AFI-3245",
@@ -1861,9 +1865,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 504,
-      "retail": 65,
-      "previousRank": 10
+      "service": 877,
+      "retail": 399,
+      "previousRank": 11
     },
     {
       "id": "AFI-3246",
@@ -1873,9 +1877,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 423,
-      "retail": 96,
-      "previousRank": 11
+      "service": 2030,
+      "retail": 54,
+      "previousRank": 3
     },
     {
       "id": "AFI-3247",
@@ -1885,9 +1889,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 399,
-      "retail": 84,
-      "previousRank": 12
+      "service": 1266,
+      "retail": 174,
+      "previousRank": 7
     },
     {
       "id": "AFI-3248",
@@ -1897,9 +1901,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 408,
-      "retail": 115,
-      "previousRank": 13
+      "service": 583,
+      "retail": 95,
+      "previousRank": 16
     },
     {
       "id": "AFI-3249",
@@ -1909,9 +1913,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 417,
-      "retail": 146,
-      "previousRank": 14
+      "service": 804,
+      "retail": 456,
+      "previousRank": 12
     },
     {
       "id": "AFI-3250",
@@ -1921,9 +1925,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 336,
-      "retail": 177,
-      "previousRank": 15
+      "service": 1797,
+      "retail": 55,
+      "previousRank": 4
     },
     {
       "id": "AFI-3251",
@@ -1933,9 +1937,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 345,
-      "retail": 48,
-      "previousRank": 16
+      "service": 1222,
+      "retail": 158,
+      "previousRank": 9
     },
     {
       "id": "AFI-3252",
@@ -1945,8 +1949,8 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 264,
-      "retail": 79,
+      "service": 547,
+      "retail": 119,
       "previousRank": 17
     },
     {
@@ -1957,9 +1961,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "north",
-      "service": 273,
-      "retail": 110,
-      "previousRank": 17
+      "service": 776,
+      "retail": 396,
+      "previousRank": 13
     },
     {
       "id": "AFI-3254",
@@ -1969,9 +1973,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 810,
-      "retail": 33,
-      "previousRank": 2
+      "service": 973,
+      "retail": 451,
+      "previousRank": 13
     },
     {
       "id": "AFI-3255",
@@ -1981,9 +1985,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 729,
-      "retail": 64,
-      "previousRank": 3
+      "service": 2266,
+      "retail": 52,
+      "previousRank": 1
     },
     {
       "id": "AFI-3256",
@@ -1993,9 +1997,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 738,
-      "retail": 95,
-      "previousRank": 4
+      "service": 1423,
+      "retail": 195,
+      "previousRank": 7
     },
     {
       "id": "AFI-3257",
@@ -2005,9 +2009,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 747,
-      "retail": 126,
-      "previousRank": 5
+      "service": 732,
+      "retail": 96,
+      "previousRank": 19
     },
     {
       "id": "AFI-3258",
@@ -2017,9 +2021,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 666,
-      "retail": 157,
-      "previousRank": 6
+      "service": 945,
+      "retail": 551,
+      "previousRank": 11
     },
     {
       "id": "AFI-3259",
@@ -2029,9 +2033,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 675,
-      "retail": 28,
-      "previousRank": 7
+      "service": 2198,
+      "retail": 41,
+      "previousRank": 2
     },
     {
       "id": "AFI-3260",
@@ -2041,9 +2045,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 594,
-      "retail": 59,
-      "previousRank": 8
+      "service": 1379,
+      "retail": 179,
+      "previousRank": 9
     },
     {
       "id": "AFI-3261",
@@ -2053,9 +2057,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 603,
-      "retail": 90,
-      "previousRank": 9
+      "service": 696,
+      "retail": 70,
+      "previousRank": 21
     },
     {
       "id": "AFI-3262",
@@ -2065,9 +2069,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 612,
-      "retail": 121,
-      "previousRank": 10
+      "service": 917,
+      "retail": 491,
+      "previousRank": 14
     },
     {
       "id": "AFI-3263",
@@ -2077,9 +2081,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 531,
-      "retail": 152,
-      "previousRank": 11
+      "service": 2130,
+      "retail": 30,
+      "previousRank": 3
     },
     {
       "id": "AFI-3264",
@@ -2089,9 +2093,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 535,
-      "retail": 28,
-      "previousRank": 12
+      "service": 1394,
+      "retail": 208,
+      "previousRank": 8
     },
     {
       "id": "AFI-3265",
@@ -2101,9 +2105,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 544,
-      "retail": 59,
-      "previousRank": 13
+      "service": 699,
+      "retail": 119,
+      "previousRank": 20
     },
     {
       "id": "AFI-3266",
@@ -2113,9 +2117,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 463,
-      "retail": 90,
-      "previousRank": 14
+      "service": 828,
+      "retail": 436,
+      "previousRank": 16
     },
     {
       "id": "AFI-3267",
@@ -2125,9 +2129,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 472,
-      "retail": 121,
-      "previousRank": 15
+      "service": 1961,
+      "retail": 59,
+      "previousRank": 4
     },
     {
       "id": "AFI-3268",
@@ -2137,9 +2141,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 481,
-      "retail": 152,
-      "previousRank": 16
+      "service": 1350,
+      "retail": 192,
+      "previousRank": 10
     },
     {
       "id": "AFI-3269",
@@ -2149,9 +2153,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 400,
-      "retail": 23,
-      "previousRank": 17
+      "service": 663,
+      "retail": 93,
+      "previousRank": 22
     },
     {
       "id": "AFI-3270",
@@ -2161,9 +2165,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 409,
-      "retail": 54,
-      "previousRank": 18
+      "service": 800,
+      "retail": 376,
+      "previousRank": 17
     },
     {
       "id": "AFI-3271",
@@ -2173,9 +2177,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 418,
-      "retail": 85,
-      "previousRank": 19
+      "service": 1893,
+      "retail": 48,
+      "previousRank": 5
     },
     {
       "id": "AFI-3272",
@@ -2185,9 +2189,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 337,
-      "retail": 116,
-      "previousRank": 20
+      "service": 1306,
+      "retail": 176,
+      "previousRank": 12
     },
     {
       "id": "AFI-3273",
@@ -2197,9 +2201,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 346,
-      "retail": 147,
-      "previousRank": 21
+      "service": 627,
+      "retail": 117,
+      "previousRank": 23
     },
     {
       "id": "AFI-3274",
@@ -2209,9 +2213,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 286,
-      "retail": 29,
-      "previousRank": 22
+      "service": 793,
+      "retail": 327,
+      "previousRank": 18
     },
     {
       "id": "AFI-3275",
@@ -2221,9 +2225,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 295,
-      "retail": 60,
-      "previousRank": 23
+      "service": 1846,
+      "retail": 58,
+      "previousRank": 6
     },
     {
       "id": "AFI-3276",
@@ -2233,9 +2237,9 @@
       "optedIn": true,
       "program": "nailTechnology",
       "campus": "south",
-      "service": 304,
-      "retail": 91,
-      "previousRank": 23
+      "service": 1123,
+      "retail": 181,
+      "previousRank": 15
     }
   ]
 }

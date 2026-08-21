@@ -12,9 +12,10 @@ import {
   formatCycleRange,
   formatMoney,
   fridayBefore,
+  formatPoints,
   listPageWindow,
   rankStudents,
-  studentTotal,
+  studentPoints,
   type StudentRecord,
 } from "./leaderboard.ts";
 
@@ -69,9 +70,10 @@ const fixtures: StudentRecord[] = [
   },
 ];
 
-describe("studentTotal", () => {
-  it("is service plus retail", () => {
-    assert.equal(studentTotal({ service: 200, retail: 100 }), 300);
+describe("studentPoints", () => {
+  it("is 1 pt per service dollar and 5 pts per retail dollar", () => {
+    assert.equal(studentPoints({ service: 200, retail: 100 }), 700);
+    assert.equal(studentPoints({ service: 1860, retail: 420 }), 3960);
   });
 });
 
@@ -99,21 +101,53 @@ describe("programs", () => {
 });
 
 describe("rankStudents", () => {
-  it("ranks only within the requested program", () => {
+  it("ranks only within the requested program by points, not raw dollars", () => {
     const ranked = rankStudents(fixtures, { program: "cosmetology" });
     assert.equal(ranked.length, 3);
-    assert.equal(ranked[0].id, "AFI-3");
+    // AFI-3 has more dollars (450 vs 300) but AFI-1 has more points (700 vs 650).
+    assert.equal(ranked[0].id, "AFI-1");
+    assert.equal(ranked[0].points, 700);
+    assert.equal(ranked[1].id, "AFI-3");
+    assert.equal(ranked[1].points, 650);
     assert.deepEqual(
       ranked.map((student) => student.program),
       ["cosmetology", "cosmetology", "cosmetology"],
     );
   });
 
+  it("lets a retail-heavy student outrank a higher service-dollar student", () => {
+    const ranked = rankStudents(
+      [
+        {
+          ...fixtures[0],
+          id: "AFI-SVC",
+          service: 2000,
+          retail: 40,
+        },
+        {
+          ...fixtures[0],
+          id: "AFI-RTL",
+          firstName: "Remy",
+          lastName: "Vega",
+          lastInitial: "V",
+          service: 1100,
+          retail: 280,
+        },
+      ],
+      { program: "cosmetology" },
+    );
+    assert.ok(2000 + 40 > 1100 + 280);
+    assert.equal(studentPoints(ranked[0]), 1100 + 280 * 5);
+    assert.equal(ranked[0].id, "AFI-RTL");
+    assert.equal(ranked[1].id, "AFI-SVC");
+    assert.equal(ranked[0].highFive, true);
+  });
+
   it("can further limit a campus board to that campus", () => {
     const ranked = rankStudents(fixtures, { program: "cosmetology", campus: "north" });
     assert.equal(ranked.length, 2);
     assert.equal(ranked[0].id, "AFI-1");
-    assert.equal(ranked[0].total, 300);
+    assert.equal(ranked[0].points, 700);
     assert.equal(ranked[0].rank, 1);
   });
 
@@ -131,14 +165,6 @@ describe("rankStudents", () => {
     const dropped = ranked.find((student) => student.id === "AFI-2");
     assert.equal(jumped?.rankDelta, 2);
     assert.equal(dropped?.rankDelta, -1);
-  });
-
-  it("awards most-retail and most-services badges in scope", () => {
-    const ranked = rankStudents(fixtures, { program: "cosmetology" });
-    const mostRetail = ranked.filter((student) => student.badges.mostRetail);
-    const mostServices = ranked.filter((student) => student.badges.mostServices);
-    assert.equal(mostRetail[0]?.id, "AFI-1");
-    assert.equal(mostServices[0]?.id, "AFI-3");
   });
 
   it("marks High Five winners as ranks 1–5 only", () => {
@@ -209,6 +235,10 @@ describe("listPageWindow", () => {
 describe("helpers", () => {
   it("formats money without cents", () => {
     assert.equal(formatMoney(1240), "$1,240");
+  });
+
+  it("formats points without a dollar sign", () => {
+    assert.equal(formatPoints(3960), "3,960 pts");
   });
 
   it("ends a cycle on the Friday before the next class start", () => {

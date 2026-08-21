@@ -52,11 +52,9 @@ Auth is a client-side stub against `data/leaderboard.json`. It is not production
 - Dummy roster uses **institute totals**, split unevenly so both campuses have a real list: Cosmetology 50 (29/21), Esthetics 70 (31/39), Barbering 20 (12/8), Nail Technology 40 (17/23).
 - Every board row is an opted-in fictional student: first name + last initial only. No `Student AFI-xxxx` rows.
 - Each campus program column fills a 1080p TV with slim HUD-style rows. A 1080p column cannot show 35–70 ranks at once, so the list **auto-pages** (hold ~7 seconds, slide up, loop). Cosmetology and Esthetics need more than one page.
-- High Five winners are **ranks 1–5** only (gold chip / stronger row, page 1). Later pages are quieter. Rank 1 is a bit stronger, same row height.
-- Score is `total = service $ + retail $`.
-- TOTAL is the large TV number. Under it: `S:$200  R:$100`.
-- Opted-in display: first name + last initial. Login still offers consent; opted-out display would be `Student` + student ID, but this dummy board has no opted-out rows.
-- Badges: up/down rank arrows next to the rank number, High Five, most retail, most services.
+- High Five winners are **ranks 1–5 by points** only (gold chip / stronger row, page 1). Later pages are quieter. Rank 1 is a bit stronger, same row height. No Most Services / Most Retail badges.
+- Score is `points = serviceDollars × 1 + retailDollars × 5`. Rank is points descending, still only within program (and per campus).
+- The large TV number is **points** (labeled `pts`, no $). Under it: `S:$200  R:$100` as dollars.
 - Current dummy cycle, from published class starts: July 20 – August 28, 2026 (week 5 of 6). A cycle starts on a class start date and ends the Friday before the next start.
 
 Edit fictional students, last names, sponsors, and cycle dates in `data/leaderboard.json`. Ranking helpers live in `src/lib/leaderboard.ts`.

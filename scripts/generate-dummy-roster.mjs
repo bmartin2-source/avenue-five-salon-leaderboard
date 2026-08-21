@@ -38,15 +38,62 @@ const plan = {
 };
 
 const pinned = {
-  "AFI-2401": { firstName: "Jordan", lastName: "Reyes", program: "cosmetology", campus: "north", service: 1860, retail: 420, previousRank: 4 },
-  "AFI-2402": { firstName: "Riley", lastName: "Cruz", program: "esthetics", campus: "south", service: 1580, retail: 310, previousRank: 3 },
-  "AFI-2403": { firstName: "Casey", lastName: "Miles", program: "barbering", campus: "north", service: 1320, retail: 760, previousRank: 2 },
+  "AFI-2401": { firstName: "Jordan", lastName: "Reyes", program: "cosmetology", campus: "north", service: 1680, retail: 520 },
+  "AFI-2402": { firstName: "Riley", lastName: "Cruz", program: "esthetics", campus: "south", service: 1420, retail: 480 },
+  "AFI-2403": { firstName: "Casey", lastName: "Miles", program: "barbering", campus: "north", service: 1180, retail: 790 },
 };
 
 function hash(value) {
   let total = 0;
   for (const char of value) total = (total * 31 + char.charCodeAt(0)) >>> 0;
   return total;
+}
+
+function pointsOf(student) {
+  return student.service + student.retail * 5;
+}
+
+function dollarsOf(student) {
+  return student.service + student.retail;
+}
+
+function salesFor(seed, index, count) {
+  const profile = index % 4;
+  const jitter = hash(seed);
+  const ladder = count - index;
+  if (profile === 0) {
+    return {
+      service: 720 + ladder * 8 + (jitter % 120),
+      retail: 300 + ladder * 6 + (hash(`${seed}r`) % 160),
+    };
+  }
+  if (profile === 1) {
+    return {
+      service: 1680 + ladder * 18 + (jitter % 280),
+      retail: 28 + (hash(`${seed}r`) % 45),
+    };
+  }
+  if (profile === 2) {
+    return {
+      service: 1100 + ladder * 12 + (jitter % 160),
+      retail: 140 + (hash(`${seed}r`) % 70),
+    };
+  }
+  return {
+    service: 480 + ladder * 10 + (jitter % 140),
+    retail: 70 + (hash(`${seed}r`) % 50),
+  };
+}
+
+function assignDollarPreviousRanks(group) {
+  const byDollars = group.slice().sort((a, b) => {
+    const dollarDiff = dollarsOf(b) - dollarsOf(a);
+    if (dollarDiff !== 0) return dollarDiff;
+    return a.id.localeCompare(b.id);
+  });
+  byDollars.forEach((student, index) => {
+    student.previousRank = index + 1;
+  });
 }
 
 const students = [];
@@ -72,9 +119,7 @@ for (const [program, campuses] of Object.entries(plan)) {
           break;
         }
       }
-      const base = 220 + ((count - index) * (program === "esthetics" ? 18 : 22));
-      const service = base + (hash(`${seed}s`) % 90);
-      const retail = 20 + (hash(`${seed}r`) % (program === "barbering" ? 80 : 160));
+      const { service, retail } = salesFor(seed, index, count);
       generated.push({
         id: `AFI-${serial}`,
         firstName,
@@ -85,7 +130,7 @@ for (const [program, campuses] of Object.entries(plan)) {
         campus,
         service,
         retail,
-        previousRank: Math.min(count, index + 2),
+        previousRank: 1,
       });
       serial += 1;
     }
@@ -100,9 +145,10 @@ for (const [program, campuses] of Object.entries(plan)) {
         campus: info.campus,
         service: info.service,
         retail: info.retail,
-        previousRank: info.previousRank,
+        previousRank: 1,
       });
     }
+    assignDollarPreviousRanks(generated);
     students.push(...generated);
   }
 }
@@ -114,6 +160,7 @@ for (const student of students) {
 }
 
 const counts = { institute: {}, campus: {} };
+let inversions = 0;
 for (const student of students) {
   counts.institute[student.program] = (counts.institute[student.program] || 0) + 1;
   const key = `${student.campus} ${student.program}`;
@@ -122,13 +169,30 @@ for (const student of students) {
   if (student.firstName.startsWith("Student")) throw new Error("placeholder name");
 }
 
+for (const [program, campuses] of Object.entries(plan)) {
+  for (const campus of ["north", "south"]) {
+    const group = students.filter((student) => student.program === program && student.campus === campus);
+    const byPoints = group.slice().sort((a, b) => pointsOf(b) - pointsOf(a) || a.id.localeCompare(b.id));
+    const byDollars = group.slice().sort((a, b) => dollarsOf(b) - dollarsOf(a) || a.id.localeCompare(b.id));
+    const climbed = byPoints.find((student, index) => {
+      const dollarRank = byDollars.findIndex((row) => row.id === student.id);
+      return dollarRank > index && dollarsOf(student) < dollarsOf(byDollars[index]);
+    });
+    if (climbed) inversions += 1;
+    if (group.length >= 8 && !climbed) {
+      throw new Error(`no retail-over-service inversion in ${campus} ${program}`);
+    }
+  }
+}
+
 const data = JSON.parse(readFileSync("data/leaderboard.json", "utf8"));
-data.meta.notice = "Fictional opted-in students only. Institute totals: Cosmetology 50, Esthetics 70, Barbering 20, Nail Technology 40, split unevenly across North Austin and South Austin.";
+data.meta.notice = "Fictional opted-in students only. Ranked by points (1 pt per $1 service, 5 pts per $1 retail). Institute totals: Cosmetology 50, Esthetics 70, Barbering 20, Nail Technology 40, split unevenly across North Austin and South Austin.";
 data.meta.roster = {
   basis: "institute-totals",
+  scoring: { servicePointsPerDollar: 1, retailPointsPerDollar: 5 },
   programs: { cosmetology: 50, esthetics: 70, barbering: 20, nailTechnology: 40 },
   split: plan,
 };
 data.students = students;
 writeFileSync("data/leaderboard.json", JSON.stringify(data, null, 2) + "\n");
-console.log(counts, "total", students.length);
+console.log(counts, "total", students.length, "inversions", inversions);

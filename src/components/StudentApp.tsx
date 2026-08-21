@@ -13,9 +13,10 @@ import {
   findStudentByLogin,
   formatCycleRange,
   formatMoney,
+  formatPoints,
   rankStudents,
   resolveCycle,
-  studentTotal,
+  studentPoints,
 } from "@/lib/leaderboard";
 import { data } from "@/lib/data";
 import {
@@ -59,8 +60,8 @@ export function LoginForm() {
         <h1>High Five Competition</h1>
         <p className="lede">
           Web view only for this dummy. Enter a fictional student ID and last name
-          to reach the name-display consent page. This does not connect to a real
-          student system.
+          to reach the name-display consent page. Rankings use points: 1 pt per $1
+          service, 5 pts per $1 retail. This does not connect to a real student system.
         </p>
         <form className="auth-card" onSubmit={onSubmit}>
           <div className="field">
@@ -145,7 +146,7 @@ export function ConsentForm() {
         <p className="kicker">Avenue Five Institute</p>
         <h1>High Five Competition — Name Display Consent</h1>
         <p>
-          The High Five Competition is Avenue Five Institute’s private student salon contest. Rankings are based on service and retail totals for the current class-start cycle.
+          The High Five Competition is Avenue Five Institute’s private student salon contest. Rankings use points: 1 pt per $1 service, 5 pts per $1 retail.
         </p>
         <p>
           By choosing Opt In, you agree that Avenue Five Institute may show your first name and last initial, your program, your campus, your rank, and your competition totals on the High Five Competition board. That board is visible to other Avenue Five students and staff, including on the campus break-room television. It is not a public marketing website and is not meant to be indexed on the open internet.
@@ -298,7 +299,7 @@ export function StudentDashboard() {
               ) : null}
             </p>
             <p className="lede">
-              Ranked only within {PROGRAM_LABELS[student.program]}. Campus rank #{campusBoard.find((row) => row.id === student.id)?.campusRank} of {campusBoard.length}.
+              Ranked by points only within {PROGRAM_LABELS[student.program]} (1 pt per $1 service, 5 pts per $1 retail). Campus rank #{campusBoard.find((row) => row.id === student.id)?.campusRank} of {campusBoard.length}.
               {me?.highFive ? " High Five award winner for this program at this campus." : " Not in this campus program High Five (top five)."}
             </p>
             <p className="hint">
@@ -306,15 +307,14 @@ export function StudentDashboard() {
             </p>
           </div>
           <div className="student-totals">
-            <p className="kicker">Your dummy total</p>
-            <p className="total">{formatMoney(studentTotal(student))}</p>
+            <p className="kicker">Your dummy points</p>
+            <p className="total">{formatPoints(studentPoints(student))}</p>
             <p className="hint">
               S:{formatMoney(student.service)}&nbsp;&nbsp;R:{formatMoney(student.retail)}
             </p>
+            <p className="hint">1 pt per $1 service · 5 pts per $1 retail</p>
             <p className="badges" style={{ marginTop: 12 }}>
               {me?.highFive ? <span className="badge highfive">High Five</span> : null}
-              {me?.badges.mostRetail ? <span className="badge retail">Most retail</span> : null}
-              {me?.badges.mostServices ? <span className="badge service">Most services</span> : null}
             </p>
           </div>
         </section>
@@ -359,13 +359,11 @@ export function StudentDashboard() {
                   <div className="hint">
                     {row.campus === "north" ? "North Austin Campus" : "South Austin Campus"}
                     {row.highFive ? " · High Five" : ""}
-                    {row.badges.mostRetail ? " · Most retail" : ""}
-                    {row.badges.mostServices ? " · Most services" : ""}
                   </div>
                 </div>
                 <div className="money">
                   <div className="total" style={{ fontSize: 28 }}>
-                    {formatMoney(row.total)}
+                    {formatPoints(row.points)}
                   </div>
                   <div className="split">
                     S:{formatMoney(row.service)}&nbsp;&nbsp;R:{formatMoney(row.retail)}

@@ -10,6 +10,7 @@ import {
   cycleWeek,
   formatCycleRange,
   formatMoney,
+  formatPoints,
   listPageWindow,
   rankAllPrograms,
   resolveCycle,
@@ -64,10 +65,8 @@ function RankRow({
       </div>
       <div className="end">
         {student.rank <= 5 ? <span className="badge highfive">High Five</span> : null}
-        {student.badges.mostRetail ? <span className="badge retail">Retail</span> : null}
-        {student.badges.mostServices ? <span className="badge service">Services</span> : null}
         <div className="money">
-          <div className="total">{formatMoney(student.total)}</div>
+          <div className="total">{formatPoints(student.points)}</div>
           <div className="split">
             S:{formatMoney(student.service)}&nbsp;&nbsp;R:{formatMoney(student.retail)}
           </div>
@@ -123,7 +122,7 @@ function ProgramColumn({
       <header>
         <div>
           <h2>{PROGRAM_LABELS[program]}</h2>
-          <p className="highfive-label">High Five = ranks 1–5</p>
+          <p className="highfive-label">High Five = top 5 by points</p>
         </div>
         <span className="count">{rangeLabel}</span>
       </header>
@@ -188,7 +187,7 @@ function InstituteScoreboard() {
             S:{formatMoney(north.service)} · R:{formatMoney(north.retail)}
           </div>
         </div>
-        <div className="amount">{formatMoney(north.total)}</div>
+        <div className="amount">{formatPoints(north.points)}</div>
       </div>
       <div className="vs">VS</div>
       <div className="score south">
@@ -198,7 +197,7 @@ function InstituteScoreboard() {
             S:{formatMoney(south.service)} · R:{formatMoney(south.retail)}
           </div>
         </div>
-        <div className="amount">{formatMoney(south.total)}</div>
+        <div className="amount">{formatPoints(south.points)}</div>
       </div>
     </div>
   );
@@ -238,8 +237,8 @@ function Board({
       ? CAMPUS_LABELS[campus]
       : "High Five";
   const subtitle = institute
-    ? "North Austin Campus vs South Austin Campus · High Five is ranks 1–5 in each program at each campus"
-    : "Private High Five Competition · ranked only within program";
+    ? "North Austin Campus vs South Austin Campus · High Five is top 5 by points in each program at each campus"
+    : "Private High Five Competition · ranked by points within program only";
 
   useEffect(() => {
     const timer = window.setInterval(() => {
