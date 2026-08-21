@@ -1,0 +1,538 @@
+{
+  "meta": {
+    "dummy": true,
+    "notice": "Fictional students and dollar amounts only. No real student names or salon totals."
+  },
+  "institute": {
+    "name": "Avenue Five Institute",
+    "shortName": "Avenue Five"
+  },
+  "cycle": {
+    "id": "2026-08-10",
+    "label": "August 10 start",
+    "startDate": "2026-08-10",
+    "endDate": "2026-09-25",
+    "weeks": 7,
+    "note": "Ranks reset on the class start date. This dummy cycle is 7 weeks."
+  },
+  "sponsors": [
+    {
+      "id": "s1",
+      "name": "Campus Color Lab",
+      "line": "Dummy sponsor · Ask an educator about this week's color-bar specials"
+    },
+    {
+      "id": "s2",
+      "name": "Retail Rush Friday",
+      "line": "Dummy sponsor · Guest take-home kits count toward your retail total"
+    },
+    {
+      "id": "s3",
+      "name": "Guest Experience Week",
+      "line": "Dummy sponsor · Consultations and add-on services boost your service total"
+    },
+    {
+      "id": "s4",
+      "name": "Student Kit Refresh",
+      "line": "Dummy sponsor · Feature a backbar favorite and earn the Most Retail badge"
+    },
+    {
+      "id": "s5",
+      "name": "AFI Education Partners",
+      "line": "Dummy sponsor · Private break-room board — not a public marketing display"
+    }
+  ],
+  "accounts": [
+    {
+      "id": "AFI-2401",
+      "pin": "1357",
+      "firstName": "Jordan",
+      "lastInitial": "R",
+      "optedIn": true,
+      "program": "cosmetology",
+      "campus": "north"
+    },
+    {
+      "id": "AFI-2402",
+      "pin": "2468",
+      "firstName": "Riley",
+      "lastInitial": "C",
+      "optedIn": false,
+      "program": "aesthetics",
+      "campus": "south"
+    },
+    {
+      "id": "AFI-2403",
+      "pin": "8024",
+      "firstName": "Casey",
+      "lastInitial": "M",
+      "optedIn": true,
+      "program": "barbering",
+      "campus": "north"
+    }
+  ],
+  "students": [
+    {
+      "id": "AFI-2401",
+      "firstName": "Jordan",
+      "lastInitial": "R",
+      "optedIn": true,
+      "program": "cosmetology",
+      "campus": "north",
+      "service": 1860,
+      "retail": 420,
+      "previousRank": 4
+    },
+    {
+      "id": "AFI-2411",
+      "firstName": "Avery",
+      "lastInitial": "K",
+      "optedIn": true,
+      "program": "cosmetology",
+      "campus": "north",
+      "service": 1540,
+      "retail": 610,
+      "previousRank": 1
+    },
+    {
+      "id": "AFI-2412",
+      "firstName": "Quinn",
+      "lastInitial": "S",
+      "optedIn": false,
+      "program": "cosmetology",
+      "campus": "north",
+      "service": 1710,
+      "retail": 190,
+      "previousRank": 2
+    },
+    {
+      "id": "AFI-2413",
+      "firstName": "Morgan",
+      "lastInitial": "D",
+      "optedIn": true,
+      "program": "cosmetology",
+      "campus": "north",
+      "service": 980,
+      "retail": 540,
+      "previousRank": 5
+    },
+    {
+      "id": "AFI-2414",
+      "firstName": "Reese",
+      "lastInitial": "P",
+      "optedIn": true,
+      "program": "cosmetology",
+      "campus": "north",
+      "service": 1220,
+      "retail": 210,
+      "previousRank": 3
+    },
+    {
+      "id": "AFI-2415",
+      "firstName": "Skyler",
+      "lastInitial": "B",
+      "optedIn": false,
+      "program": "cosmetology",
+      "campus": "north",
+      "service": 640,
+      "retail": 80,
+      "previousRank": 6
+    },
+    {
+      "id": "AFI-2421",
+      "firstName": "Harper",
+      "lastInitial": "L",
+      "optedIn": true,
+      "program": "cosmetology",
+      "campus": "south",
+      "service": 1690,
+      "retail": 380,
+      "previousRank": 2
+    },
+    {
+      "id": "AFI-2422",
+      "firstName": "Rowan",
+      "lastInitial": "T",
+      "optedIn": true,
+      "program": "cosmetology",
+      "campus": "south",
+      "service": 1480,
+      "retail": 720,
+      "previousRank": 1
+    },
+    {
+      "id": "AFI-2423",
+      "firstName": "Sage",
+      "lastInitial": "W",
+      "optedIn": false,
+      "program": "cosmetology",
+      "campus": "south",
+      "service": 1330,
+      "retail": 260,
+      "previousRank": 4
+    },
+    {
+      "id": "AFI-2424",
+      "firstName": "Cameron",
+      "lastInitial": "H",
+      "optedIn": true,
+      "program": "cosmetology",
+      "campus": "south",
+      "service": 1100,
+      "retail": 150,
+      "previousRank": 3
+    },
+    {
+      "id": "AFI-2425",
+      "firstName": "Drew",
+      "lastInitial": "N",
+      "optedIn": true,
+      "program": "cosmetology",
+      "campus": "south",
+      "service": 870,
+      "retail": 330,
+      "previousRank": 6
+    },
+    {
+      "id": "AFI-2426",
+      "firstName": "Parker",
+      "lastInitial": "F",
+      "optedIn": false,
+      "program": "cosmetology",
+      "campus": "south",
+      "service": 510,
+      "retail": 90,
+      "previousRank": 5
+    },
+    {
+      "id": "AFI-2431",
+      "firstName": "Finley",
+      "lastInitial": "A",
+      "optedIn": true,
+      "program": "aesthetics",
+      "campus": "north",
+      "service": 1420,
+      "retail": 280,
+      "previousRank": 2
+    },
+    {
+      "id": "AFI-2432",
+      "firstName": "Hayden",
+      "lastInitial": "V",
+      "optedIn": true,
+      "program": "aesthetics",
+      "campus": "north",
+      "service": 1180,
+      "retail": 640,
+      "previousRank": 1
+    },
+    {
+      "id": "AFI-2433",
+      "firstName": "Blake",
+      "lastInitial": "G",
+      "optedIn": false,
+      "program": "aesthetics",
+      "campus": "north",
+      "service": 1260,
+      "retail": 170,
+      "previousRank": 4
+    },
+    {
+      "id": "AFI-2434",
+      "firstName": "Emerson",
+      "lastInitial": "J",
+      "optedIn": true,
+      "program": "aesthetics",
+      "campus": "north",
+      "service": 900,
+      "retail": 220,
+      "previousRank": 3
+    },
+    {
+      "id": "AFI-2435",
+      "firstName": "Kendall",
+      "lastInitial": "Y",
+      "optedIn": true,
+      "program": "aesthetics",
+      "campus": "north",
+      "service": 610,
+      "retail": 140,
+      "previousRank": 5
+    },
+    {
+      "id": "AFI-2402",
+      "firstName": "Riley",
+      "lastInitial": "C",
+      "optedIn": false,
+      "program": "aesthetics",
+      "campus": "south",
+      "service": 1580,
+      "retail": 310,
+      "previousRank": 3
+    },
+    {
+      "id": "AFI-2441",
+      "firstName": "Logan",
+      "lastInitial": "E",
+      "optedIn": true,
+      "program": "aesthetics",
+      "campus": "south",
+      "service": 1340,
+      "retail": 490,
+      "previousRank": 1
+    },
+    {
+      "id": "AFI-2442",
+      "firstName": "Micah",
+      "lastInitial": "O",
+      "optedIn": true,
+      "program": "aesthetics",
+      "campus": "south",
+      "service": 1210,
+      "retail": 260,
+      "previousRank": 2
+    },
+    {
+      "id": "AFI-2443",
+      "firstName": "Peyton",
+      "lastInitial": "Q",
+      "optedIn": false,
+      "program": "aesthetics",
+      "campus": "south",
+      "service": 780,
+      "retail": 180,
+      "previousRank": 5
+    },
+    {
+      "id": "AFI-2444",
+      "firstName": "Remy",
+      "lastInitial": "Z",
+      "optedIn": true,
+      "program": "aesthetics",
+      "campus": "south",
+      "service": 690,
+      "retail": 410,
+      "previousRank": 4
+    },
+    {
+      "id": "AFI-2403",
+      "firstName": "Casey",
+      "lastInitial": "M",
+      "optedIn": true,
+      "program": "barbering",
+      "campus": "north",
+      "service": 1320,
+      "retail": 760,
+      "previousRank": 2
+    },
+    {
+      "id": "AFI-2451",
+      "firstName": "Sutton",
+      "lastInitial": "I",
+      "optedIn": true,
+      "program": "barbering",
+      "campus": "north",
+      "service": 1610,
+      "retail": 120,
+      "previousRank": 1
+    },
+    {
+      "id": "AFI-2452",
+      "firstName": "Tatum",
+      "lastInitial": "U",
+      "optedIn": false,
+      "program": "barbering",
+      "campus": "north",
+      "service": 1190,
+      "retail": 240,
+      "previousRank": 4
+    },
+    {
+      "id": "AFI-2453",
+      "firstName": "Winter",
+      "lastInitial": "X",
+      "optedIn": true,
+      "program": "barbering",
+      "campus": "north",
+      "service": 840,
+      "retail": 300,
+      "previousRank": 3
+    },
+    {
+      "id": "AFI-2454",
+      "firstName": "Eden",
+      "lastInitial": "A",
+      "optedIn": true,
+      "program": "barbering",
+      "campus": "north",
+      "service": 560,
+      "retail": 70,
+      "previousRank": 5
+    },
+    {
+      "id": "AFI-2461",
+      "firstName": "Phoenix",
+      "lastInitial": "B",
+      "optedIn": true,
+      "program": "barbering",
+      "campus": "south",
+      "service": 1490,
+      "retail": 210,
+      "previousRank": 1
+    },
+    {
+      "id": "AFI-2462",
+      "firstName": "Dakota",
+      "lastInitial": "C",
+      "optedIn": false,
+      "program": "barbering",
+      "campus": "south",
+      "service": 1270,
+      "retail": 350,
+      "previousRank": 3
+    },
+    {
+      "id": "AFI-2463",
+      "firstName": "Lennox",
+      "lastInitial": "D",
+      "optedIn": true,
+      "program": "barbering",
+      "campus": "south",
+      "service": 1020,
+      "retail": 480,
+      "previousRank": 2
+    },
+    {
+      "id": "AFI-2464",
+      "firstName": "Shiloh",
+      "lastInitial": "E",
+      "optedIn": true,
+      "program": "barbering",
+      "campus": "south",
+      "service": 730,
+      "retail": 160,
+      "previousRank": 5
+    },
+    {
+      "id": "AFI-2465",
+      "firstName": "Marley",
+      "lastInitial": "F",
+      "optedIn": false,
+      "program": "barbering",
+      "campus": "south",
+      "service": 480,
+      "retail": 95,
+      "previousRank": 4
+    },
+    {
+      "id": "AFI-2471",
+      "firstName": "Indigo",
+      "lastInitial": "G",
+      "optedIn": true,
+      "program": "nails",
+      "campus": "north",
+      "service": 980,
+      "retail": 540,
+      "previousRank": 2
+    },
+    {
+      "id": "AFI-2472",
+      "firstName": "Wren",
+      "lastInitial": "H",
+      "optedIn": true,
+      "program": "nails",
+      "campus": "north",
+      "service": 1120,
+      "retail": 190,
+      "previousRank": 1
+    },
+    {
+      "id": "AFI-2473",
+      "firstName": "Oakley",
+      "lastInitial": "I",
+      "optedIn": false,
+      "program": "nails",
+      "campus": "north",
+      "service": 860,
+      "retail": 270,
+      "previousRank": 4
+    },
+    {
+      "id": "AFI-2474",
+      "firstName": "Landry",
+      "lastInitial": "J",
+      "optedIn": true,
+      "program": "nails",
+      "campus": "north",
+      "service": 720,
+      "retail": 130,
+      "previousRank": 3
+    },
+    {
+      "id": "AFI-2475",
+      "firstName": "Bellamy",
+      "lastInitial": "K",
+      "optedIn": true,
+      "program": "nails",
+      "campus": "north",
+      "service": 410,
+      "retail": 60,
+      "previousRank": 5
+    },
+    {
+      "id": "AFI-2481",
+      "firstName": "Sloane",
+      "lastInitial": "L",
+      "optedIn": true,
+      "program": "nails",
+      "campus": "south",
+      "service": 1240,
+      "retail": 360,
+      "previousRank": 3
+    },
+    {
+      "id": "AFI-2482",
+      "firstName": "Ellis",
+      "lastInitial": "M",
+      "optedIn": false,
+      "program": "nails",
+      "campus": "south",
+      "service": 1010,
+      "retail": 220,
+      "previousRank": 1
+    },
+    {
+      "id": "AFI-2483",
+      "firstName": "Arden",
+      "lastInitial": "N",
+      "optedIn": true,
+      "program": "nails",
+      "campus": "south",
+      "service": 770,
+      "retail": 610,
+      "previousRank": 2
+    },
+    {
+      "id": "AFI-2484",
+      "firstName": "Frankie",
+      "lastInitial": "O",
+      "optedIn": true,
+      "program": "nails",
+      "campus": "south",
+      "service": 650,
+      "retail": 180,
+      "previousRank": 4
+    },
+    {
+      "id": "AFI-2485",
+      "firstName": "Jamie",
+      "lastInitial": "P",
+      "optedIn": false,
+      "program": "nails",
+      "campus": "south",
+      "service": 390,
+      "retail": 110,
+      "previousRank": 5
+    }
+  ]
+}
