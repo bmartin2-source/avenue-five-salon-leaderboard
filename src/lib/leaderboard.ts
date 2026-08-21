@@ -108,6 +108,16 @@ export function formatMoney(amount: number): string {
   return `$${amount.toLocaleString("en-US")}`;
 }
 
+/** TV list paging: which ranks belong on a page, wrapping in both directions. */
+export function listPageWindow(length: number, pageSize: number, listPage: number) {
+  const size = Math.max(1, Math.floor(pageSize) || 1);
+  const pageCount = Math.max(1, Math.ceil(Math.max(0, length) / size));
+  const page = ((listPage % pageCount) + pageCount) % pageCount;
+  const start = Math.min(length, page * size);
+  const end = Math.min(length, start + size);
+  return { page, pageCount, start, end, size };
+}
+
 function parseIso(iso: string): Date {
   return new Date(`${iso}T00:00:00`);
 }

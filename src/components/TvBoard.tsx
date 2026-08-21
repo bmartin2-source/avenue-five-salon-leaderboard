@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CAMPUS_LABELS,
   CAMPUS_SHORT,
@@ -10,6 +10,7 @@ import {
   cycleWeek,
   formatCycleRange,
   formatMoney,
+  listPageWindow,
   rankAllPrograms,
   resolveCycle,
   type Campus,
@@ -20,23 +21,10 @@ import {
 import { data } from "@/lib/data";
 import { readConsentOverrides } from "@/lib/session";
 
-const SLIDE_MS = 9000;
+const PAGE_HOLD_MS = 7000;
 const MIN_ROW_HEIGHT = 50;
 
 export type TvMode = "slideshow" | "north" | "south";
-
-function useAnimatedRanks(rows: RankedStudent[]) {
-  const [phase, setPhase] = useState<"from" | "to">("from");
-  const key = rows.map((row) => `${row.id}:${row.rank}:${row.previousRank}`).join("|");
-
-  useEffect(() => {
-    setPhase("from");
-    const timer = window.setTimeout(() => setPhase("to"), 160);
-    return () => window.clearTimeout(timer);
-  }, [key]);
-
-  return phase;
-}
 
 function RankArrow({ delta }: { delta: number }) {
   if (delta > 0) return <span className="rank-arrow up">▲{delta}</span>;
@@ -46,19 +34,14 @@ function RankArrow({ delta }: { delta: number }) {
 
 function RankRow({
   student,
-  index,
   showCampus,
-  phase,
   rowHeight,
 }: {
   student: RankedStudent;
-  index: number;
   showCampus?: boolean;
-  phase: "from" | "to";
   rowHeight: number;
 }) {
-  const visualRank = phase === "from" ? student.previousRank : student.rank;
-  const y = (visualRank - 1) * rowHeight;
+  const y = (student.rank - 1) * rowHeight;
   const moved = student.rankDelta > 0 ? "moved-up" : student.rankDelta < 0 ? "moved-down" : "";
   const highFiveClass = student.rank === 1
     ? "high-five-lead"
@@ -69,7 +52,7 @@ function RankRow({
   return (
     <article
       className={`row rank-${student.rank} ${highFiveClass} ${moved}`}
-      style={{ height: rowHeight, transform: `translateY(${y}px)`, zIndex: 20 - index }}
+      style={{ height: rowHeight, transform: `translateY(${y}px)`, zIndex: 80 - student.rank }}
     >
       <div className="rank-cluster">
         <div className="rank">{student.rank}</div>
@@ -98,10 +81,14 @@ function ProgramColumn({
   program,
   rows,
   showCampus,
+  listPage,
+  onFit,
 }: {
   program: Program;
   rows: RankedStudent[];
   showCampus?: boolean;
+  listPage: number;
+  onFit?: (count: number) => void;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [fit, setFit] = useState({ count: 15, rowHeight: 52 });
@@ -121,8 +108,16 @@ function ProgramColumn({
     return () => observer.disconnect();
   }, []);
 
-  const visible = rows.slice(0, fit.count);
-  const phase = useAnimatedRanks(visible);
+  useEffect(() => {
+    onFit?.(fit.count);
+  }, [fit.count, onFit]);
+
+  const pageWindow = listPageWindow(rows.length, fit.count, listPage);
+  const shiftY = pageWindow.page * fit.count * fit.rowHeight;
+  const rangeLabel = rows.length
+    ? `${pageWindow.start + 1}–${pageWindow.end} of ${rows.length}`
+    : "0";
+
   return (
     <section className={`program-col ${program}`}>
       <header>
@@ -130,19 +125,22 @@ function ProgramColumn({
           <h2>{PROGRAM_LABELS[program]}</h2>
           <p className="highfive-label">High Five = ranks 1–5</p>
         </div>
-        <span className="count">{rows.length}</span>
+        <span className="count">{rangeLabel}</span>
       </header>
       <div className="track" ref={trackRef}>
-        {visible.map((student, index) => (
-          <RankRow
-            key={student.id}
-            student={student}
-            index={index}
-            showCampus={showCampus}
-            phase={phase}
-            rowHeight={fit.rowHeight}
-          />
-        ))}
+        <div
+          className="track-shift"
+          style={{ transform: `translateY(-${shiftY}px)` }}
+        >
+          {rows.map((student) => (
+            <RankRow
+              key={student.id}
+              student={student}
+              showCampus={showCampus}
+              rowHeight={fit.rowHeight}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -206,8 +204,21 @@ function InstituteScoreboard() {
   );
 }
 
-function Board({ campus, institute }: { campus?: Campus; institute?: boolean }) {
+function Board({
+  campus,
+  institute,
+  onPageCycle,
+}: {
+  campus?: Campus;
+  institute?: boolean;
+  onPageCycle?: () => void;
+}) {
   const [students, setStudents] = useState(data.students);
+  const [listPage, setListPage] = useState(0);
+  const [pageSize, setPageSize] = useState(15);
+  const reportFit = useCallback((count: number) => {
+    setPageSize((current) => (current === count ? current : count));
+  }, []);
 
   useEffect(() => {
     setStudents(applyConsent(data.students, readConsentOverrides()));
@@ -217,6 +228,10 @@ function Board({ campus, institute }: { campus?: Campus; institute?: boolean }) 
     () => rankAllPrograms(students, campus),
     [students, campus],
   );
+  const maxPages = Math.max(
+    1,
+    ...PROGRAMS.map((program) => listPageWindow(boards[program].length, pageSize, 0).pageCount),
+  );
   const title = institute
     ? "All Institute"
     : campus
@@ -225,6 +240,34 @@ function Board({ campus, institute }: { campus?: Campus; institute?: boolean }) 
   const subtitle = institute
     ? "North Austin Campus vs South Austin Campus · High Five is ranks 1–5 in each program at each campus"
     : "Private High Five Competition · ranked only within program";
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setListPage((current) => current + 1);
+    }, PAGE_HOLD_MS);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (onPageCycle && listPage > 0 && listPage % maxPages === 0) {
+      onPageCycle();
+    }
+  }, [listPage, maxPages, onPageCycle]);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "ArrowDown" || event.key === "PageDown") {
+        event.preventDefault();
+        setListPage((current) => current + 1);
+      }
+      if (event.key === "ArrowUp" || event.key === "PageUp") {
+        event.preventDefault();
+        setListPage((current) => current - 1);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
     <>
@@ -250,6 +293,8 @@ function Board({ campus, institute }: { campus?: Campus; institute?: boolean }) 
             program={program}
             rows={boards[program]}
             showCampus={institute}
+            listPage={listPage}
+            onFit={program === PROGRAMS[0] ? reportFit : undefined}
           />
         ))}
       </div>
@@ -269,12 +314,9 @@ export function TvBoard({ mode }: { mode: TvMode }) {
 
   const [index, setIndex] = useState(0);
 
-  useEffect(() => {
+  const advanceSlide = useCallback(() => {
     if (slides.length < 2) return;
-    const timer = window.setInterval(() => {
-      setIndex((current) => (current + 1) % slides.length);
-    }, SLIDE_MS);
-    return () => window.clearInterval(timer);
+    setIndex((current) => (current + 1) % slides.length);
   }, [slides.length]);
 
   useEffect(() => {
@@ -292,7 +334,12 @@ export function TvBoard({ mode }: { mode: TvMode }) {
 
   return (
     <main className="tv-shell">
-      <Board campus={slide.campus} institute={slide.institute} />
+      <Board
+        key={slide.key}
+        campus={slide.campus}
+        institute={slide.institute}
+        onPageCycle={mode === "slideshow" ? advanceSlide : undefined}
+      />
       {mode === "slideshow" ? (
         <div className="tv-dots" aria-hidden>
           {slides.map((item, slideIndex) => (

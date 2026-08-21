@@ -19,7 +19,8 @@ export default function HomePage() {
             <h2>Break-room board</h2>
             <p>
               Private slideshow: North Austin Campus, South Austin Campus, then an
-              all-institute comparison. Sponsor ticker on the bottom. Arrow keys change slides.
+              all-institute comparison. Lists auto-slide to later ranks. Sponsor ticker
+              on the bottom. Arrow keys change campus slides; up/down pages the list.
             </p>
           </Link>
           <Link className="card" href="/tv/north">
@@ -44,13 +45,13 @@ export default function HomePage() {
           <ul className="meta-list">
             <li>Product name: High Five Competition. Avenue Five Institute branding stays.</li>
             <li>Columns left to right: Cosmetology, Barbering, Esthetics, Nail Technology.</li>
-            <li>Each program column lists ~10 students. High Five winners are ranks 1–5 only; 6–10 are quieter.</li>
+            <li>Dummy roster is institute totals split unevenly across campuses: Cosmetology 50, Esthetics 70, Barbering 20, Nail Technology 40. Every visible student is opted in (first name + last initial). No Student AFI-xxxx rows.</li>
+            <li>TV columns auto-page every ~7 seconds so ranks below the first screen are visible. High Five highlight stays on ranks 1–5 (page 1). Later pages are quieter.</li>
             <li>Rank = service $ + retail $. TOTAL is large; S: and R: sit under it.</li>
-            <li>Opted-in names are first name + last initial. Others show Student + ID.</li>
             <li>Current dummy cycle: July 20 – August 28, week 5 of 6.</li>
             <li>
-              Demo logins — Jordan (opted in): <code>AFI-2401</code> / <code>Reyes</code>.
-              Riley (opted out): <code>AFI-2402</code> / <code>Cruz</code>.
+              Demo logins (all opted in) — Jordan: <code>AFI-2401</code> / <code>Reyes</code>.
+              Riley: <code>AFI-2402</code> / <code>Cruz</code>.
               Casey: <code>AFI-2403</code> / <code>Miles</code>.
             </li>
           </ul>

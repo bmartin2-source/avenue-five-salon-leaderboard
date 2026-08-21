@@ -95,9 +95,9 @@ export function LoginForm() {
           <p className="hint">
             <code>AFI-2401</code> / <code>Reyes</code> · Jordan · Cosmetology, North Austin Campus, opted in
             <br />
-            <code>AFI-2402</code> / <code>Cruz</code> · opted out · Esthetics, South Austin Campus
+            <code>AFI-2402</code> / <code>Cruz</code> · Riley · Esthetics, South Austin Campus, opted in
             <br />
-            <code>AFI-2403</code> / <code>Miles</code> · Casey · Barbering, North Austin Campus
+            <code>AFI-2403</code> / <code>Miles</code> · Casey · Barbering, North Austin Campus, opted in
           </p>
         </div>
       </div>

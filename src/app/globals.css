@@ -365,6 +365,8 @@ h2,
   color: var(--muted);
   font-size: 11px;
   padding-top: 4px;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .program-col.cosmetology h2 { color: var(--cosmetology); }
@@ -376,6 +378,16 @@ h2,
   position: relative;
   min-height: 0;
   height: 100%;
+  overflow: hidden;
+}
+
+.track-shift {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  transition: transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 
 .row {
@@ -393,7 +405,6 @@ h2,
   border: 0;
   border-bottom: 1px solid rgba(232, 214, 176, 0.1);
   transition:
-    transform 780ms cubic-bezier(0.22, 1, 0.36, 1),
     background 420ms ease,
     opacity 420ms ease;
 }
@@ -774,5 +785,11 @@ h2,
 
   .track {
     height: auto !important;
+    overflow: visible;
+  }
+
+  .track-shift {
+    position: static;
+    transform: none !important;
   }
 }

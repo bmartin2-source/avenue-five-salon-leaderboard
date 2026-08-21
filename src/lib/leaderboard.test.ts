@@ -12,6 +12,7 @@ import {
   formatCycleRange,
   formatMoney,
   fridayBefore,
+  listPageWindow,
   rankStudents,
   studentTotal,
   type StudentRecord,
@@ -184,6 +185,24 @@ describe("campusTotals", () => {
     assert.equal(north.total, 200 + 100 + 180 + 90 + 900 + 10);
     assert.equal(north.byProgram.cosmetology.total, 570);
     assert.equal(north.byProgram.nailTechnology.total, 910);
+  });
+});
+
+describe("listPageWindow", () => {
+  it("pages a 39-row Esthetics column so later ranks are reachable", () => {
+    const first = listPageWindow(39, 15, 0);
+    assert.deepEqual(first, { page: 0, pageCount: 3, start: 0, end: 15, size: 15 });
+    const second = listPageWindow(39, 15, 1);
+    assert.deepEqual(second, { page: 1, pageCount: 3, start: 15, end: 30, size: 15 });
+    const last = listPageWindow(39, 15, 2);
+    assert.deepEqual(last, { page: 2, pageCount: 3, start: 30, end: 39, size: 15 });
+    assert.equal(listPageWindow(39, 15, 3).page, 0);
+    assert.equal(listPageWindow(39, 15, -1).page, 2);
+  });
+
+  it("does not invent extra pages for a short Barbering column", () => {
+    const window = listPageWindow(8, 15, 4);
+    assert.deepEqual(window, { page: 0, pageCount: 1, start: 0, end: 8, size: 15 });
   });
 });
 
