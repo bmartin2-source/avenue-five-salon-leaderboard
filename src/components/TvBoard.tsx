@@ -129,7 +129,12 @@ function ProgramColumn({
 
   const pageWindow = listPageWindow(rows.length, fit.count, listPage);
   const visible = rows.slice(pageWindow.start, pageWindow.end);
-  const rowHeight = Math.max(MIN_ROW_HEIGHT, Math.floor(fit.height / fit.count));
+  // Folded leftovers (1–7 extra names) stay on this page. Keep the 50px
+  // page-1 rhythm unless this slice is longer than the measured fit.
+  const rowHeight =
+    visible.length > fit.count
+      ? Math.max(1, Math.floor(fit.height / visible.length))
+      : Math.max(MIN_ROW_HEIGHT, Math.floor(fit.height / fit.count));
   const rangeLabel = rows.length
     ? `${pageWindow.start + 1}–${pageWindow.end} of ${rows.length}`
     : "0";
