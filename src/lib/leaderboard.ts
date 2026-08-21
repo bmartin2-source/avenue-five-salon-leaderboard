@@ -27,7 +27,19 @@ export type StudentRecord = {
   campus: Campus;
   service: number;
   retail: number;
+  careerService: number;
+  careerRetail: number;
+  startedOn: string;
   previousRank?: number;
+};
+
+export type ScoreKind = "cycle" | "career";
+
+export const PROGRAM_LENGTH_MONTHS: Record<Program, number> = {
+  cosmetology: 9,
+  barbering: 8,
+  esthetics: 6.75,
+  nailTechnology: 5,
 };
 
 export const HIGH_FIVE_SIZE = 5;
@@ -68,11 +80,14 @@ export type RankedStudent = StudentRecord & {
   rankDelta: number;
   displayName: string;
   highFive: boolean;
+  allTime: boolean;
+  scoreKind: ScoreKind;
 };
 
 export type BoardScope = {
   program: Program;
   campus?: Campus;
+  score?: ScoreKind;
 };
 
 export const PROGRAM_LABELS: Record<Program, string> = {
@@ -108,14 +123,28 @@ export function formatPoints(amount: number): string {
   return `${amount.toLocaleString("en-US")} pts`;
 }
 
-function compareByPoints(a: StudentRecord, b: StudentRecord): number {
-  const pointDiff = studentPoints(b) - studentPoints(a);
-  if (pointDiff !== 0) return pointDiff;
-  const retailDiff = b.retail - a.retail;
-  if (retailDiff !== 0) return retailDiff;
-  const serviceDiff = b.service - a.service;
-  if (serviceDiff !== 0) return serviceDiff;
-  return a.id.localeCompare(b.id);
+export function scoreDollars(
+  student: StudentRecord,
+  score: ScoreKind = "cycle",
+): Pick<StudentRecord, "service" | "retail"> {
+  if (score === "career") {
+    return { service: student.careerService, retail: student.careerRetail };
+  }
+  return { service: student.service, retail: student.retail };
+}
+
+function compareByPoints(score: ScoreKind = "cycle") {
+  return (a: StudentRecord, b: StudentRecord): number => {
+    const pointDiff = studentPoints(scoreDollars(b, score)) - studentPoints(scoreDollars(a, score));
+    if (pointDiff !== 0) return pointDiff;
+    const left = scoreDollars(a, score);
+    const right = scoreDollars(b, score);
+    const retailDiff = right.retail - left.retail;
+    if (retailDiff !== 0) return retailDiff;
+    const serviceDiff = right.service - left.service;
+    if (serviceDiff !== 0) return serviceDiff;
+    return a.id.localeCompare(b.id);
+  };
 }
 
 export function displayName(student: Pick<StudentRecord, "id" | "firstName" | "lastInitial" | "optedIn">): string {
@@ -221,6 +250,7 @@ export function rankStudents(
   students: StudentRecord[],
   scope: BoardScope,
 ): RankedStudent[] {
+  const score = scope.score ?? "cycle";
   const list = students
     .filter((student) => {
       if (student.program !== scope.program) return false;
@@ -228,36 +258,40 @@ export function rankStudents(
       return true;
     })
     .slice()
-    .sort(compareByPoints);
+    .sort(compareByPoints(score));
 
-  const campusRankById = campusProgramRanks(students);
+  const campusRankById = campusProgramRanks(students, score);
 
   return list.map((student, index) => {
     const rank = index + 1;
-    const previousRank = student.previousRank ?? rank;
+    const dollars = scoreDollars(student, score);
+    const previousRank = score === "career" ? rank : student.previousRank ?? rank;
     const campusRank = campusRankById.get(student.id) ?? rank;
+    const points = studentPoints(dollars);
     return {
       ...student,
-      points: studentPoints(student),
-      total: studentPoints(student),
+      points,
+      total: points,
       rank,
       campusRank,
       previousRank,
       rankDelta: previousRank - rank,
       displayName: displayName(student),
-      highFive: rank <= HIGH_FIVE_SIZE,
+      highFive: score === "cycle" && rank <= HIGH_FIVE_SIZE,
+      allTime: score === "career" && rank <= HIGH_FIVE_SIZE,
+      scoreKind: score,
     };
   });
 }
 
-function campusProgramRanks(students: StudentRecord[]): Map<string, number> {
+function campusProgramRanks(students: StudentRecord[], score: ScoreKind = "cycle"): Map<string, number> {
   const ranks = new Map<string, number>();
   for (const campus of CAMPUSES) {
     for (const program of PROGRAMS) {
       const list = students
         .filter((student) => student.campus === campus && student.program === program)
         .slice()
-        .sort(compareByPoints);
+        .sort(compareByPoints(score));
       list.forEach((student, index) => ranks.set(student.id, index + 1));
     }
   }
@@ -267,9 +301,10 @@ function campusProgramRanks(students: StudentRecord[]): Map<string, number> {
 export function rankAllPrograms(
   students: StudentRecord[],
   campus?: Campus,
+  score: ScoreKind = "cycle",
 ): Record<Program, RankedStudent[]> {
   return Object.fromEntries(
-    PROGRAMS.map((program) => [program, rankStudents(students, { program, campus })]),
+    PROGRAMS.map((program) => [program, rankStudents(students, { program, campus, score })]),
   ) as Record<Program, RankedStudent[]>;
 }
 

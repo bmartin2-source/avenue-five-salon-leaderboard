@@ -23,6 +23,7 @@ import { data } from "@/lib/data";
 import { readConsentOverrides } from "@/lib/session";
 
 const PAGE_HOLD_MS = 7000;
+const ALL_TIME_AFTER_MS = 60_000;
 const MIN_ROW_HEIGHT = 50;
 
 export type TvMode = "slideshow" | "north" | "south";
@@ -37,38 +38,47 @@ function RankRow({
   student,
   showCampus,
   rowHeight,
+  allTime,
 }: {
   student: RankedStudent;
   showCampus?: boolean;
   rowHeight: number;
+  allTime?: boolean;
 }) {
   const y = (student.rank - 1) * rowHeight;
-  const moved = student.rankDelta > 0 ? "moved-up" : student.rankDelta < 0 ? "moved-down" : "";
-  const highFiveClass = student.rank === 1
-    ? "high-five-lead"
+  const moved = !allTime && student.rankDelta > 0 ? "moved-up" : !allTime && student.rankDelta < 0 ? "moved-down" : "";
+  const leadClass = student.rank === 1
+    ? allTime ? "all-time-lead" : "high-five-lead"
     : student.rank <= 5
-      ? "high-five-set"
+      ? allTime ? "all-time-set" : "high-five-set"
       : "rank-rest";
+  const dollars = allTime
+    ? { service: student.careerService, retail: student.careerRetail }
+    : { service: student.service, retail: student.retail };
 
   return (
     <article
-      className={`row rank-${student.rank} ${highFiveClass} ${moved}`}
+      className={`row rank-${student.rank} ${leadClass} ${moved}`}
       style={{ height: rowHeight, transform: `translateY(${y}px)`, zIndex: 80 - student.rank }}
     >
       <div className="rank-cluster">
         <div className="rank">{student.rank}</div>
-        <RankArrow delta={student.rankDelta} />
+        {allTime ? null : <RankArrow delta={student.rankDelta} />}
       </div>
       <div className="who">
         <span className="name">{student.displayName}</span>
         {showCampus ? <span className="campus-tag">{CAMPUS_SHORT[student.campus]}</span> : null}
       </div>
       <div className="end">
-        {student.rank <= 5 ? <span className="badge highfive">High Five</span> : null}
+        {student.rank <= 5 ? (
+          <span className={`badge ${allTime ? "alltime" : "highfive"}`}>
+            {allTime ? "All-Time" : "High Five"}
+          </span>
+        ) : null}
         <div className="money">
           <div className="total">{formatPoints(student.points)}</div>
           <div className="split">
-            S:{formatMoney(student.service)}&nbsp;&nbsp;R:{formatMoney(student.retail)}
+            S:{formatMoney(dollars.service)}&nbsp;&nbsp;R:{formatMoney(dollars.retail)}
           </div>
         </div>
       </div>
@@ -82,12 +92,14 @@ function ProgramColumn({
   showCampus,
   listPage,
   onFit,
+  allTime,
 }: {
   program: Program;
   rows: RankedStudent[];
   showCampus?: boolean;
   listPage: number;
   onFit?: (count: number) => void;
+  allTime?: boolean;
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [fit, setFit] = useState({ count: 15, rowHeight: 52 });
@@ -122,7 +134,9 @@ function ProgramColumn({
       <header>
         <div>
           <h2>{PROGRAM_LABELS[program]}</h2>
-          <p className="highfive-label">High Five = top 5 by points</p>
+          <p className={`highfive-label ${allTime ? "alltime" : ""}`}>
+            {allTime ? "All-time = career top 5" : "High Five = top 5 this cycle"}
+          </p>
         </div>
         <span className="count">{rangeLabel}</span>
       </header>
@@ -137,6 +151,7 @@ function ProgramColumn({
               student={student}
               showCampus={showCampus}
               rowHeight={fit.rowHeight}
+              allTime={allTime}
             />
           ))}
         </div>
@@ -161,10 +176,18 @@ function SponsorTicker() {
   );
 }
 
-function CycleChip() {
+function CycleChip({ allTime }: { allTime?: boolean }) {
   const cycle = resolveCycle(data);
   const asOf = data.asOf ? new Date(`${data.asOf}T12:00:00`) : new Date();
   const week = cycleWeek(cycle, asOf);
+  if (allTime) {
+    return (
+      <div className="cycle-chip alltime">
+        <div className="cycle-dates">ALL-TIME</div>
+        <div className="cycle-week">Career · not this cycle</div>
+      </div>
+    );
+  }
   return (
     <div className="cycle-chip">
       <div className="cycle-dates">{formatCycleRange(cycle)}</div>
@@ -206,10 +229,12 @@ function InstituteScoreboard() {
 function Board({
   campus,
   institute,
+  allTime,
   onPageCycle,
 }: {
   campus?: Campus;
   institute?: boolean;
+  allTime?: boolean;
   onPageCycle?: () => void;
 }) {
   const [students, setStudents] = useState(data.students);
@@ -224,21 +249,25 @@ function Board({
   }, []);
 
   const boards = useMemo(
-    () => rankAllPrograms(students, campus),
-    [students, campus],
+    () => rankAllPrograms(students, allTime ? undefined : campus, allTime ? "career" : "cycle"),
+    [students, campus, allTime],
   );
   const maxPages = Math.max(
     1,
     ...PROGRAMS.map((program) => listPageWindow(boards[program].length, pageSize, 0).pageCount),
   );
-  const title = institute
-    ? "All Institute"
-    : campus
-      ? CAMPUS_LABELS[campus]
-      : "High Five";
-  const subtitle = institute
-    ? "North Austin Campus vs South Austin Campus · High Five is top 5 by points in each program at each campus"
-    : "Private High Five Competition · ranked by points within program only";
+  const title = allTime
+    ? "ALL-TIME"
+    : institute
+      ? "All Institute"
+      : campus
+        ? CAMPUS_LABELS[campus]
+        : "High Five";
+  const subtitle = allTime
+    ? "Career points in school history · both campuses · not the July 20 – August 28 cycle"
+    : institute
+      ? "North Austin Campus vs South Austin Campus · High Five is top 5 this cycle in each program"
+      : "Private High Five Competition · this cycle · ranked by points within program only";
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -282,18 +311,19 @@ function Board({
           <h1>{title}</h1>
           <p>{subtitle}</p>
         </div>
-        <CycleChip />
+        <CycleChip allTime={allTime} />
       </header>
-      {institute ? <InstituteScoreboard /> : null}
+      {institute && !allTime ? <InstituteScoreboard /> : null}
       <div className="tv-columns">
         {PROGRAMS.map((program) => (
           <ProgramColumn
             key={program}
             program={program}
             rows={boards[program]}
-            showCampus={institute}
+            showCampus={institute || allTime}
             listPage={listPage}
             onFit={program === PROGRAMS[0] ? reportFit : undefined}
+            allTime={allTime}
           />
         ))}
       </div>
@@ -312,6 +342,7 @@ export function TvBoard({ mode }: { mode: TvMode }) {
       : [{ key: mode, campus: mode }];
 
   const [index, setIndex] = useState(0);
+  const [showAllTime, setShowAllTime] = useState(false);
 
   const advanceSlide = useCallback(() => {
     if (slides.length < 2) return;
@@ -319,31 +350,58 @@ export function TvBoard({ mode }: { mode: TvMode }) {
   }, [slides.length]);
 
   useEffect(() => {
+    if (showAllTime) return;
+    const timer = window.setTimeout(() => setShowAllTime(true), ALL_TIME_AFTER_MS);
+    return () => window.clearTimeout(timer);
+  }, [showAllTime]);
+
+  useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "ArrowRight") setIndex((current) => (current + 1) % slides.length);
+      if (event.key === "ArrowRight") {
+        if (showAllTime) {
+          setShowAllTime(false);
+          setIndex((current) => (current + 1) % slides.length);
+          return;
+        }
+        setIndex((current) => (current + 1) % slides.length);
+      }
       if (event.key === "ArrowLeft") {
+        if (showAllTime) {
+          setShowAllTime(false);
+          return;
+        }
         setIndex((current) => (current - 1 + slides.length) % slides.length);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [slides.length]);
+  }, [slides.length, showAllTime]);
 
   const slide = slides[index];
 
   return (
-    <main className="tv-shell">
-      <Board
-        key={slide.key}
-        campus={slide.campus}
-        institute={slide.institute}
-        onPageCycle={mode === "slideshow" ? advanceSlide : undefined}
-      />
+    <main className={`tv-shell ${showAllTime ? "all-time" : ""}`}>
+      {showAllTime ? (
+        <Board
+          key="alltime"
+          allTime
+          institute
+          onPageCycle={() => setShowAllTime(false)}
+        />
+      ) : (
+        <Board
+          key={slide.key}
+          campus={slide.campus}
+          institute={slide.institute}
+          onPageCycle={mode === "slideshow" ? advanceSlide : undefined}
+        />
+      )}
       {mode === "slideshow" ? (
         <div className="tv-dots" aria-hidden>
           {slides.map((item, slideIndex) => (
-            <span key={item.key} className={`dot ${slideIndex === index ? "on" : ""}`} />
+            <span key={item.key} className={`dot ${!showAllTime && slideIndex === index ? "on" : ""}`} />
           ))}
+          <span className={`dot alltime ${showAllTime ? "on" : ""}`} />
         </div>
       ) : null}
       <SponsorTicker />

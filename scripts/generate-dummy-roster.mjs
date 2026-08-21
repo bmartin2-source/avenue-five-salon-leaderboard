@@ -38,9 +38,17 @@ const plan = {
 };
 
 const pinned = {
-  "AFI-2401": { firstName: "Jordan", lastName: "Reyes", program: "cosmetology", campus: "north", service: 1680, retail: 520 },
-  "AFI-2402": { firstName: "Riley", lastName: "Cruz", program: "esthetics", campus: "south", service: 1420, retail: 480 },
-  "AFI-2403": { firstName: "Casey", lastName: "Miles", program: "barbering", campus: "north", service: 1180, retail: 790 },
+  "AFI-2401": { firstName: "Jordan", lastName: "Reyes", program: "cosmetology", campus: "north", service: 1680, retail: 520, startedOn: "2025-11-17" },
+  "AFI-2402": { firstName: "Riley", lastName: "Cruz", program: "esthetics", campus: "south", service: 1420, retail: 480, startedOn: "2026-02-02" },
+  "AFI-2403": { firstName: "Casey", lastName: "Miles", program: "barbering", campus: "north", service: 1180, retail: 790, startedOn: "2025-12-08" },
+};
+
+const AS_OF = "2026-08-21";
+const STARTS = {
+  cosmetology: ["2025-11-17", "2025-12-08", "2026-01-12", "2026-02-02", "2026-03-16", "2026-04-27", "2026-06-08", "2026-07-20"],
+  barbering: ["2025-12-08", "2026-01-12", "2026-02-02", "2026-03-16", "2026-04-27", "2026-06-08", "2026-07-20"],
+  esthetics: ["2026-01-12", "2026-02-02", "2026-03-16", "2026-04-27", "2026-06-08", "2026-07-20"],
+  nailTechnology: ["2026-03-16", "2026-04-27", "2026-06-08", "2026-07-20"],
 };
 
 function hash(value) {
@@ -85,6 +93,28 @@ function salesFor(seed, index, count) {
   };
 }
 
+function monthsBetween(start, asOf) {
+  const from = new Date(`${start}T00:00:00`);
+  const to = new Date(`${asOf}T00:00:00`);
+  return (to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24 * 30.437);
+}
+
+function careerFromCycle(service, retail, startedOn, seed) {
+  const months = monthsBetween(startedOn, AS_OF);
+  const priorMonths = Math.max(0, months - 1.4);
+  const pace = 0.84 + (hash(`${seed}p`) % 22) / 100;
+  const careerService = service + Math.round(service * (priorMonths / 1.4) * pace);
+  const careerRetail = retail + Math.round(retail * (priorMonths / 1.4) * (pace - 0.04));
+  return { careerService, careerRetail, months };
+}
+
+function pickStart(program, index, seed) {
+  const options = STARTS[program];
+  if (index % 7 === 0) return options[0];
+  if (index % 7 === 1) return options[options.length - 1];
+  return options[(hash(seed) + index * 3) % options.length];
+}
+
 function assignDollarPreviousRanks(group) {
   const byDollars = group.slice().sort((a, b) => {
     const dollarDiff = dollarsOf(b) - dollarsOf(a);
@@ -120,6 +150,8 @@ for (const [program, campuses] of Object.entries(plan)) {
         }
       }
       const { service, retail } = salesFor(seed, index, count);
+      const startedOn = pickStart(program, index, seed);
+      const career = careerFromCycle(service, retail, startedOn, seed);
       generated.push({
         id: `AFI-${serial}`,
         firstName,
@@ -130,11 +162,15 @@ for (const [program, campuses] of Object.entries(plan)) {
         campus,
         service,
         retail,
+        careerService: career.careerService,
+        careerRetail: career.careerRetail,
+        startedOn,
         previousRank: 1,
       });
       serial += 1;
     }
     for (const [id, info] of pins) {
+      const career = careerFromCycle(info.service, info.retail, info.startedOn, id);
       generated.push({
         id,
         firstName: info.firstName,
@@ -145,6 +181,9 @@ for (const [program, campuses] of Object.entries(plan)) {
         campus: info.campus,
         service: info.service,
         retail: info.retail,
+        careerService: career.careerService,
+        careerRetail: career.careerRetail,
+        startedOn: info.startedOn,
         previousRank: 1,
       });
     }
@@ -167,6 +206,9 @@ for (const student of students) {
   counts.campus[key] = (counts.campus[key] || 0) + 1;
   if (!student.optedIn) throw new Error("opted out slipped in");
   if (student.firstName.startsWith("Student")) throw new Error("placeholder name");
+  if (student.careerService < student.service || student.careerRetail < student.retail) {
+    throw new Error(`career smaller than cycle for ${student.id}`);
+  }
 }
 
 for (const [program, campuses] of Object.entries(plan)) {
@@ -186,10 +228,15 @@ for (const [program, campuses] of Object.entries(plan)) {
 }
 
 const data = JSON.parse(readFileSync("data/leaderboard.json", "utf8"));
-data.meta.notice = "Fictional opted-in students only. Ranked by points (1 pt per $1 service, 5 pts per $1 retail). Institute totals: Cosmetology 50, Esthetics 70, Barbering 20, Nail Technology 40, split unevenly across North Austin and South Austin.";
+const retailSponsor = data.sponsors?.find((sponsor) => sponsor.id === "s4");
+if (retailSponsor) {
+  retailSponsor.line = "Dummy sponsor · Feature a backbar favorite and grow your retail points";
+}
+data.meta.notice = "Fictional opted-in students only. Ranked by points (1 pt per $1 service, 5 pts per $1 retail). Current cycle July 20 – August 28. All-time uses career salon totals. Institute totals: Cosmetology 50, Esthetics 70, Barbering 20, Nail Technology 40.";
 data.meta.roster = {
   basis: "institute-totals",
   scoring: { servicePointsPerDollar: 1, retailPointsPerDollar: 5 },
+  programLengthMonths: { cosmetology: 9, barbering: 8, esthetics: 6.75, nailTechnology: 5 },
   programs: { cosmetology: 50, esthetics: 70, barbering: 20, nailTechnology: 40 },
   split: plan,
 };

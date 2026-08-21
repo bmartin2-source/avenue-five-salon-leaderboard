@@ -235,6 +235,10 @@ export function StudentDashboard() {
     () => (student ? rankStudents(students, { program: student.program }) : []),
     [student, students],
   );
+  const careerBoard = useMemo(
+    () => (student ? rankStudents(students, { program: student.program, score: "career" }) : []),
+    [student, students],
+  );
 
   if (!studentId) return null;
   if (!student) {
@@ -304,6 +308,11 @@ export function StudentDashboard() {
             </p>
             <p className="hint">
               Cycle: {formatCycleRange(cycle)} · week {week} of {cycle.weeks}
+            </p>
+            <p className="hint">
+              All-time #{careerBoard.find((row) => row.id === student.id)?.rank ?? "—"} of {careerBoard.length} in {PROGRAM_LABELS[student.program]}
+              {" · "}
+              {formatPoints(studentPoints({ service: student.careerService, retail: student.careerRetail }))} career
             </p>
           </div>
           <div className="student-totals">

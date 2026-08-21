@@ -33,7 +33,7 @@ Then open [http://localhost:3000](http://localhost:3000).
 | Name-display consent | `/consent` |
 | Student view (after login) | `/student` |
 
-The TV slideshow cycles North Austin Campus → South Austin Campus → all-institute comparison after each campus finishes paging through its list. Left/right arrows change campus slides. Up/down or Page Up/Page Down advance the list. The board also auto-slides to the next set of ranks every ~7 seconds so a break-room TV does not need a mouse.
+The TV slideshow cycles North Austin Campus → South Austin Campus → all-institute comparison after each campus finishes paging through its list. About every 60 seconds it shifts to an institute-wide **ALL-TIME** career board, then returns to the current-cycle campus boards. Left/right arrows change campus slides. Up/down or Page Up/Page Down advance the list. Current-cycle columns also auto-page every ~7 seconds so a break-room TV does not need a mouse.
 
 ## Dummy student logins
 
@@ -56,5 +56,6 @@ Auth is a client-side stub against `data/leaderboard.json`. It is not production
 - Score is `points = serviceDollars × 1 + retailDollars × 5`. Rank is points descending, still only within program (and per campus).
 - The large TV number is **points** (labeled `pts`, no $). Under it: `S:$200  R:$100` as dollars.
 - Current dummy cycle, from published class starts: July 20 – August 28, 2026 (week 5 of 6). A cycle starts on a class start date and ends the Friday before the next start.
+- **ALL-TIME** is a separate institute-wide board of career salon totals (same point formula). Dummy program lengths: Cosmetology ~9 months, Barbering ~8 months, Esthetics ~6.5–7 months, Nail Technology ~5 months. Start dates are mixed so some students are newer. All-time top 5 get an All-Time mark, not a High Five.
 
 Edit fictional students, last names, sponsors, and cycle dates in `data/leaderboard.json`. Ranking helpers live in `src/lib/leaderboard.ts`.

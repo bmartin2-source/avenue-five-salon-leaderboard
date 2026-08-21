@@ -19,20 +19,30 @@ import {
   type StudentRecord,
 } from "./leaderboard.ts";
 
+function record(partial: Partial<StudentRecord> & Pick<StudentRecord, "id" | "firstName" | "lastName" | "program" | "campus" | "service" | "retail">): StudentRecord {
+  return {
+    lastInitial: partial.lastName[0],
+    optedIn: true,
+    careerService: partial.service,
+    careerRetail: partial.retail,
+    startedOn: "2026-07-20",
+    ...partial,
+  };
+}
+
 const fixtures: StudentRecord[] = [
-  {
+  record({
     id: "AFI-1",
     firstName: "Jordan",
     lastName: "Reyes",
     lastInitial: "R",
-    optedIn: true,
     program: "cosmetology",
     campus: "north",
     service: 200,
     retail: 100,
     previousRank: 3,
-  },
-  {
+  }),
+  record({
     id: "AFI-2",
     firstName: "Riley",
     lastName: "Cruz",
@@ -43,31 +53,29 @@ const fixtures: StudentRecord[] = [
     service: 180,
     retail: 90,
     previousRank: 1,
-  },
-  {
+  }),
+  record({
     id: "AFI-3",
     firstName: "Casey",
     lastName: "Miles",
     lastInitial: "M",
-    optedIn: true,
     program: "cosmetology",
     campus: "south",
     service: 400,
     retail: 50,
     previousRank: 1,
-  },
-  {
+  }),
+  record({
     id: "AFI-4",
     firstName: "Avery",
     lastName: "Kane",
     lastInitial: "K",
-    optedIn: true,
     program: "nailTechnology",
     campus: "north",
     service: 900,
     retail: 10,
     previousRank: 1,
-  },
+  }),
 ];
 
 describe("studentPoints", () => {
@@ -168,18 +176,20 @@ describe("rankStudents", () => {
   });
 
   it("marks High Five winners as ranks 1–5 only", () => {
-    const extras: StudentRecord[] = Array.from({ length: 6 }, (_, index) => ({
-      id: `AFI-N${index}`,
-      firstName: "Pat",
-      lastName: "North",
-      lastInitial: "N",
-      optedIn: index % 2 === 0,
-      program: "cosmetology",
-      campus: "north",
-      service: 80 - index,
-      retail: 10,
-      previousRank: index + 3,
-    }));
+    const extras: StudentRecord[] = Array.from({ length: 6 }, (_, index) =>
+      record({
+        id: `AFI-N${index}`,
+        firstName: "Pat",
+        lastName: "North",
+        lastInitial: "N",
+        optedIn: index % 2 === 0,
+        program: "cosmetology",
+        campus: "north",
+        service: 80 - index,
+        retail: 10,
+        previousRank: index + 3,
+      }),
+    );
     const north = rankStudents([...fixtures, ...extras], { program: "cosmetology", campus: "north" });
     assert.equal(north.length, 8);
     assert.deepEqual(
@@ -187,7 +197,73 @@ describe("rankStudents", () => {
       [true, true, true, true, true, false, false, false],
     );
     assert.equal(north[0].rank, 1);
+    assert.equal(north[0].highFive, true);
+    assert.equal(north[0].allTime, false);
     assert.equal(north[5].rank, 6);
+  });
+
+  it("ranks all-time by career points, not this-cycle dollars", () => {
+    const ranked = rankStudents(
+      [
+        record({
+          id: "AFI-NEW",
+          firstName: "Nova",
+          lastName: "Pike",
+          program: "cosmetology",
+          campus: "north",
+          service: 2200,
+          retail: 400,
+          careerService: 2200,
+          careerRetail: 400,
+          startedOn: "2026-07-20",
+        }),
+        record({
+          id: "AFI-VET",
+          firstName: "Vera",
+          lastName: "Long",
+          program: "cosmetology",
+          campus: "south",
+          service: 900,
+          retail: 80,
+          careerService: 8200,
+          careerRetail: 1600,
+          startedOn: "2025-11-17",
+        }),
+      ],
+      { program: "cosmetology", score: "career" },
+    );
+    assert.equal(ranked[0].id, "AFI-VET");
+    assert.equal(ranked[0].points, 8200 + 1600 * 5);
+    assert.equal(ranked[0].highFive, false);
+    assert.equal(ranked[0].allTime, true);
+    assert.equal(ranked[1].id, "AFI-NEW");
+    const cycle = rankStudents(
+      [
+        record({
+          id: "AFI-NEW",
+          firstName: "Nova",
+          lastName: "Pike",
+          program: "cosmetology",
+          campus: "north",
+          service: 2200,
+          retail: 400,
+        }),
+        record({
+          id: "AFI-VET",
+          firstName: "Vera",
+          lastName: "Long",
+          program: "cosmetology",
+          campus: "south",
+          service: 900,
+          retail: 80,
+          careerService: 8200,
+          careerRetail: 1600,
+        }),
+      ],
+      { program: "cosmetology" },
+    );
+    assert.equal(cycle[0].id, "AFI-NEW");
+    assert.equal(cycle[0].highFive, true);
   });
 });
 
