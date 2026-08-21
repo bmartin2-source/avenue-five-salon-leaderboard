@@ -1,8 +1,15 @@
 export const PROGRAMS = [
   "cosmetology",
-  "aesthetics",
   "barbering",
-  "nails",
+  "esthetics",
+  "nailTechnology",
+] as const;
+
+export const CLASS_START_DATES = [
+  "2026-07-20",
+  "2026-08-31",
+  "2026-10-19",
+  "2026-11-30",
 ] as const;
 
 export const CAMPUSES = ["north", "south"] as const;
@@ -13,6 +20,7 @@ export type Campus = (typeof CAMPUSES)[number];
 export type StudentRecord = {
   id: string;
   firstName: string;
+  lastName: string;
   lastInitial: string;
   optedIn: boolean;
   program: Program;
@@ -22,15 +30,7 @@ export type StudentRecord = {
   previousRank?: number;
 };
 
-export type AccountRecord = {
-  id: string;
-  pin: string;
-  firstName: string;
-  lastInitial: string;
-  optedIn: boolean;
-  program: Program;
-  campus: Campus;
-};
+export const HIGH_FIVE_SIZE = 5;
 
 export type Sponsor = {
   id: string;
@@ -50,18 +50,21 @@ export type Cycle = {
 export type LeaderboardData = {
   meta: { dummy: boolean; notice: string };
   institute: { name: string; shortName: string };
+  asOf?: string;
+  classStarts?: string[];
   cycle: Cycle;
   sponsors: Sponsor[];
-  accounts: AccountRecord[];
   students: StudentRecord[];
 };
 
 export type RankedStudent = StudentRecord & {
   total: number;
   rank: number;
+  campusRank: number;
   previousRank: number;
   rankDelta: number;
   displayName: string;
+  highFive: boolean;
   badges: {
     mostRetail: boolean;
     mostServices: boolean;
@@ -75,9 +78,9 @@ export type BoardScope = {
 
 export const PROGRAM_LABELS: Record<Program, string> = {
   cosmetology: "Cosmetology",
-  aesthetics: "Aesthetics",
   barbering: "Barbering",
-  nails: "Nails",
+  esthetics: "Esthetics",
+  nailTechnology: "Nail Technology",
 };
 
 export const CAMPUS_LABELS: Record<Campus, string> = {
@@ -100,8 +103,79 @@ export function formatMoney(amount: number): string {
   return `$${amount.toLocaleString("en-US")}`;
 }
 
+function parseIso(iso: string): Date {
+  return new Date(`${iso}T00:00:00`);
+}
+
+function toIso(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export function fridayBefore(isoDate: string): string {
+  const date = parseIso(isoDate);
+  const day = date.getDay();
+  const daysSinceFriday = (day - 5 + 7) % 7;
+  date.setDate(date.getDate() - (daysSinceFriday === 0 ? 7 : daysSinceFriday));
+  return toIso(date);
+}
+
+export function cycleLengthWeeks(startDate: string, endDate: string): number {
+  const days =
+    Math.round((parseIso(endDate).getTime() - parseIso(startDate).getTime()) / 86_400_000) + 1;
+  return Math.max(1, Math.ceil(days / 7));
+}
+
+export function cycleForDate(
+  today: Date,
+  starts: readonly string[] = CLASS_START_DATES,
+): Cycle {
+  const todayIso = toIso(today);
+  let start = starts[0];
+  let next: string | undefined = starts[1];
+  for (let index = 0; index < starts.length; index += 1) {
+    if (starts[index] <= todayIso) {
+      start = starts[index];
+      next = starts[index + 1];
+    }
+  }
+  const endDate = next ? fridayBefore(next) : start;
+  const startLabel = parseIso(start).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+  });
+  return {
+    id: start,
+    label: `${startLabel} start`,
+    startDate: start,
+    endDate,
+    weeks: cycleLengthWeeks(start, endDate),
+    note: "Cycle starts on a published class start date and ends the Friday before the next class start.",
+  };
+}
+
+export function formatCycleRange(cycle: Cycle): string {
+  const start = parseIso(cycle.startDate).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+  });
+  const end = parseIso(cycle.endDate).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+  });
+  return `${start} – ${end}`;
+}
+
+export function resolveCycle(board: LeaderboardData, today = new Date()): Cycle {
+  const asOf = board.asOf ? parseIso(board.asOf) : today;
+  const starts = board.classStarts?.length ? board.classStarts : CLASS_START_DATES;
+  return cycleForDate(asOf, starts);
+}
+
 export function cycleWeek(cycle: Cycle, today = new Date()): number {
-  const start = new Date(`${cycle.startDate}T00:00:00`);
+  const start = parseIso(cycle.startDate);
   const diff = today.getTime() - start.getTime();
   const week = Math.floor(diff / (7 * 24 * 60 * 60 * 1000)) + 1;
   return Math.min(cycle.weeks, Math.max(1, week));
@@ -128,17 +202,21 @@ export function rankStudents(
 
   const maxRetail = Math.max(0, ...list.map((student) => student.retail));
   const maxService = Math.max(0, ...list.map((student) => student.service));
+  const campusRankById = campusProgramRanks(students);
 
   return list.map((student, index) => {
     const rank = index + 1;
     const previousRank = student.previousRank ?? rank;
+    const campusRank = campusRankById.get(student.id) ?? rank;
     return {
       ...student,
       total: studentTotal(student),
       rank,
+      campusRank,
       previousRank,
       rankDelta: previousRank - rank,
       displayName: displayName(student),
+      highFive: campusRank <= HIGH_FIVE_SIZE,
       badges: {
         mostRetail: student.retail === maxRetail && maxRetail > 0,
         mostServices: student.service === maxService && maxService > 0,
@@ -147,16 +225,33 @@ export function rankStudents(
   });
 }
 
+function campusProgramRanks(students: StudentRecord[]): Map<string, number> {
+  const ranks = new Map<string, number>();
+  for (const campus of CAMPUSES) {
+    for (const program of PROGRAMS) {
+      const list = students
+        .filter((student) => student.campus === campus && student.program === program)
+        .slice()
+        .sort((a, b) => {
+          const totalDiff = studentTotal(b) - studentTotal(a);
+          if (totalDiff !== 0) return totalDiff;
+          const serviceDiff = b.service - a.service;
+          if (serviceDiff !== 0) return serviceDiff;
+          return a.id.localeCompare(b.id);
+        });
+      list.forEach((student, index) => ranks.set(student.id, index + 1));
+    }
+  }
+  return ranks;
+}
+
 export function rankAllPrograms(
   students: StudentRecord[],
   campus?: Campus,
 ): Record<Program, RankedStudent[]> {
-  return {
-    cosmetology: rankStudents(students, { program: "cosmetology", campus }),
-    aesthetics: rankStudents(students, { program: "aesthetics", campus }),
-    barbering: rankStudents(students, { program: "barbering", campus }),
-    nails: rankStudents(students, { program: "nails", campus }),
-  };
+  return Object.fromEntries(
+    PROGRAMS.map((program) => [program, rankStudents(students, { program, campus })]),
+  ) as Record<Program, RankedStudent[]>;
 }
 
 export function campusTotals(students: StudentRecord[], campus: Campus) {
@@ -175,14 +270,15 @@ export function campusTotals(students: StudentRecord[], campus: Campus) {
   return { campus, service, retail, total: service + retail, count: subset.length, byProgram };
 }
 
-export function findAccount(
-  accounts: AccountRecord[],
+export function findStudentByLogin(
+  students: StudentRecord[],
   studentId: string,
-  pin: string,
-): AccountRecord | null {
+  lastName: string,
+): StudentRecord | null {
   const id = studentId.trim().toUpperCase();
-  const match = accounts.find((account) => account.id.toUpperCase() === id);
-  if (!match || match.pin !== pin.trim()) return null;
+  const name = lastName.trim().toLowerCase();
+  const match = students.find((student) => student.id.toUpperCase() === id);
+  if (!match || match.lastName.toLowerCase() !== name) return null;
   return match;
 }
 
@@ -191,4 +287,15 @@ export function findStudent(
   studentId: string,
 ): StudentRecord | undefined {
   return students.find((student) => student.id.toUpperCase() === studentId.trim().toUpperCase());
+}
+
+export function applyConsent(
+  students: StudentRecord[],
+  overrides: Record<string, boolean> = {},
+): StudentRecord[] {
+  return students.map((student) =>
+    Object.hasOwn(overrides, student.id)
+      ? { ...student, optedIn: overrides[student.id] }
+      : student,
+  );
 }

@@ -1,10 +1,17 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
+  PROGRAMS,
+  PROGRAM_LABELS,
+  applyConsent,
   campusTotals,
+  cycleForDate,
   cycleWeek,
   displayName,
+  findStudentByLogin,
+  formatCycleRange,
   formatMoney,
+  fridayBefore,
   rankStudents,
   studentTotal,
   type StudentRecord,
@@ -14,6 +21,7 @@ const fixtures: StudentRecord[] = [
   {
     id: "AFI-1",
     firstName: "Jordan",
+    lastName: "Reyes",
     lastInitial: "R",
     optedIn: true,
     program: "cosmetology",
@@ -25,6 +33,7 @@ const fixtures: StudentRecord[] = [
   {
     id: "AFI-2",
     firstName: "Riley",
+    lastName: "Cruz",
     lastInitial: "C",
     optedIn: false,
     program: "cosmetology",
@@ -36,6 +45,7 @@ const fixtures: StudentRecord[] = [
   {
     id: "AFI-3",
     firstName: "Casey",
+    lastName: "Miles",
     lastInitial: "M",
     optedIn: true,
     program: "cosmetology",
@@ -47,9 +57,10 @@ const fixtures: StudentRecord[] = [
   {
     id: "AFI-4",
     firstName: "Avery",
+    lastName: "Kane",
     lastInitial: "K",
     optedIn: true,
-    program: "nails",
+    program: "nailTechnology",
     campus: "north",
     service: 900,
     retail: 10,
@@ -73,6 +84,19 @@ describe("displayName", () => {
   });
 });
 
+describe("programs", () => {
+  it("uses Avenue Five names and column order", () => {
+    assert.deepEqual([...PROGRAMS], [
+      "cosmetology",
+      "barbering",
+      "esthetics",
+      "nailTechnology",
+    ]);
+    assert.equal(PROGRAM_LABELS.esthetics, "Esthetics");
+    assert.equal(PROGRAM_LABELS.nailTechnology, "Nail Technology");
+  });
+});
+
 describe("rankStudents", () => {
   it("ranks only within the requested program", () => {
     const ranked = rankStudents(fixtures, { program: "cosmetology" });
@@ -92,7 +116,7 @@ describe("rankStudents", () => {
     assert.equal(ranked[0].rank, 1);
   });
 
-  it("does not mix a nails total into a cosmetology board", () => {
+  it("does not mix a nail technology total into a cosmetology board", () => {
     const ranked = rankStudents(fixtures, { program: "cosmetology" });
     assert.equal(
       ranked.some((student) => student.id === "AFI-4"),
@@ -115,6 +139,31 @@ describe("rankStudents", () => {
     assert.equal(mostRetail[0]?.id, "AFI-1");
     assert.equal(mostServices[0]?.id, "AFI-3");
   });
+
+  it("marks High Five winners as the top five at each campus and program", () => {
+    const north = rankStudents(fixtures, { program: "cosmetology", campus: "north" });
+    assert.equal(north[0].highFive, true);
+    assert.equal(north[0].campusRank, 1);
+    const institute = rankStudents(fixtures, { program: "cosmetology" });
+    const southLead = institute.find((student) => student.id === "AFI-3");
+    assert.equal(southLead?.rank, 1);
+    assert.equal(southLead?.campusRank, 1);
+    assert.equal(southLead?.highFive, true);
+  });
+});
+
+describe("login and consent", () => {
+  it("signs in with student ID and last name, not a PIN", () => {
+    assert.equal(findStudentByLogin(fixtures, "afi-1", "Reyes")?.id, "AFI-1");
+    assert.equal(findStudentByLogin(fixtures, "AFI-1", "wrong"), null);
+  });
+
+  it("applies dummy opt-in overrides to display names", () => {
+    const hidden = applyConsent(fixtures, { "AFI-1": false });
+    assert.equal(displayName(hidden[0]), "Student AFI-1");
+    const shown = applyConsent(fixtures, { "AFI-2": true });
+    assert.equal(displayName(shown[1]), "Riley C.");
+  });
 });
 
 describe("campusTotals", () => {
@@ -122,7 +171,7 @@ describe("campusTotals", () => {
     const north = campusTotals(fixtures, "north");
     assert.equal(north.total, 200 + 100 + 180 + 90 + 900 + 10);
     assert.equal(north.byProgram.cosmetology.total, 570);
-    assert.equal(north.byProgram.nails.total, 910);
+    assert.equal(north.byProgram.nailTechnology.total, 910);
   });
 });
 
@@ -131,17 +180,29 @@ describe("helpers", () => {
     assert.equal(formatMoney(1240), "$1,240");
   });
 
+  it("ends a cycle on the Friday before the next class start", () => {
+    assert.equal(fridayBefore("2026-08-31"), "2026-08-28");
+    assert.equal(fridayBefore("2026-10-19"), "2026-10-16");
+  });
+
+  it("uses July 20 – August 28 as the current cycle on August 21, 2026", () => {
+    const current = cycleForDate(new Date("2026-08-21T12:00:00"));
+    assert.equal(current.startDate, "2026-07-20");
+    assert.equal(current.endDate, "2026-08-28");
+    assert.equal(current.weeks, 6);
+    assert.equal(formatCycleRange(current), "July 20 – August 28");
+    assert.equal(cycleWeek(current, new Date("2026-08-21T12:00:00")), 5);
+  });
+
+  it("does not treat the August 31 cycle as current before that start", () => {
+    const next = cycleForDate(new Date("2026-08-31T12:00:00"));
+    assert.equal(next.startDate, "2026-08-31");
+    assert.equal(next.endDate, "2026-10-16");
+  });
+
   it("clamps the cycle week between 1 and the cycle length", () => {
-    const cycle = {
-      id: "x",
-      label: "test",
-      startDate: "2026-08-10",
-      endDate: "2026-09-25",
-      weeks: 7,
-      note: "",
-    };
-    assert.equal(cycleWeek(cycle, new Date("2026-08-21T12:00:00")), 2);
-    assert.equal(cycleWeek(cycle, new Date("2026-08-09T12:00:00")), 1);
-    assert.equal(cycleWeek(cycle, new Date("2026-12-01T12:00:00")), 7);
+    const cycle = cycleForDate(new Date("2026-08-21T12:00:00"));
+    assert.equal(cycleWeek(cycle, new Date("2026-07-19T12:00:00")), 1);
+    assert.equal(cycleWeek(cycle, new Date("2026-09-01T12:00:00")), 6);
   });
 });

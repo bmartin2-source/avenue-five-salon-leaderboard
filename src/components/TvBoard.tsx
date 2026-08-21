@@ -1,21 +1,24 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   CAMPUS_LABELS,
   PROGRAMS,
   PROGRAM_LABELS,
   campusTotals,
   cycleWeek,
+  formatCycleRange,
   formatMoney,
   rankAllPrograms,
+  resolveCycle,
   type Campus,
   type Program,
+  applyConsent,
   type RankedStudent,
 } from "@/lib/leaderboard";
 import { data } from "@/lib/data";
+import { readConsentOverrides } from "@/lib/session";
 
-const ROW_HEIGHT = 92;
 const SLIDE_MS = 9000;
 
 export type TvMode = "slideshow" | "north" | "south";
@@ -33,34 +36,49 @@ function useAnimatedRanks(rows: RankedStudent[]) {
   return phase;
 }
 
+function RankArrow({ delta }: { delta: number }) {
+  if (delta > 0) return <span className="rank-arrow up">▲{delta}</span>;
+  if (delta < 0) return <span className="rank-arrow down">▼{Math.abs(delta)}</span>;
+  return null;
+}
+
 function RankRow({
   student,
   index,
   showCampus,
   phase,
+  rowHeight,
 }: {
   student: RankedStudent;
   index: number;
   showCampus?: boolean;
   phase: "from" | "to";
+  rowHeight: number;
 }) {
   const visualRank = phase === "from" ? student.previousRank : student.rank;
-  const y = (visualRank - 1) * ROW_HEIGHT;
+  const y = (visualRank - 1) * rowHeight;
   const moved = student.rankDelta > 0 ? "moved-up" : student.rankDelta < 0 ? "moved-down" : "";
+  const highFiveClass = student.campusRank === 1
+    ? "high-five-lead"
+    : student.highFive
+      ? "high-five-set"
+      : "";
 
   return (
     <article
-      className={`row rank-${student.rank} ${moved}`}
-      style={{ transform: `translateY(${y}px)`, zIndex: 20 - index }}
+      className={`row rank-${student.rank} ${highFiveClass} ${moved}`}
+      style={{ height: rowHeight, transform: `translateY(${y}px)`, zIndex: 20 - index }}
     >
-      <div className="rank">{student.rank}</div>
+      <div className="rank-cluster">
+        <div className="rank">{student.rank}</div>
+        <RankArrow delta={student.rankDelta} />
+      </div>
       <div className="who">
         <div className="name">{student.displayName}</div>
         <div className="meta">
           {showCampus ? <span>{student.campus === "north" ? "North" : "South"}</span> : null}
           <span className="badges">
-            {student.rankDelta > 0 ? <span className="badge up">▲ {student.rankDelta}</span> : null}
-            {student.rankDelta < 0 ? <span className="badge down">▼ {Math.abs(student.rankDelta)}</span> : null}
+            {student.highFive ? <span className="badge highfive">High Five</span> : null}
             {student.badges.mostRetail ? <span className="badge retail">Most retail</span> : null}
             {student.badges.mostServices ? <span className="badge service">Most services</span> : null}
           </span>
@@ -87,14 +105,32 @@ function ProgramColumn({
 }) {
   const visible = rows.slice(0, 6);
   const phase = useAnimatedRanks(visible);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [rowHeight, setRowHeight] = useState(120);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const update = () => {
+      const next = Math.floor(el.clientHeight / Math.max(visible.length, 1));
+      if (next > 0) setRowHeight(next);
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [visible.length]);
 
   return (
     <section className={`program-col ${program}`}>
       <header>
-        <h2>{PROGRAM_LABELS[program]}</h2>
-        <span className="count">Ranked in program · {rows.length}</span>
+        <div>
+          <h2>{PROGRAM_LABELS[program]}</h2>
+          <p className="highfive-label">High Five winners</p>
+        </div>
+        <span className="count">Top 5 / campus</span>
       </header>
-      <div className="track" style={{ height: visible.length * ROW_HEIGHT }}>
+      <div className="track" ref={trackRef}>
         {visible.map((student, index) => (
           <RankRow
             key={student.id}
@@ -102,6 +138,7 @@ function ProgramColumn({
             index={index}
             showCampus={showCampus}
             phase={phase}
+            rowHeight={rowHeight}
           />
         ))}
       </div>
@@ -126,15 +163,15 @@ function SponsorTicker() {
 }
 
 function CycleChip() {
-  const week = cycleWeek(data.cycle);
+  const cycle = resolveCycle(data);
+  const asOf = data.asOf ? new Date(`${data.asOf}T12:00:00`) : new Date();
+  const week = cycleWeek(cycle, asOf);
   return (
     <div className="cycle-chip">
-      <strong>
-        Week {week} of {data.cycle.weeks}
-      </strong>
-      <span>
-        {data.cycle.label} · resets {data.cycle.endDate}
-      </span>
+      <div className="cycle-dates">{formatCycleRange(cycle)}</div>
+      <div className="cycle-week">
+        Week {week} of {cycle.weeks}
+      </div>
     </div>
   );
 }
@@ -147,7 +184,7 @@ function InstituteScoreboard() {
       <div className="score north">
         <div>
           <div className="campus">North</div>
-          <div className="program-leads" style={{ justifyContent: "flex-start", marginTop: 4 }}>
+          <div className="program-leads" style={{ justifyContent: "flex-start", marginTop: 2 }}>
             S:{formatMoney(north.service)} · R:{formatMoney(north.retail)}
           </div>
         </div>
@@ -157,7 +194,7 @@ function InstituteScoreboard() {
       <div className="score south">
         <div>
           <div className="campus">South</div>
-          <div className="program-leads" style={{ justifyContent: "flex-end", marginTop: 4 }}>
+          <div className="program-leads" style={{ justifyContent: "flex-end", marginTop: 2 }}>
             S:{formatMoney(south.service)} · R:{formatMoney(south.retail)}
           </div>
         </div>
@@ -168,18 +205,24 @@ function InstituteScoreboard() {
 }
 
 function Board({ campus, institute }: { campus?: Campus; institute?: boolean }) {
+  const [students, setStudents] = useState(data.students);
+
+  useEffect(() => {
+    setStudents(applyConsent(data.students, readConsentOverrides()));
+  }, []);
+
   const boards = useMemo(
-    () => rankAllPrograms(data.students, campus),
-    [campus],
+    () => rankAllPrograms(students, campus),
+    [students, campus],
   );
   const title = institute
     ? "All Institute"
     : campus
       ? CAMPUS_LABELS[campus]
-      : "Student Salon";
+      : "High Five";
   const subtitle = institute
-    ? "Comparison slide · still ranked only within each program"
-    : "Private student salon · ranked only within program";
+    ? "High Five awards are the top five in each program at each campus"
+    : "Private High Five Competition · ranked only within program";
 
   return (
     <>
@@ -188,7 +231,7 @@ function Board({ campus, institute }: { campus?: Campus; institute?: boolean }) 
           <div className="mark">A5</div>
           <div className="brand-copy">
             <p className="name">Avenue Five</p>
-            <p className="sub">Student salon leaderboard · Private</p>
+            <p className="sub">High Five Competition · Private</p>
           </div>
         </div>
         <div className="board-title">

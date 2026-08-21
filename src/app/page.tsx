@@ -6,11 +6,11 @@ export default function HomePage() {
       <div className="hub-inner">
         <p className="notice">Dummy · private · do not deploy · no real student names</p>
         <p className="kicker">Avenue Five Institute</p>
-        <h1>Student salon leaderboard</h1>
+        <h1>High Five Competition</h1>
         <p className="lede">
-          Private break-room TV and student login for North and South Austin. This
-          is a dummy first pass with fictional names and totals. It is not a public
-          marketing site and should not be deployed or indexed.
+          Private break-room TV and student web consent for North and South Austin.
+          This is a dummy first pass with fictional names and totals. It is not a
+          public marketing site and should not be deployed or indexed.
         </p>
 
         <div className="card-grid">
@@ -35,21 +35,23 @@ export default function HomePage() {
           <Link className="card" href="/login">
             <p className="kicker">Student web</p>
             <h2>Student login</h2>
-            <p>Dummy auth stub: student ID + PIN. No iOS app in this pass.</p>
+            <p>Dummy auth: student ID + last name, then name-display consent. No PIN. No iOS.</p>
           </Link>
         </div>
 
         <div className="dummy-accounts">
           <p className="kicker">Reviewer notes</p>
           <ul className="meta-list">
+            <li>Product name: High Five Competition. Avenue Five Institute branding stays.</li>
+            <li>Columns left to right: Cosmetology, Barbering, Esthetics, Nail Technology.</li>
+            <li>High Five winners are the top five in each program at each campus.</li>
             <li>Rank = service $ + retail $. TOTAL is large; S: and R: sit under it.</li>
             <li>Opted-in names are first name + last initial. Others show Student + ID.</li>
-            <li>Badges: up/down arrows, most retail, most services.</li>
-            <li>Cycle dummy: August 10 start, 7 weeks, resets September 25.</li>
+            <li>Current dummy cycle: July 20 – August 28, week 5 of 6.</li>
             <li>
-              Demo logins — Jordan (opted in): <code>AFI-2401</code> / <code>1357</code>.
-              Riley (not opted in): <code>AFI-2402</code> / <code>2468</code>.
-              Casey (most retail, barbering): <code>AFI-2403</code> / <code>8024</code>.
+              Demo logins — Jordan (opted in): <code>AFI-2401</code> / <code>Reyes</code>.
+              Riley (opted out): <code>AFI-2402</code> / <code>Cruz</code>.
+              Casey: <code>AFI-2403</code> / <code>Miles</code>.
             </li>
           </ul>
         </div>

@@ -7,13 +7,20 @@
     "name": "Avenue Five Institute",
     "shortName": "Avenue Five"
   },
+  "asOf": "2026-08-21",
+  "classStarts": [
+    "2026-07-20",
+    "2026-08-31",
+    "2026-10-19",
+    "2026-11-30"
+  ],
   "cycle": {
-    "id": "2026-08-10",
-    "label": "August 10 start",
-    "startDate": "2026-08-10",
-    "endDate": "2026-09-25",
-    "weeks": 7,
-    "note": "Ranks reset on the class start date. This dummy cycle is 7 weeks."
+    "id": "2026-07-20",
+    "label": "July 20 start",
+    "startDate": "2026-07-20",
+    "endDate": "2026-08-28",
+    "weeks": 6,
+    "note": "Cycle starts on a published class start date and ends the Friday before the next class start. Current cycle on August 21, 2026 is July 20 – August 28 (week 5 of 6)."
   },
   "sponsors": [
     {
@@ -42,35 +49,6 @@
       "line": "Dummy sponsor · Private break-room board — not a public marketing display"
     }
   ],
-  "accounts": [
-    {
-      "id": "AFI-2401",
-      "pin": "1357",
-      "firstName": "Jordan",
-      "lastInitial": "R",
-      "optedIn": true,
-      "program": "cosmetology",
-      "campus": "north"
-    },
-    {
-      "id": "AFI-2402",
-      "pin": "2468",
-      "firstName": "Riley",
-      "lastInitial": "C",
-      "optedIn": false,
-      "program": "aesthetics",
-      "campus": "south"
-    },
-    {
-      "id": "AFI-2403",
-      "pin": "8024",
-      "firstName": "Casey",
-      "lastInitial": "M",
-      "optedIn": true,
-      "program": "barbering",
-      "campus": "north"
-    }
-  ],
   "students": [
     {
       "id": "AFI-2401",
@@ -81,7 +59,8 @@
       "campus": "north",
       "service": 1860,
       "retail": 420,
-      "previousRank": 4
+      "previousRank": 4,
+      "lastName": "Reyes"
     },
     {
       "id": "AFI-2411",
@@ -92,7 +71,8 @@
       "campus": "north",
       "service": 1540,
       "retail": 610,
-      "previousRank": 1
+      "previousRank": 1,
+      "lastName": "Kane"
     },
     {
       "id": "AFI-2412",
@@ -103,7 +83,8 @@
       "campus": "north",
       "service": 1710,
       "retail": 190,
-      "previousRank": 2
+      "previousRank": 2,
+      "lastName": "Soto"
     },
     {
       "id": "AFI-2413",
@@ -114,7 +95,8 @@
       "campus": "north",
       "service": 980,
       "retail": 540,
-      "previousRank": 5
+      "previousRank": 5,
+      "lastName": "Diaz"
     },
     {
       "id": "AFI-2414",
@@ -125,7 +107,8 @@
       "campus": "north",
       "service": 1220,
       "retail": 210,
-      "previousRank": 3
+      "previousRank": 3,
+      "lastName": "Patel"
     },
     {
       "id": "AFI-2415",
@@ -136,7 +119,8 @@
       "campus": "north",
       "service": 640,
       "retail": 80,
-      "previousRank": 6
+      "previousRank": 6,
+      "lastName": "Brooks"
     },
     {
       "id": "AFI-2421",
@@ -147,7 +131,8 @@
       "campus": "south",
       "service": 1690,
       "retail": 380,
-      "previousRank": 2
+      "previousRank": 2,
+      "lastName": "Lane"
     },
     {
       "id": "AFI-2422",
@@ -158,7 +143,8 @@
       "campus": "south",
       "service": 1480,
       "retail": 720,
-      "previousRank": 1
+      "previousRank": 1,
+      "lastName": "Torres"
     },
     {
       "id": "AFI-2423",
@@ -169,7 +155,8 @@
       "campus": "south",
       "service": 1330,
       "retail": 260,
-      "previousRank": 4
+      "previousRank": 4,
+      "lastName": "Walsh"
     },
     {
       "id": "AFI-2424",
@@ -180,7 +167,8 @@
       "campus": "south",
       "service": 1100,
       "retail": 150,
-      "previousRank": 3
+      "previousRank": 3,
+      "lastName": "Hayes"
     },
     {
       "id": "AFI-2425",
@@ -191,7 +179,8 @@
       "campus": "south",
       "service": 870,
       "retail": 330,
-      "previousRank": 6
+      "previousRank": 6,
+      "lastName": "Nash"
     },
     {
       "id": "AFI-2426",
@@ -202,117 +191,128 @@
       "campus": "south",
       "service": 510,
       "retail": 90,
-      "previousRank": 5
+      "previousRank": 5,
+      "lastName": "Ford"
     },
     {
       "id": "AFI-2431",
       "firstName": "Finley",
       "lastInitial": "A",
       "optedIn": true,
-      "program": "aesthetics",
+      "program": "esthetics",
       "campus": "north",
       "service": 1420,
       "retail": 280,
-      "previousRank": 2
+      "previousRank": 2,
+      "lastName": "Alvarez"
     },
     {
       "id": "AFI-2432",
       "firstName": "Hayden",
       "lastInitial": "V",
       "optedIn": true,
-      "program": "aesthetics",
+      "program": "esthetics",
       "campus": "north",
       "service": 1180,
       "retail": 640,
-      "previousRank": 1
+      "previousRank": 1,
+      "lastName": "Vega"
     },
     {
       "id": "AFI-2433",
       "firstName": "Blake",
       "lastInitial": "G",
       "optedIn": false,
-      "program": "aesthetics",
+      "program": "esthetics",
       "campus": "north",
       "service": 1260,
       "retail": 170,
-      "previousRank": 4
+      "previousRank": 4,
+      "lastName": "Grant"
     },
     {
       "id": "AFI-2434",
       "firstName": "Emerson",
       "lastInitial": "J",
       "optedIn": true,
-      "program": "aesthetics",
+      "program": "esthetics",
       "campus": "north",
       "service": 900,
       "retail": 220,
-      "previousRank": 3
+      "previousRank": 3,
+      "lastName": "Jones"
     },
     {
       "id": "AFI-2435",
       "firstName": "Kendall",
       "lastInitial": "Y",
       "optedIn": true,
-      "program": "aesthetics",
+      "program": "esthetics",
       "campus": "north",
       "service": 610,
       "retail": 140,
-      "previousRank": 5
+      "previousRank": 5,
+      "lastName": "Young"
     },
     {
       "id": "AFI-2402",
       "firstName": "Riley",
       "lastInitial": "C",
       "optedIn": false,
-      "program": "aesthetics",
+      "program": "esthetics",
       "campus": "south",
       "service": 1580,
       "retail": 310,
-      "previousRank": 3
+      "previousRank": 3,
+      "lastName": "Cruz"
     },
     {
       "id": "AFI-2441",
       "firstName": "Logan",
       "lastInitial": "E",
       "optedIn": true,
-      "program": "aesthetics",
+      "program": "esthetics",
       "campus": "south",
       "service": 1340,
       "retail": 490,
-      "previousRank": 1
+      "previousRank": 1,
+      "lastName": "Ellis"
     },
     {
       "id": "AFI-2442",
       "firstName": "Micah",
       "lastInitial": "O",
       "optedIn": true,
-      "program": "aesthetics",
+      "program": "esthetics",
       "campus": "south",
       "service": 1210,
       "retail": 260,
-      "previousRank": 2
+      "previousRank": 2,
+      "lastName": "Ortiz"
     },
     {
       "id": "AFI-2443",
       "firstName": "Peyton",
       "lastInitial": "Q",
       "optedIn": false,
-      "program": "aesthetics",
+      "program": "esthetics",
       "campus": "south",
       "service": 780,
       "retail": 180,
-      "previousRank": 5
+      "previousRank": 5,
+      "lastName": "Quinn"
     },
     {
       "id": "AFI-2444",
       "firstName": "Remy",
       "lastInitial": "Z",
       "optedIn": true,
-      "program": "aesthetics",
+      "program": "esthetics",
       "campus": "south",
       "service": 690,
       "retail": 410,
-      "previousRank": 4
+      "previousRank": 4,
+      "lastName": "Zimmerman"
     },
     {
       "id": "AFI-2403",
@@ -323,7 +323,8 @@
       "campus": "north",
       "service": 1320,
       "retail": 760,
-      "previousRank": 2
+      "previousRank": 2,
+      "lastName": "Miles"
     },
     {
       "id": "AFI-2451",
@@ -334,7 +335,8 @@
       "campus": "north",
       "service": 1610,
       "retail": 120,
-      "previousRank": 1
+      "previousRank": 1,
+      "lastName": "Iverson"
     },
     {
       "id": "AFI-2452",
@@ -345,7 +347,8 @@
       "campus": "north",
       "service": 1190,
       "retail": 240,
-      "previousRank": 4
+      "previousRank": 4,
+      "lastName": "Underwood"
     },
     {
       "id": "AFI-2453",
@@ -356,7 +359,8 @@
       "campus": "north",
       "service": 840,
       "retail": 300,
-      "previousRank": 3
+      "previousRank": 3,
+      "lastName": "Xu"
     },
     {
       "id": "AFI-2454",
@@ -367,7 +371,8 @@
       "campus": "north",
       "service": 560,
       "retail": 70,
-      "previousRank": 5
+      "previousRank": 5,
+      "lastName": "Adler"
     },
     {
       "id": "AFI-2461",
@@ -378,7 +383,8 @@
       "campus": "south",
       "service": 1490,
       "retail": 210,
-      "previousRank": 1
+      "previousRank": 1,
+      "lastName": "Blake"
     },
     {
       "id": "AFI-2462",
@@ -389,7 +395,8 @@
       "campus": "south",
       "service": 1270,
       "retail": 350,
-      "previousRank": 3
+      "previousRank": 3,
+      "lastName": "Chen"
     },
     {
       "id": "AFI-2463",
@@ -400,7 +407,8 @@
       "campus": "south",
       "service": 1020,
       "retail": 480,
-      "previousRank": 2
+      "previousRank": 2,
+      "lastName": "Drake"
     },
     {
       "id": "AFI-2464",
@@ -411,7 +419,8 @@
       "campus": "south",
       "service": 730,
       "retail": 160,
-      "previousRank": 5
+      "previousRank": 5,
+      "lastName": "Eaton"
     },
     {
       "id": "AFI-2465",
@@ -422,117 +431,128 @@
       "campus": "south",
       "service": 480,
       "retail": 95,
-      "previousRank": 4
+      "previousRank": 4,
+      "lastName": "Flynn"
     },
     {
       "id": "AFI-2471",
       "firstName": "Indigo",
       "lastInitial": "G",
       "optedIn": true,
-      "program": "nails",
+      "program": "nailTechnology",
       "campus": "north",
       "service": 980,
       "retail": 540,
-      "previousRank": 2
+      "previousRank": 2,
+      "lastName": "Garcia"
     },
     {
       "id": "AFI-2472",
       "firstName": "Wren",
       "lastInitial": "H",
       "optedIn": true,
-      "program": "nails",
+      "program": "nailTechnology",
       "campus": "north",
       "service": 1120,
       "retail": 190,
-      "previousRank": 1
+      "previousRank": 1,
+      "lastName": "Hart"
     },
     {
       "id": "AFI-2473",
       "firstName": "Oakley",
       "lastInitial": "I",
       "optedIn": false,
-      "program": "nails",
+      "program": "nailTechnology",
       "campus": "north",
       "service": 860,
       "retail": 270,
-      "previousRank": 4
+      "previousRank": 4,
+      "lastName": "Ingram"
     },
     {
       "id": "AFI-2474",
       "firstName": "Landry",
       "lastInitial": "J",
       "optedIn": true,
-      "program": "nails",
+      "program": "nailTechnology",
       "campus": "north",
       "service": 720,
       "retail": 130,
-      "previousRank": 3
+      "previousRank": 3,
+      "lastName": "Jung"
     },
     {
       "id": "AFI-2475",
       "firstName": "Bellamy",
       "lastInitial": "K",
       "optedIn": true,
-      "program": "nails",
+      "program": "nailTechnology",
       "campus": "north",
       "service": 410,
       "retail": 60,
-      "previousRank": 5
+      "previousRank": 5,
+      "lastName": "King"
     },
     {
       "id": "AFI-2481",
       "firstName": "Sloane",
       "lastInitial": "L",
       "optedIn": true,
-      "program": "nails",
+      "program": "nailTechnology",
       "campus": "south",
       "service": 1240,
       "retail": 360,
-      "previousRank": 3
+      "previousRank": 3,
+      "lastName": "Lopez"
     },
     {
       "id": "AFI-2482",
       "firstName": "Ellis",
       "lastInitial": "M",
       "optedIn": false,
-      "program": "nails",
+      "program": "nailTechnology",
       "campus": "south",
       "service": 1010,
       "retail": 220,
-      "previousRank": 1
+      "previousRank": 1,
+      "lastName": "Moore"
     },
     {
       "id": "AFI-2483",
       "firstName": "Arden",
       "lastInitial": "N",
       "optedIn": true,
-      "program": "nails",
+      "program": "nailTechnology",
       "campus": "south",
       "service": 770,
       "retail": 610,
-      "previousRank": 2
+      "previousRank": 2,
+      "lastName": "Nguyen"
     },
     {
       "id": "AFI-2484",
       "firstName": "Frankie",
       "lastInitial": "O",
       "optedIn": true,
-      "program": "nails",
+      "program": "nailTechnology",
       "campus": "south",
       "service": 650,
       "retail": 180,
-      "previousRank": 4
+      "previousRank": 4,
+      "lastName": "Owens"
     },
     {
       "id": "AFI-2485",
       "firstName": "Jamie",
       "lastInitial": "P",
       "optedIn": false,
-      "program": "nails",
+      "program": "nailTechnology",
       "campus": "south",
       "service": 390,
       "retail": 110,
-      "previousRank": 5
+      "previousRank": 5,
+      "lastName": "Price"
     }
   ]
 }

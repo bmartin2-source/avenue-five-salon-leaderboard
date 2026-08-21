@@ -13,9 +13,9 @@ const sans = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Avenue Five · Private salon leaderboard (dummy)",
+  title: "Avenue Five · High Five Competition (dummy)",
   description:
-    "Private student-salon leaderboard dummy. Not a public marketing site. Do not deploy.",
+    "Private High Five Competition dummy. Not a public marketing site. Do not deploy.",
   robots: { index: false, follow: false, nocache: true },
 };
 
