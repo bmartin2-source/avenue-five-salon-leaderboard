@@ -13,7 +13,6 @@ import {
   formatMoney,
   fridayBefore,
   formatPoints,
-  balancedPageSize,
   listPageWindow,
   rankStudents,
   studentPoints,
@@ -291,21 +290,33 @@ describe("campusTotals", () => {
   });
 });
 
-describe("balancedPageSize", () => {
-  it("keeps a leftover under 8 rows on the previous page when it still fits", () => {
-    assert.equal(balancedPageSize(17, 15, 860, 50), 17);
-    assert.equal(balancedPageSize(17, 16, 860, 50), 17);
-    assert.equal(balancedPageSize(12, 16, 860, 50), 16);
+describe("tv leftover pages", () => {
+  it("keeps Nail Technology ranks 16–17 on page 1 when only 15 rows fit", () => {
+    const first = listPageWindow(17, 15, 0);
+    assert.equal(first.pageCount, 1);
+    assert.equal(first.start, 0);
+    assert.equal(first.end, 17);
+    assert.equal(listPageWindow(17, 15, 1).end, 17);
   });
 
-  it("does not invent a tiny last page by shrinking a 17-row Nail Technology list", () => {
-    assert.equal(balancedPageSize(17, 12, 860, 50), 17);
+  it("does not create a last page of 1–7 names", () => {
+    assert.equal(listPageWindow(17, 12, 0).pageCount, 1);
+    assert.equal(listPageWindow(17, 16, 0).end, 17);
+    const folded = listPageWindow(31, 15, 1);
+    assert.equal(folded.start, 15);
+    assert.equal(folded.end, 31);
+    assert.ok(folded.end - folded.start >= 8);
   });
 
-  it("keeps a real second page when the leftover is at least 8 rows", () => {
-    assert.equal(balancedPageSize(29, 17, 860, 50), 17);
-    assert.equal(listPageWindow(29, 17, 1).start, 17);
-    assert.equal(listPageWindow(29, 17, 1).end, 29);
+  it("keeps Cosmetology and Esthetics last pages at 8+ normal-height rows", () => {
+    const cosmo = listPageWindow(29, 17, 1);
+    assert.equal(cosmo.start, 17);
+    assert.equal(cosmo.end, 29);
+    assert.ok(cosmo.end - cosmo.start >= 8);
+    const esthetics = listPageWindow(31, 17, 1);
+    assert.equal(esthetics.start, 17);
+    assert.equal(esthetics.end, 31);
+    assert.ok(esthetics.end - esthetics.start >= 8);
   });
 });
 

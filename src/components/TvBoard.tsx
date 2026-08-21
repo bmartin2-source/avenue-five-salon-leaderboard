@@ -11,7 +11,6 @@ import {
   formatCycleRange,
   formatMoney,
   formatPoints,
-  balancedPageSize,
   listPageWindow,
   rankAllPrograms,
   resolveCycle,
@@ -128,11 +127,9 @@ function ProgramColumn({
     onFit?.(fit.count);
   }, [fit.count, onFit]);
 
-  const pageSize = balancedPageSize(rows.length, fit.count, fit.height, MIN_ROW_HEIGHT);
-  const pageWindow = listPageWindow(rows.length, pageSize, listPage);
+  const pageWindow = listPageWindow(rows.length, fit.count, listPage);
   const visible = rows.slice(pageWindow.start, pageWindow.end);
-  const rowSlots = visible.length > fit.count ? visible.length : fit.count;
-  const rowHeight = Math.max(MIN_ROW_HEIGHT, Math.floor(fit.height / rowSlots));
+  const rowHeight = Math.max(MIN_ROW_HEIGHT, Math.floor(fit.height / fit.count));
   const rangeLabel = rows.length
     ? `${pageWindow.start + 1}–${pageWindow.end} of ${rows.length}`
     : "0";
@@ -149,7 +146,7 @@ function ProgramColumn({
         <span className="count">{rangeLabel}</span>
       </header>
       <div className="track" ref={trackRef}>
-        <div className="track-shift" key={`${pageWindow.page}-${pageSize}`}>
+        <div className="track-shift" key={`${pageWindow.page}-${fit.count}`}>
           {visible.map((student, index) => (
             <RankRow
               key={student.id}
@@ -260,10 +257,7 @@ function Board({
   );
   const maxPages = Math.max(
     1,
-    ...PROGRAMS.map((program) => {
-      const size = balancedPageSize(boards[program].length, pageSize);
-      return listPageWindow(boards[program].length, size, 0).pageCount;
-    }),
+    ...PROGRAMS.map((program) => listPageWindow(boards[program].length, pageSize, 0).pageCount),
   );
   const title = allTime
     ? "ALL-TIME"
