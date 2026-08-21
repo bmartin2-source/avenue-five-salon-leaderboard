@@ -441,8 +441,16 @@ h2,
   min-width: 0;
 }
 
+.who .name {
+  font-size: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
 .student-page .topbar h1,
-.who .name,
 .student-row .name {
   font-size: clamp(28px, 2.5vw, 40px);
   white-space: nowrap;
