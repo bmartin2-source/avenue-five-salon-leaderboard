@@ -310,21 +310,23 @@ function Board({
 
   return (
     <>
-      <header className="tv-header">
-        <div className="brand">
-          <div className="mark">A5</div>
-          <div className="brand-copy">
-            <p className="name">Avenue Five</p>
-            <p className="sub">High Five Competition · Private</p>
+      <div className="tv-top">
+        <header className="tv-header">
+          <div className="brand">
+            <div className="mark">A5</div>
+            <div className="brand-copy">
+              <p className="name">Avenue Five</p>
+              <p className="sub">High Five Competition · Private</p>
+            </div>
           </div>
-        </div>
-        <div className="board-title">
-          <h1>{title}</h1>
-          <p>{subtitle}</p>
-        </div>
-        <CycleChip allTime={allTime} />
-      </header>
-      {institute && !allTime ? <InstituteScoreboard /> : null}
+          <div className="board-title">
+            <h1>{title}</h1>
+            <p>{subtitle}</p>
+          </div>
+          <CycleChip allTime={allTime} />
+        </header>
+        {institute && !allTime ? <InstituteScoreboard /> : null}
+      </div>
       <div className="tv-columns">
         {PROGRAMS.map((program) => (
           <ProgramColumn

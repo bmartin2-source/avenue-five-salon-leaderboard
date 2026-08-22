@@ -354,6 +354,10 @@ html.tv-lock body {
   margin-top: 4px;
 }
 
+.tv-top {
+  min-height: 0;
+}
+
 .tv-columns {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
