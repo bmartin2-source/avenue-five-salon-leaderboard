@@ -16,6 +16,7 @@ import {
   listPageWindow,
   rankStudents,
   tvStageScale,
+  TV_ROW_HEIGHT,
   studentPoints,
   type StudentRecord,
 } from "./leaderboard.ts";
@@ -302,6 +303,10 @@ describe("tvStageScale", () => {
   it("is 1 on a 1920×1080 TV and can grow on 4K", () => {
     assert.equal(tvStageScale(1920, 1080), 1);
     assert.equal(tvStageScale(3840, 2160), 2);
+  });
+
+  it("locks the same 50px row height for a short Barbering list and a full Cosmetology page", () => {
+    assert.equal(TV_ROW_HEIGHT, 50);
   });
 });
 

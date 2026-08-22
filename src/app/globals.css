@@ -252,6 +252,18 @@ html.tv-lock body {
   position: relative;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  --tv-row-h: 50px;
+  --tv-name: 24px;
+  --tv-name-lh: 1.1;
+  --tv-rank: 24px;
+  --tv-points: 20px;
+  --tv-points-lh: 1.1;
+  --tv-split: 11px;
+  --tv-hf: 9px;
+  --tv-title: 20px;
+  --tv-title-lh: 1.05;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
   background:
     radial-gradient(900px 480px at 8% 0%, rgba(212, 179, 122, 0.14), transparent 50%),
     radial-gradient(800px 420px at 100% 10%, rgba(224, 163, 176, 0.08), transparent 46%),
@@ -387,8 +399,8 @@ html.tv-lock body {
 
 .program-col h2 {
   margin: 0;
-  font-size: 20px;
-  line-height: 1.05;
+  font-size: var(--tv-title);
+  line-height: var(--tv-title-lh);
 }
 
 .highfive-label {
@@ -437,7 +449,7 @@ html.tv-lock body {
   position: absolute;
   left: 0;
   right: 0;
-  height: 50px;
+  height: var(--tv-row-h);
   display: grid;
   grid-template-columns: 52px minmax(0, 1fr) 102px;
   gap: 10px;
@@ -494,7 +506,7 @@ html.tv-lock body {
 
 .rank {
   font-family: var(--font-sans), "Avenir Next", "Segoe UI", sans-serif;
-  font-size: 24px;
+  font-size: var(--tv-rank);
   font-weight: 750;
   font-variant-numeric: tabular-nums;
   line-height: 1;
@@ -516,7 +528,7 @@ html.tv-lock body {
 }
 
 .rank-mark {
-  font-size: 9px;
+  font-size: var(--tv-hf);
   font-weight: 800;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -538,13 +550,13 @@ html.tv-lock body {
 }
 
 .who .name {
-  font-size: 24px;
+  font-size: var(--tv-name);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 750;
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: var(--tv-name-lh);
   min-width: 0;
 }
 
@@ -586,9 +598,9 @@ html.tv-lock body {
 
 .money .total {
   font-family: var(--font-sans), "Avenir Next", "Segoe UI", sans-serif;
-  font-size: 20px;
+  font-size: var(--tv-points);
   font-weight: 750;
-  line-height: 1.1;
+  line-height: var(--tv-points-lh);
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
@@ -603,7 +615,7 @@ html.tv-lock body {
 .money .split {
   margin-top: 4px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--tv-split);
   letter-spacing: 0.02em;
   line-height: 1.15;
   white-space: nowrap;

@@ -160,6 +160,7 @@ export function formatMoney(amount: number): string {
 
 export const TV_STAGE_WIDTH = 1920;
 export const TV_STAGE_HEIGHT = 1080;
+export const TV_ROW_HEIGHT = 50;
 
 /** Uniform scale so a 1920×1080 TV stage fits any viewport without clipping a column. */
 export function tvStageScale(viewportWidth: number, viewportHeight: number) {

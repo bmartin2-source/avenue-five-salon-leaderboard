@@ -13,6 +13,7 @@ import {
   formatPoints,
   listPageWindow,
   rankAllPrograms,
+  TV_ROW_HEIGHT,
   TV_STAGE_HEIGHT,
   TV_STAGE_WIDTH,
   tvStageScale,
@@ -27,7 +28,6 @@ import { readConsentOverrides } from "@/lib/session";
 
 const PAGE_HOLD_MS = 7000;
 const ALL_TIME_AFTER_MS = 60_000;
-const MIN_ROW_HEIGHT = 50;
 
 export type TvMode = "slideshow" | "north" | "south";
 
@@ -117,7 +117,7 @@ function ProgramColumn({
     if (!el) return;
     const update = () => {
       const height = el.clientHeight;
-      const count = Math.max(1, Math.floor(height / MIN_ROW_HEIGHT));
+      const count = Math.max(1, Math.floor(height / TV_ROW_HEIGHT));
       setFit({ count, height });
     };
     update();
@@ -132,12 +132,6 @@ function ProgramColumn({
 
   const pageWindow = listPageWindow(rows.length, fit.count, listPage);
   const visible = rows.slice(pageWindow.start, pageWindow.end);
-  // Folded leftovers (1–7 extra names) stay on this page. Keep the 50px
-  // page-1 rhythm unless this slice is longer than the measured fit.
-  const rowHeight =
-    visible.length > fit.count
-      ? Math.max(1, Math.floor(fit.height / visible.length))
-      : Math.max(MIN_ROW_HEIGHT, Math.floor(fit.height / fit.count));
   const rangeLabel = rows.length
     ? `${pageWindow.start + 1}–${pageWindow.end} of ${rows.length}`
     : "0";
@@ -161,7 +155,7 @@ function ProgramColumn({
               student={student}
               index={index}
               showCampus={showCampus}
-              rowHeight={rowHeight}
+              rowHeight={TV_ROW_HEIGHT}
               allTime={allTime}
             />
           ))}
