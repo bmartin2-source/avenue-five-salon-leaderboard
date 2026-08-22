@@ -57,11 +57,11 @@ export function LoginForm() {
       <div className="auth-inner">
         <p className="notice">Dummy sign-in · student ID + last name · not production</p>
         <p className="kicker">Avenue Five Institute</p>
-        <h1>High Five Competition</h1>
+        <h1>High Five Awards Opt-in</h1>
         <p className="lede">
-          Web view only for this dummy. Enter a fictional student ID and last name
-          to reach the name-display consent page. Rankings use points: 1 pt per $1
-          service, 5 pts per $1 retail. This does not connect to a real student system.
+          Dummy sign-in for the High Five Awards. Enter a student ID and last name,
+          then choose Opt In or Opt Out. Rankings use points: 1 pt per $1 service,
+          5 pts per $1 retail. This does not connect to a real student system.
         </p>
         <form className="auth-card" onSubmit={onSubmit}>
           <div className="field">
@@ -109,7 +109,6 @@ export function LoginForm() {
 export function ConsentForm() {
   const router = useRouter();
   const [studentId, setStudentId] = useState<string | null>(null);
-  const [agreed, setAgreed] = useState(false);
   const [students, setStudents] = useState(data.students);
 
   useEffect(() => {
@@ -123,10 +122,6 @@ export function ConsentForm() {
   }, [router]);
 
   const student = studentId ? findStudent(students, studentId) : undefined;
-
-  function refresh() {
-    setStudents(liveStudents());
-  }
 
   if (!studentId) return null;
   if (!student) {
@@ -144,63 +139,44 @@ export function ConsentForm() {
       <div className="student-inner consent-copy">
         <p className="notice">Dummy only · no production deploy</p>
         <p className="kicker">Avenue Five Institute</p>
-        <h1>High Five Competition — Name Display Consent</h1>
+        <h1>High Five Awards Opt-in</h1>
         <p>
-          The High Five Competition is Avenue Five Institute’s private student salon contest. Rankings use points: 1 pt per $1 service, 5 pts per $1 retail.
+          The High Five Awards is Avenue Five Institute’s student salon contest. Rankings use service and retail results for the current class cycle.
         </p>
         <p>
-          By choosing Opt In, you agree that Avenue Five Institute may show your first name and last initial, your program, your campus, your rank, and your competition totals on the High Five Competition board. That board is visible to other Avenue Five students and staff, including on the campus break-room television. It is not a public marketing website and is not meant to be indexed on the open internet.
+          By choosing Opt In, you agree that Avenue Five Institute may display your full name, program schedule, and relevant performance statistics. This information may be displayed on campus and may be available to other students who have opted in.
         </p>
         <p>
-          Your participation is voluntary. Opting in or out does not affect your enrollment, grades, attendance, or financial aid.
+          Participation is voluntary. Opting in or out does not affect your enrollment, grades, attendance, or financial aid.
         </p>
         <p>
-          You may opt out at any time. Sign in again with your student ID and last name and choose Opt Out. After you opt out, your results may still be counted in the competition, but the board will show “Student” plus your student ID instead of your name.
+          You may change your choice at any time by signing in again and selecting Opt In or Opt Out. If you opt out, your results may still be counted in the contest, but your name will not be shown.
         </p>
-        <p>If you do not agree, do not opt in.</p>
+        <p>If you do not agree, choose Opt Out.</p>
         <p className="hint">
-          Dummy status now: {student.optedIn ? `opted in as ${displayName(student)}` : `opted out as ${displayName(student)}`}.
+          Dummy status now: {student.optedIn ? "Opt In" : "Opt Out"}.
         </p>
         <div className="consent-actions">
-          {student.optedIn ? (
-            <>
-              <button
-                className="btn ghost"
-                type="button"
-                onClick={() => {
-                  writeConsent(student.id, false);
-                  refresh();
-                }}
-              >
-                Opt Out
-              </button>
-              <Link className="btn" href="/student" style={{ textAlign: "center", textDecoration: "none" }}>
-                View my board
-              </Link>
-            </>
-          ) : (
-            <>
-              <label className="agree">
-                <input
-                  type="checkbox"
-                  checked={agreed}
-                  onChange={(event) => setAgreed(event.target.checked)}
-                />
-                <span>I agree to the name-display terms above.</span>
-              </label>
-              <button
-                className="btn"
-                type="button"
-                disabled={!agreed}
-                onClick={() => {
-                  writeConsent(student.id, true);
-                  router.push("/student");
-                }}
-              >
-                Opt In
-              </button>
-            </>
-          )}
+          <button
+            className="btn"
+            type="button"
+            onClick={() => {
+              writeConsent(student.id, true);
+              router.push("/student");
+            }}
+          >
+            Opt In
+          </button>
+          <button
+            className="btn ghost"
+            type="button"
+            onClick={() => {
+              writeConsent(student.id, false);
+              router.push("/student");
+            }}
+          >
+            Opt Out
+          </button>
         </div>
       </div>
     </main>
