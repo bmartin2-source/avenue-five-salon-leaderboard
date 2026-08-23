@@ -64,7 +64,7 @@ All of these are reachable from `/admin`. They are dummy switches, not productio
 | Hide the whole board | Safe Avenue Five branding screen. Institute admin only. |
 | Freeze ranks | Locks the current walk-on order. Live dummy totals cannot reshuffle. TV shows **RANKS FROZEN**. Unfreeze restores live ranking. Campus managers freeze their campus; institute admin can freeze all. |
 | Pin physical TV | Assigns `/tv/u/afi-salon-tv` to North Austin, South Austin, or the institute slideshow. The pin sticks in this browser. Locked `/tv/north` and `/tv/south` routes stay as-is. |
-| Quiet hours | Default 21:00–07:00 (overnight). Stops slide flipping and paging. Hold a branding screen or the last slide. |
+| Quiet hours | Off until enabled. Dummy window 21:00–07:00 (overnight). Stops slide flipping and paging. Hold a branding screen or the last slide. |
 | Type size | Smaller / default / larger. Default stays the last clean mid-size board (24px names, 50px rows, reserved name vs points columns). HIGH FIVE chips stay under the rank, not on names. No service/retail badges. |
 
 ## Ranking rules in this dummy
