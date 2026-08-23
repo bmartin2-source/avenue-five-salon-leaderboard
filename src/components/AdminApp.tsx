@@ -455,7 +455,7 @@ function AdminDashboard({
           <h2>Quiet hours</h2>
           <p className="hint">
             After close, stop slide flipping and paging. Board can sit on a calm branding screen
-            or the last slide. Dummy default 21:00–07:00 (overnight).
+            or the last slide. Dummy window 21:00–07:00 (overnight); off until you enable it.
           </p>
           {institute ? (
             <>
