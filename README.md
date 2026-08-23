@@ -32,6 +32,7 @@ Then open [http://localhost:3000](http://localhost:3000).
 | Student login | `/login` |
 | Name-display consent | `/consent` |
 | Student view (after login) | `/student` |
+| Dummy administrator | `/admin` |
 
 The TV slideshow cycles North Austin Campus → South Austin Campus → all-institute comparison after each campus finishes paging through its list. About every 60 seconds it shifts to an institute-wide **ALL-TIME** career board, then returns to the current-cycle campus boards. Left/right arrows change campus slides. Up/down or Page Up/Page Down advance the list. Current-cycle columns also auto-page every ~7 seconds so a break-room TV does not need a mouse.
 
@@ -44,6 +45,8 @@ The TV slideshow cycles North Austin Campus → South Austin Campus → all-inst
 | `AFI-2403` | `Miles` | Casey M. · Barbering · North Austin Campus · opted in |
 
 Auth is a client-side stub against `data/leaderboard.json`. It is not production security. After sign-in, students land on the consent page to Opt In or Opt Out.
+
+Dummy staff login for `/admin`: `admin@avenuefive.com` / PIN `2468`. Admin settings persist in this browser and update the TV after save/refresh.
 
 ## Ranking rules in this dummy
 

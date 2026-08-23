@@ -36,7 +36,12 @@ export default function HomePage() {
           <Link className="card" href="/login">
             <p className="kicker">Student web</p>
             <h2>Student login</h2>
-            <p>Dummy auth: student ID + last name, then name-display consent. No PIN. No iOS.</p>
+            <p>Dummy auth: student ID + last name, then High Five Awards Opt-in. No PIN. No iOS.</p>
+          </Link>
+          <Link className="card" href="/admin">
+            <p className="kicker">Staff</p>
+            <h2>Administrator</h2>
+            <p>Dummy staff dashboard: cycle pull, roster opt-in, ticker, and TV display controls. Not public.</p>
           </Link>
         </div>
 
@@ -50,9 +55,13 @@ export default function HomePage() {
             <li>Rank = points within program only: 1 pt per $1 service, 5 pts per $1 retail. The large number is points (no $). S: and R: under it stay dollars. High Five is top 5 by points. No Most Services / Most Retail badges.</li>
             <li>Current dummy cycle: July 20 – August 28, week 5 of 6. About every 60 seconds the TV shows ALL-TIME career leaders (institute-wide, same point formula). High Five is this-cycle only; all-time top 5 use an All-Time mark.</li>
             <li>
-              Demo logins (all opted in) — Jordan: <code>AFI-2401</code> / <code>Reyes</code>.
+              Demo student logins (all opted in) — Jordan: <code>AFI-2401</code> / <code>Reyes</code>.
               Riley: <code>AFI-2402</code> / <code>Cruz</code>.
               Casey: <code>AFI-2403</code> / <code>Miles</code>.
+            </li>
+            <li>
+              Dummy admin login — email <code>admin@avenuefive.com</code> / PIN <code>2468</code>.
+              Open <code>/admin</code>. Changes save to this browser and show on the TV after refresh.
             </li>
           </ul>
         </div>

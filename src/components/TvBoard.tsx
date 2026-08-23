@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CAMPUS_LABELS,
   CAMPUS_SHORT,
-  PROGRAMS,
   PROGRAM_LABELS,
   campusTotals,
   cycleWeek,
@@ -17,17 +16,14 @@ import {
   TV_STAGE_HEIGHT,
   TV_STAGE_WIDTH,
   tvStageScale,
-  resolveCycle,
   type Campus,
   type Program,
-  applyConsent,
+  type Cycle,
   type RankedStudent,
+  type StudentRecord,
 } from "@/lib/leaderboard";
-import { data } from "@/lib/data";
-import { readConsentOverrides } from "@/lib/session";
-
-const PAGE_HOLD_MS = 7000;
-const ALL_TIME_AFTER_MS = 60_000;
+import { useLiveBoard } from "@/lib/live-board";
+import type { AdminStore, TickerItem } from "@/lib/admin-store";
 
 export type TvMode = "slideshow" | "north" | "south";
 
@@ -52,9 +48,10 @@ function RankRow({
 }) {
   const y = index * rowHeight;
   const moved = !allTime && student.rankDelta > 0 ? "moved-up" : !allTime && student.rankDelta < 0 ? "moved-down" : "";
+  const marked = allTime ? student.allTime : student.highFive;
   const leadClass = student.rank === 1
     ? allTime ? "all-time-lead" : "high-five-lead"
-    : student.rank <= 5
+    : marked
       ? allTime ? "all-time-set" : "high-five-set"
       : "rank-rest";
   const dollars = allTime
@@ -70,7 +67,7 @@ function RankRow({
         <div className="rank">{student.rank}</div>
         <div className="rank-side">
           {allTime ? null : <RankArrow delta={student.rankDelta} />}
-          {student.rank <= 5 ? (
+          {marked ? (
             <span className={`rank-mark ${allTime ? "alltime" : "highfive"}`}>
               {allTime ? "AT" : "HF"}
             </span>
@@ -165,12 +162,15 @@ function ProgramColumn({
   );
 }
 
-function SponsorTicker() {
-  const items = [...data.sponsors, ...data.sponsors];
+function SponsorTicker({ items, enabled }: { items: TickerItem[]; enabled: boolean }) {
+  if (!enabled || items.length === 0) {
+    return <div className="ticker" aria-hidden />;
+  }
+  const loop = [...items, ...items];
   return (
     <div className="ticker" aria-label="Sponsor ticker">
       <div className="ticker-track">
-        {items.map((sponsor, index) => (
+        {loop.map((sponsor, index) => (
           <div className="ticker-item" key={`${sponsor.id}-${index}`}>
             <strong>{sponsor.name}</strong>
             <span>{sponsor.line}</span>
@@ -181,10 +181,14 @@ function SponsorTicker() {
   );
 }
 
-function CycleChip({ allTime }: { allTime?: boolean }) {
-  const cycle = resolveCycle(data);
-  const asOf = data.asOf ? new Date(`${data.asOf}T12:00:00`) : new Date();
-  const week = cycleWeek(cycle, asOf);
+function CycleChip({
+  allTime,
+  cycle,
+}: {
+  allTime?: boolean;
+  cycle: Cycle;
+}) {
+  const week = cycleWeek(cycle, new Date(`${cycle.endDate}T12:00:00`));
   if (allTime) {
     return (
       <div className="cycle-chip alltime">
@@ -203,9 +207,9 @@ function CycleChip({ allTime }: { allTime?: boolean }) {
   );
 }
 
-function InstituteScoreboard() {
-  const north = campusTotals(data.students, "north");
-  const south = campusTotals(data.students, "south");
+function InstituteScoreboard({ students }: { students: StudentRecord[] }) {
+  const north = campusTotals(students, "north");
+  const south = campusTotals(students, "south");
   return (
     <div className="scoreboard">
       <div className="score north">
@@ -236,30 +240,39 @@ function Board({
   institute,
   allTime,
   onPageCycle,
+  students,
+  cycle,
+  programs,
+  store,
 }: {
   campus?: Campus;
   institute?: boolean;
   allTime?: boolean;
   onPageCycle?: () => void;
+  students: StudentRecord[];
+  cycle: Cycle;
+  programs: readonly Program[];
+  store: AdminStore;
 }) {
-  const [students, setStudents] = useState(data.students);
   const [listPage, setListPage] = useState(0);
   const [pageSize, setPageSize] = useState(15);
   const reportFit = useCallback((count: number) => {
     setPageSize((current) => (current === count ? current : count));
   }, []);
 
-  useEffect(() => {
-    setStudents(applyConsent(data.students, readConsentOverrides()));
-  }, []);
-
   const boards = useMemo(
-    () => rankAllPrograms(students, allTime ? undefined : campus, allTime ? "career" : "cycle"),
-    [students, campus, allTime],
+    () =>
+      rankAllPrograms(
+        students,
+        allTime ? undefined : campus,
+        allTime ? "career" : "cycle",
+        store.highFiveCutoff,
+      ),
+    [students, campus, allTime, store.highFiveCutoff],
   );
   const maxPages = Math.max(
     1,
-    ...PROGRAMS.map((program) => listPageWindow(boards[program].length, pageSize, 0).pageCount),
+    ...programs.map((program) => listPageWindow(boards[program].length, pageSize, 0).pageCount),
   );
   const title = allTime
     ? "ALL-TIME"
@@ -269,17 +282,18 @@ function Board({
         ? CAMPUS_LABELS[campus]
         : "High Five";
   const subtitle = allTime
-    ? "Career points in school history · both campuses · not the July 20 – August 28 cycle"
+    ? `Career points in school history · both campuses · not the ${formatCycleRange(cycle)} cycle`
     : institute
-      ? "North Austin Campus vs South Austin Campus · High Five is top 5 this cycle in each program"
+      ? `North Austin Campus vs South Austin Campus · High Five is top ${store.highFiveCutoff} this cycle in each program`
       : "Private High Five Competition · this cycle · ranked by points within program only";
 
   useEffect(() => {
+    if (store.paused) return;
     const timer = window.setInterval(() => {
       setListPage((current) => current + 1);
-    }, PAGE_HOLD_MS);
+    }, store.pageHoldSeconds * 1000);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [store.paused, store.pageHoldSeconds]);
 
   useEffect(() => {
     if (onPageCycle && listPage > 0 && listPage % maxPages === 0) {
@@ -317,19 +331,19 @@ function Board({
             <h1>{title}</h1>
             <p>{subtitle}</p>
           </div>
-          <CycleChip allTime={allTime} />
+          <CycleChip allTime={allTime} cycle={cycle} />
         </header>
-        {institute && !allTime ? <InstituteScoreboard /> : null}
+        {institute && !allTime ? <InstituteScoreboard students={students} /> : null}
       </div>
       <div className="tv-columns">
-        {PROGRAMS.map((program) => (
+        {programs.map((program) => (
           <ProgramColumn
             key={program}
             program={program}
             rows={boards[program]}
             showCampus={institute || allTime}
             listPage={listPage}
-            onFit={program === PROGRAMS[0] ? reportFit : undefined}
+            onFit={program === programs[0] ? reportFit : undefined}
             allTime={allTime}
           />
         ))}
@@ -361,31 +375,47 @@ function useTvStageScale() {
 }
 
 export function TvBoard({ mode }: { mode: TvMode }) {
-  const slides: Array<{ key: string; campus?: Campus; institute?: boolean }> =
-    mode === "slideshow"
-      ? [
-          { key: "north", campus: "north" },
-          { key: "south", campus: "south" },
-          { key: "institute", institute: true },
-        ]
-      : [{ key: mode, campus: mode }];
+  const live = useLiveBoard();
+  const slides = useMemo(() => {
+    if (mode !== "slideshow") return [{ key: mode, campus: mode as Campus }];
+    const campusSlides = live.campuses.map((campus) => ({ key: campus, campus }));
+    return [...campusSlides, { key: "institute" as const, institute: true }];
+  }, [mode, live.campuses]);
 
   const [index, setIndex] = useState(0);
   const [showAllTime, setShowAllTime] = useState(false);
+  const forced = live.store.forceSlide;
 
   const advanceSlide = useCallback(() => {
-    if (slides.length < 2) return;
+    if (forced !== "auto" || slides.length < 2) return;
     setIndex((current) => (current + 1) % slides.length);
-  }, [slides.length]);
+  }, [slides.length, forced]);
 
   useEffect(() => {
-    if (showAllTime) return;
-    const timer = window.setTimeout(() => setShowAllTime(true), ALL_TIME_AFTER_MS);
+    if (mode !== "slideshow") return;
+    if (forced === "allTime") {
+      setShowAllTime(true);
+      return;
+    }
+    if (forced !== "auto") {
+      setShowAllTime(false);
+      const next = slides.findIndex((slide) => slide.key === forced);
+      if (next >= 0) setIndex(next);
+    }
+  }, [forced, mode, slides]);
+
+  useEffect(() => {
+    if (showAllTime || live.store.paused || forced !== "auto" || mode !== "slideshow") return;
+    const timer = window.setTimeout(
+      () => setShowAllTime(true),
+      live.store.allTimeAfterSeconds * 1000,
+    );
     return () => window.clearTimeout(timer);
-  }, [showAllTime]);
+  }, [showAllTime, live.store.paused, live.store.allTimeAfterSeconds, forced, mode]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      if (forced !== "auto") return;
       if (event.key === "ArrowRight") {
         if (showAllTime) {
           setShowAllTime(false);
@@ -404,10 +434,16 @@ export function TvBoard({ mode }: { mode: TvMode }) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [slides.length, showAllTime]);
+  }, [slides.length, showAllTime, forced]);
 
-  const slide = slides[index];
+  const slide = slides[index] ?? slides[0];
   const scale = useTvStageScale();
+  const boardProps = {
+    students: live.students,
+    cycle: live.cycle,
+    programs: live.programs,
+    store: live.store,
+  };
 
   return (
     <div className="tv-frame">
@@ -427,14 +463,16 @@ export function TvBoard({ mode }: { mode: TvMode }) {
               key="alltime"
               allTime
               institute
-              onPageCycle={() => setShowAllTime(false)}
+              onPageCycle={forced === "auto" ? () => setShowAllTime(false) : undefined}
+              {...boardProps}
             />
           ) : (
             <Board
               key={slide.key}
-              campus={slide.campus}
-              institute={slide.institute}
-              onPageCycle={mode === "slideshow" ? advanceSlide : undefined}
+              campus={"campus" in slide ? slide.campus : undefined}
+              institute={"institute" in slide ? slide.institute : undefined}
+              onPageCycle={mode === "slideshow" && forced === "auto" ? advanceSlide : undefined}
+              {...boardProps}
             />
           )}
           {mode === "slideshow" ? (
@@ -445,7 +483,7 @@ export function TvBoard({ mode }: { mode: TvMode }) {
               <span className={`dot alltime ${showAllTime ? "on" : ""}`} />
             </div>
           ) : null}
-          <SponsorTicker />
+          <SponsorTicker items={live.sponsors} enabled={live.store.tickerEnabled} />
         </main>
       </div>
     </div>

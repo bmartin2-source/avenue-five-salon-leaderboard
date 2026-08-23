@@ -88,6 +88,7 @@ export type BoardScope = {
   program: Program;
   campus?: Campus;
   score?: ScoreKind;
+  highFiveSize?: number;
 };
 
 export const PROGRAM_LABELS: Record<Program, string> = {
@@ -321,8 +322,8 @@ export function rankStudents(
       previousRank,
       rankDelta: previousRank - rank,
       displayName: displayName(student),
-      highFive: score === "cycle" && rank <= HIGH_FIVE_SIZE,
-      allTime: score === "career" && rank <= HIGH_FIVE_SIZE,
+      highFive: score === "cycle" && rank <= (scope.highFiveSize ?? HIGH_FIVE_SIZE),
+      allTime: score === "career" && rank <= (scope.highFiveSize ?? HIGH_FIVE_SIZE),
       scoreKind: score,
     };
   });
@@ -346,9 +347,13 @@ export function rankAllPrograms(
   students: StudentRecord[],
   campus?: Campus,
   score: ScoreKind = "cycle",
+  highFiveSize = HIGH_FIVE_SIZE,
 ): Record<Program, RankedStudent[]> {
   return Object.fromEntries(
-    PROGRAMS.map((program) => [program, rankStudents(students, { program, campus, score })]),
+    PROGRAMS.map((program) => [
+      program,
+      rankStudents(students, { program, campus, score, highFiveSize }),
+    ]),
   ) as Record<Program, RankedStudent[]>;
 }
 
@@ -407,13 +412,154 @@ export function findStudent(
   return students.find((student) => student.id.toUpperCase() === studentId.trim().toUpperCase());
 }
 
+export const DUMMY_ADMIN_EMAIL = "admin@avenuefive.com";
+export const DUMMY_ADMIN_PIN = "2468";
+
+export function verifyAdminLogin(email: string, pin: string) {
+  return (
+    email.trim().toLowerCase() === DUMMY_ADMIN_EMAIL &&
+    pin.trim() === DUMMY_ADMIN_PIN
+  );
+}
+
+export type DummyTicket = {
+  id: string;
+  studentId: string;
+  date: string;
+  service: number;
+  retail: number;
+};
+
+export type RosterOverride = {
+  optIn: Record<string, boolean>;
+  addedStudents: StudentRecord[];
+  cycleTotals: Record<string, { service: number; retail: number }>;
+  cycleCleared: boolean;
+  careerCleared: boolean;
+};
+
+function hashId(value: string) {
+  return [...value].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+}
+
+function enumerateDays(startDate: string, endDate: string) {
+  const days: string[] = [];
+  const cursor = new Date(`${startDate}T00:00:00`);
+  const end = new Date(`${endDate}T00:00:00`);
+  if (Number.isNaN(cursor.getTime()) || Number.isNaN(end.getTime()) || cursor > end) {
+    return days;
+  }
+  while (cursor <= end) {
+    days.push(toIso(cursor));
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return days;
+}
+
+/** Deterministic dummy tickets that sum to the student's seed cycle totals. */
+export function dummyTickets(
+  student: Pick<StudentRecord, "id" | "service" | "retail">,
+  seedStart: string,
+  seedEnd: string,
+): DummyTicket[] {
+  const days = enumerateDays(seedStart, seedEnd);
+  const buckets = days.filter((_, index) => index % 7 === 0);
+  const slots = buckets.length || 1;
+  const dates = buckets.length ? buckets : [seedStart];
+  const tickets: DummyTicket[] = [];
+  let serviceLeft = Math.max(0, student.service);
+  let retailLeft = Math.max(0, student.retail);
+  for (let index = 0; index < slots; index += 1) {
+    const last = index === slots - 1;
+    const service = last ? serviceLeft : Math.floor(student.service / slots);
+    const retail = last ? retailLeft : Math.floor(student.retail / slots);
+    serviceLeft -= service;
+    retailLeft -= retail;
+    const offset = hashId(student.id) % Math.min(7, Math.max(1, days.length || 1));
+    const date = days[Math.min(days.length - 1, days.indexOf(dates[index]) + offset)] ?? dates[index];
+    tickets.push({
+      id: `${student.id}-t${index + 1}`,
+      studentId: student.id,
+      date,
+      service,
+      retail,
+    });
+  }
+  return tickets;
+}
+
+export function pullCycleTotals(
+  students: StudentRecord[],
+  startDate: string,
+  endDate: string,
+  seedStart: string,
+  seedEnd: string,
+) {
+  const totals: Record<string, { service: number; retail: number }> = {};
+  let ticketCount = 0;
+  for (const student of students) {
+    const tickets = dummyTickets(student, seedStart, seedEnd).filter(
+      (ticket) => ticket.date >= startDate && ticket.date <= endDate,
+    );
+    ticketCount += tickets.length;
+    totals[student.id] = {
+      service: tickets.reduce((sum, ticket) => sum + ticket.service, 0),
+      retail: tickets.reduce((sum, ticket) => sum + ticket.retail, 0),
+    };
+  }
+  return { totals, ticketCount };
+}
+
+export function composeStudents(
+  seedStudents: StudentRecord[],
+  store: RosterOverride,
+  studentConsent: Record<string, boolean> = {},
+): StudentRecord[] {
+  const roster = [...seedStudents, ...store.addedStudents];
+  return roster.map((student) => {
+    const pulled = store.cycleTotals[student.id];
+    const service = store.cycleCleared && !pulled ? 0 : pulled ? pulled.service : student.service;
+    const retail = store.cycleCleared && !pulled ? 0 : pulled ? pulled.retail : student.retail;
+    const careerService = store.careerCleared ? 0 : student.careerService;
+    const careerRetail = store.careerCleared ? 0 : student.careerRetail;
+    const optedIn = Object.hasOwn(store.optIn, student.id)
+      ? store.optIn[student.id]
+      : Object.hasOwn(studentConsent, student.id)
+        ? studentConsent[student.id]
+        : student.optedIn;
+    return { ...student, service, retail, careerService, careerRetail, optedIn };
+  });
+}
+
 export function applyConsent(
   students: StudentRecord[],
   overrides: Record<string, boolean> = {},
+  adminOverrides: Record<string, boolean> = {},
 ): StudentRecord[] {
-  return students.map((student) =>
-    Object.hasOwn(overrides, student.id)
-      ? { ...student, optedIn: overrides[student.id] }
-      : student,
-  );
+  return students.map((student) => {
+    if (Object.hasOwn(adminOverrides, student.id)) {
+      return { ...student, optedIn: adminOverrides[student.id] };
+    }
+    if (Object.hasOwn(overrides, student.id)) {
+      return { ...student, optedIn: overrides[student.id] };
+    }
+    return student;
+  });
+}
+
+export function cycleFromRange(startDate: string, endDate: string): Cycle {
+  const start = startDate || "2026-07-20";
+  const end = endDate || start;
+  const startLabel = parseIso(start).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+  });
+  return {
+    id: start,
+    label: `${startLabel} start`,
+    startDate: start,
+    endDate: end,
+    weeks: cycleLengthWeeks(start, end),
+    note: "Admin-selected dummy cycle range.",
+  };
 }

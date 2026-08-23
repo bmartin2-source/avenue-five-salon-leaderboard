@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import {
   CAMPUS_LABELS,
   PROGRAM_LABELS,
-  applyConsent,
   cycleWeek,
   displayName,
   findStudent,
@@ -15,10 +14,10 @@ import {
   formatMoney,
   formatPoints,
   rankStudents,
-  resolveCycle,
   studentPoints,
 } from "@/lib/leaderboard";
 import { data } from "@/lib/data";
+import { adminCycle, composeStudents, readAdminStore } from "@/lib/admin-store";
 import {
   clearSession,
   readConsentOverrides,
@@ -28,7 +27,7 @@ import {
 } from "@/lib/session";
 
 function liveStudents() {
-  return applyConsent(data.students, readConsentOverrides());
+  return composeStudents(data.students, readAdminStore(data), readConsentOverrides());
 }
 
 export function LoginForm() {
@@ -43,7 +42,7 @@ export function LoginForm() {
 
   function onSubmit(event: FormEvent) {
     event.preventDefault();
-    const account = findStudentByLogin(data.students, studentId, lastName);
+    const account = findStudentByLogin(liveStudents(), studentId, lastName);
     if (!account) {
       setError("Dummy login failed. Use a listed student ID and last name.");
       return;
@@ -200,20 +199,35 @@ export function StudentDashboard() {
   }, [router]);
 
   const student = studentId ? findStudent(students, studentId) : undefined;
+  const cutoff = readAdminStore(data).highFiveCutoff;
   const campusBoard = useMemo(
     () =>
       student
-        ? rankStudents(students, { program: student.program, campus: student.campus })
+        ? rankStudents(students, {
+            program: student.program,
+            campus: student.campus,
+            highFiveSize: cutoff,
+          })
         : [],
-    [student, students],
+    [student, students, cutoff],
   );
   const instituteBoard = useMemo(
-    () => (student ? rankStudents(students, { program: student.program }) : []),
-    [student, students],
+    () =>
+      student
+        ? rankStudents(students, { program: student.program, highFiveSize: cutoff })
+        : [],
+    [student, students, cutoff],
   );
   const careerBoard = useMemo(
-    () => (student ? rankStudents(students, { program: student.program, score: "career" }) : []),
-    [student, students],
+    () =>
+      student
+        ? rankStudents(students, {
+            program: student.program,
+            score: "career",
+            highFiveSize: cutoff,
+          })
+        : [],
+    [student, students, cutoff],
   );
 
   if (!studentId) return null;
@@ -238,8 +252,8 @@ export function StudentDashboard() {
 
   const board = scope === "campus" ? campusBoard : instituteBoard;
   const me = board.find((row) => row.id === student.id);
-  const cycle = resolveCycle(data);
-  const week = cycleWeek(cycle, data.asOf ? new Date(`${data.asOf}T12:00:00`) : new Date());
+  const cycle = adminCycle(readAdminStore(data));
+  const week = cycleWeek(cycle, new Date(`${cycle.endDate}T12:00:00`));
 
   return (
     <main className="student-page">
@@ -329,7 +343,7 @@ export function StudentDashboard() {
           {board.map((row) => {
             const highFiveClass = row.rank === 1
               ? "high-five-lead"
-              : row.rank <= 5
+              : row.highFive
                 ? "high-five-set"
                 : "rank-rest";
             return (
