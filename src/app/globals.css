@@ -262,12 +262,91 @@ html.tv-lock body {
   --tv-hf: 9px;
   --tv-title: 20px;
   --tv-title-lh: 1.05;
+  --tv-rank-col: 52px;
+  --tv-points-col: 102px;
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   background:
     radial-gradient(900px 480px at 8% 0%, rgba(212, 179, 122, 0.14), transparent 50%),
     radial-gradient(800px 420px at 100% 10%, rgba(224, 163, 176, 0.08), transparent 46%),
     linear-gradient(180deg, #120f16 0%, #0b090e 100%);
+}
+
+.tv-shell[data-type="-1"] {
+  --tv-row-h: 48px;
+  --tv-name: 22px;
+  --tv-rank: 22px;
+  --tv-points: 18px;
+  --tv-split: 10px;
+  --tv-hf: 8px;
+  --tv-rank-col: 48px;
+  --tv-points-col: 96px;
+}
+
+.tv-shell[data-type="1"] {
+  --tv-row-h: 54px;
+  --tv-name: 26px;
+  --tv-rank: 26px;
+  --tv-points: 21px;
+  --tv-split: 11px;
+  --tv-hf: 9px;
+  --tv-rank-col: 54px;
+  --tv-points-col: 110px;
+}
+
+.tv-shell[data-quiet="1"] .ticker-track {
+  animation-play-state: paused;
+}
+
+.tv-frozen {
+  margin: 0 10px 4px;
+  padding: 6px 12px;
+  text-align: center;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1a140c;
+  background: linear-gradient(90deg, #e8c88a, #f0d7a2);
+  border-radius: 8px;
+}
+
+.tv-safe {
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 10px;
+  min-height: 0;
+  height: 100%;
+}
+
+.tv-safe .mark {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto;
+  font-size: 28px;
+}
+
+.tv-safe .safe-kicker {
+  margin: 0;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.tv-safe h1 {
+  margin: 0;
+  font-size: 64px;
+  line-height: 1;
+}
+
+.tv-safe .safe-note {
+  margin: 8px 0 0;
+  color: var(--gold-hot);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 16px;
 }
 
 .tv-header {
@@ -451,7 +530,7 @@ html.tv-lock body {
   right: 0;
   height: var(--tv-row-h);
   display: grid;
-  grid-template-columns: 52px minmax(0, 1fr) 102px;
+  grid-template-columns: var(--tv-rank-col) minmax(0, 1fr) var(--tv-points-col);
   gap: 10px;
   align-items: center;
   padding: 0 8px;
@@ -978,6 +1057,12 @@ html.tv-lock body {
   border-color: rgba(212, 179, 122, 0.55);
   background: rgba(212, 179, 122, 0.14);
   color: var(--gold-hot);
+}
+
+.chip.danger.on {
+  border-color: rgba(229, 155, 139, 0.55);
+  background: rgba(229, 155, 139, 0.16);
+  color: #f3c4b8;
 }
 
 .admin-row-head {

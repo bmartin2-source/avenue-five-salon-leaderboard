@@ -414,12 +414,209 @@ export function findStudent(
 
 export const DUMMY_ADMIN_EMAIL = "admin@avenuefive.com";
 export const DUMMY_ADMIN_PIN = "2468";
+export const DUMMY_NORTH_EMAIL = "north@avenuefive.com";
+export const DUMMY_SOUTH_EMAIL = "south@avenuefive.com";
+export const DUMMY_CAMPUS_PIN = "1357";
+
+export type StaffRole = "institute-admin" | "campus-manager";
+export type StaffSession = {
+  role: StaffRole;
+  campus?: Campus;
+  email: string;
+};
+export type FreezeScope = "all" | Campus;
+export type TvTypeStep = -1 | 0 | 1;
+export type KioskPin = Campus | "institute";
+export type QuietDisplay = "branding" | "last";
+
+export const DUMMY_STAFF: Array<{
+  email: string;
+  pin: string;
+  role: StaffRole;
+  campus?: Campus;
+}> = [
+  { email: DUMMY_ADMIN_EMAIL, pin: DUMMY_ADMIN_PIN, role: "institute-admin" },
+  { email: DUMMY_NORTH_EMAIL, pin: DUMMY_CAMPUS_PIN, role: "campus-manager", campus: "north" },
+  { email: DUMMY_SOUTH_EMAIL, pin: DUMMY_CAMPUS_PIN, role: "campus-manager", campus: "south" },
+];
+
+export function verifyStaffLogin(email: string, pin: string): StaffSession | null {
+  const match = DUMMY_STAFF.find(
+    (row) => row.email === email.trim().toLowerCase() && row.pin === pin.trim(),
+  );
+  if (!match) return null;
+  return { role: match.role, campus: match.campus, email: match.email };
+}
 
 export function verifyAdminLogin(email: string, pin: string) {
-  return (
-    email.trim().toLowerCase() === DUMMY_ADMIN_EMAIL &&
-    pin.trim() === DUMMY_ADMIN_PIN
-  );
+  return verifyStaffLogin(email, pin)?.role === "institute-admin";
+}
+
+export const TV_TYPE_STEPS: Record<
+  TvTypeStep,
+  { row: number; name: number; points: number; rankCol: number; pointsCol: number }
+> = {
+  [-1]: { row: 48, name: 22, points: 18, rankCol: 48, pointsCol: 96 },
+  [0]: { row: 50, name: 24, points: 20, rankCol: 52, pointsCol: 102 },
+  [1]: { row: 54, name: 26, points: 21, rankCol: 54, pointsCol: 110 },
+};
+
+export function clampTypeStep(value: unknown): TvTypeStep {
+  const step = Number(value);
+  if (step <= -1) return -1;
+  if (step >= 1) return 1;
+  return 0;
+}
+
+export function tvRowHeight(step: unknown = 0) {
+  return TV_TYPE_STEPS[clampTypeStep(step)].row;
+}
+
+export function parseClockMinutes(hhmm: string) {
+  const [hours, minutes] = String(hhmm || "").split(":").map((part) => Number(part));
+  if (!Number.isFinite(hours) || !Number.isFinite(minutes)) return 0;
+  return ((Math.min(23, Math.max(0, hours)) * 60) + Math.min(59, Math.max(0, minutes))) % (24 * 60);
+}
+
+/** Inclusive start, exclusive end. Overnight windows (21:00–07:00) are supported. */
+export function isQuietHours(
+  now: Date,
+  start: string,
+  end: string,
+  enabled: boolean,
+) {
+  if (!enabled) return false;
+  const mins = now.getHours() * 60 + now.getMinutes();
+  const from = parseClockMinutes(start);
+  const to = parseClockMinutes(end);
+  if (from === to) return true;
+  if (from < to) return mins >= from && mins < to;
+  return mins >= from || mins < to;
+}
+
+export function freezeRankKey(
+  score: ScoreKind,
+  campus: Campus | "all",
+  program: Program,
+) {
+  return `${score}:${campus}:${program}`;
+}
+
+export function ranksFrozenFor(
+  scopes: FreezeScope[],
+  campus?: Campus,
+  allTime?: boolean,
+) {
+  if (!scopes.length) return false;
+  if (scopes.includes("all")) return true;
+  if (allTime) return false;
+  return Boolean(campus && scopes.includes(campus));
+}
+
+export function snapshotFrozenRanks(
+  students: StudentRecord[],
+  scopes: FreezeScope[],
+): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  const includeAll = scopes.includes("all");
+  const campuses = includeAll
+    ? [...CAMPUSES]
+    : CAMPUSES.filter((campus) => scopes.includes(campus));
+
+  for (const campus of campuses) {
+    for (const program of PROGRAMS) {
+      out[freezeRankKey("cycle", campus, program)] = rankStudents(students, {
+        campus,
+        program,
+        score: "cycle",
+      }).map((row) => row.id);
+    }
+  }
+
+  if (includeAll) {
+    for (const program of PROGRAMS) {
+      out[freezeRankKey("cycle", "all", program)] = rankStudents(students, {
+        program,
+        score: "cycle",
+      }).map((row) => row.id);
+      out[freezeRankKey("career", "all", program)] = rankStudents(students, {
+        program,
+        score: "career",
+      }).map((row) => row.id);
+    }
+  }
+  return out;
+}
+
+export function applyFrozenOrder(
+  students: StudentRecord[],
+  frozenIds: string[] | undefined,
+  scope: BoardScope,
+): RankedStudent[] {
+  if (!frozenIds?.length) return rankStudents(students, scope);
+  const byId = new Map(students.map((student) => [student.id, student]));
+  const ordered: StudentRecord[] = [];
+  for (const id of frozenIds) {
+    const student = byId.get(id);
+    if (!student) continue;
+    if (student.program !== scope.program) continue;
+    if (scope.campus && student.campus !== scope.campus) continue;
+    ordered.push(student);
+  }
+  const score = scope.score ?? "cycle";
+  const cutoff = scope.highFiveSize ?? HIGH_FIVE_SIZE;
+  return ordered.map((student, index) => {
+    const rank = index + 1;
+    const dollars = scoreDollars(student, score);
+    const points = studentPoints(dollars);
+    return {
+      ...student,
+      points,
+      total: points,
+      rank,
+      campusRank: rank,
+      previousRank: rank,
+      rankDelta: 0,
+      displayName: displayName(student),
+      highFive: score === "cycle" && rank <= cutoff,
+      allTime: score === "career" && rank <= cutoff,
+      scoreKind: score,
+    };
+  });
+}
+
+export function omitHiddenStudents<T extends { id: string }>(rows: T[], hiddenIds: string[]) {
+  if (!hiddenIds.length) return rows;
+  const hidden = new Set(hiddenIds);
+  return rows.filter((row) => !hidden.has(row.id));
+}
+
+export function rankTvPrograms(
+  students: StudentRecord[],
+  options: {
+    campus?: Campus;
+    institute?: boolean;
+    allTime?: boolean;
+    highFiveSize?: number;
+    frozenScopes: FreezeScope[];
+    frozenRanks: Record<string, string[]>;
+    hiddenStudentIds: string[];
+  },
+): Record<Program, RankedStudent[]> {
+  const score: ScoreKind = options.allTime ? "career" : "cycle";
+  const campus = options.allTime || options.institute ? undefined : options.campus;
+  const freezeCampus: Campus | "all" = campus ?? "all";
+  const frozen = ranksFrozenFor(options.frozenScopes, options.campus, options.allTime);
+  return Object.fromEntries(
+    PROGRAMS.map((program) => {
+      const ranked = applyFrozenOrder(
+        students,
+        frozen ? options.frozenRanks[freezeRankKey(score, freezeCampus, program)] : undefined,
+        { program, campus, score, highFiveSize: options.highFiveSize },
+      );
+      return [program, omitHiddenStudents(ranked, options.hiddenStudentIds)];
+    }),
+  ) as Record<Program, RankedStudent[]>;
 }
 
 export type DummyTicket = {

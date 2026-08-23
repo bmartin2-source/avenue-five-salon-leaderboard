@@ -46,7 +46,26 @@ The TV slideshow cycles North Austin Campus → South Austin Campus → all-inst
 
 Auth is a client-side stub against `data/leaderboard.json`. It is not production security. After sign-in, students land on the consent page to Opt In or Opt Out.
 
-Dummy staff login for `/admin`: `admin@avenuefive.com` / PIN `2468`. Admin settings persist in this browser and update the TV after save/refresh.
+Dummy staff logins for `/admin` (role stub only, not real auth). Settings persist in this browser and update the TV after save/refresh.
+
+| Role | Email | PIN | Can control |
+| --- | --- | --- | --- |
+| Institute admin | `admin@avenuefive.com` | `2468` | Both campuses + overall board |
+| North campus manager | `north@avenuefive.com` | `1357` | North Austin board only |
+| South campus manager | `south@avenuefive.com` | `1357` | South Austin board only |
+
+## Dummy instructor TV settings
+
+All of these are reachable from `/admin`. They are dummy switches, not production.
+
+| Setting | What it does |
+| --- | --- |
+| Panic hide (one student) | Omits that student from the TV. No name, no `Student AFI-xxxx` row. |
+| Hide the whole board | Safe Avenue Five branding screen. Institute admin only. |
+| Freeze ranks | Locks the current walk-on order. Live dummy totals cannot reshuffle. TV shows **RANKS FROZEN**. Unfreeze restores live ranking. Campus managers freeze their campus; institute admin can freeze all. |
+| Pin physical TV | Assigns `/tv/u/afi-salon-tv` to North Austin, South Austin, or the institute slideshow. The pin sticks in this browser. Locked `/tv/north` and `/tv/south` routes stay as-is. |
+| Quiet hours | Default 21:00–07:00 (overnight). Stops slide flipping and paging. Hold a branding screen or the last slide. |
+| Type size | Smaller / default / larger. Default stays the last clean mid-size board (24px names, 50px rows, reserved name vs points columns). HIGH FIVE chips stay under the rank, not on names. No service/retail badges. |
 
 ## Ranking rules in this dummy
 

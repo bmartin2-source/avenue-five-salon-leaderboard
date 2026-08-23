@@ -41,7 +41,7 @@ export default function HomePage() {
           <Link className="card" href="/admin">
             <p className="kicker">Staff</p>
             <h2>Administrator</h2>
-            <p>Dummy staff dashboard: cycle pull, roster opt-in, ticker, and TV display controls. Not public.</p>
+            <p>Dummy staff dashboard: panic hide, freeze ranks, pin TV, quiet hours, type size, and role stub. Not public.</p>
           </Link>
         </div>
 
@@ -60,7 +60,9 @@ export default function HomePage() {
               Casey: <code>AFI-2403</code> / <code>Miles</code>.
             </li>
             <li>
-              Dummy admin login — email <code>admin@avenuefive.com</code> / PIN <code>2468</code>.
+              Dummy staff logins — institute admin <code>admin@avenuefive.com</code> / <code>2468</code>.
+              North manager <code>north@avenuefive.com</code> / <code>1357</code>.
+              South manager <code>south@avenuefive.com</code> / <code>1357</code>.
               Open <code>/admin</code>. Changes save to this browser and show on the TV after refresh.
             </li>
           </ul>

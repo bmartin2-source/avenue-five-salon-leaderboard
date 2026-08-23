@@ -2,11 +2,18 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
   applyConsent,
+  applyFrozenOrder,
   composeStudents,
   dummyTickets,
+  isQuietHours,
+  omitHiddenStudents,
   pullCycleTotals,
   rankStudents,
+  ranksFrozenFor,
+  snapshotFrozenRanks,
+  tvRowHeight,
   verifyAdminLogin,
+  verifyStaffLogin,
   type RosterOverride,
   type StudentRecord,
 } from "./leaderboard.ts";
@@ -44,6 +51,94 @@ describe("admin dummy login", () => {
     assert.equal(verifyAdminLogin("admin@avenuefive.com", "2468"), true);
     assert.equal(verifyAdminLogin("ADMIN@avenuefive.com", "2468"), true);
     assert.equal(verifyAdminLogin("admin@avenuefive.com", "0000"), false);
+  });
+
+  it("maps campus-manager vs institute-admin dummy roles", () => {
+    assert.deepEqual(verifyStaffLogin("admin@avenuefive.com", "2468"), {
+      role: "institute-admin",
+      campus: undefined,
+      email: "admin@avenuefive.com",
+    });
+    assert.deepEqual(verifyStaffLogin("north@avenuefive.com", "1357"), {
+      role: "campus-manager",
+      campus: "north",
+      email: "north@avenuefive.com",
+    });
+    assert.deepEqual(verifyStaffLogin("south@avenuefive.com", "1357"), {
+      role: "campus-manager",
+      campus: "south",
+      email: "south@avenuefive.com",
+    });
+    assert.equal(verifyStaffLogin("north@avenuefive.com", "2468"), null);
+    assert.equal(verifyAdminLogin("north@avenuefive.com", "1357"), false);
+  });
+});
+
+describe("quiet hours", () => {
+  it("treats an overnight 21:00–07:00 window as closed after hours", () => {
+    const date = (hours: number, minutes = 0) => {
+      const next = new Date("2026-08-23T00:00:00");
+      next.setHours(hours, minutes, 0, 0);
+      return next;
+    };
+    assert.equal(isQuietHours(date(22, 0), "21:00", "07:00", true), true);
+    assert.equal(isQuietHours(date(6, 30), "21:00", "07:00", true), true);
+    assert.equal(isQuietHours(date(12, 0), "21:00", "07:00", true), false);
+    assert.equal(isQuietHours(date(22, 0), "21:00", "07:00", false), false);
+  });
+});
+
+describe("panic hide and freeze", () => {
+  it("omits hidden students from the TV list without showing a name", () => {
+    const ranked = rankStudents(
+      [
+        student({ id: "AFI-1", service: 900 }),
+        student({ id: "AFI-2", service: 800 }),
+        student({ id: "AFI-3", service: 700 }),
+      ],
+      { program: "cosmetology" },
+    );
+    const visible = omitHiddenStudents(ranked, ["AFI-2"]);
+    assert.deepEqual(
+      visible.map((row) => [row.id, row.rank]),
+      [
+        ["AFI-1", 1],
+        ["AFI-3", 3],
+      ],
+    );
+  });
+
+  it("keeps the frozen walk-on order after live totals change", () => {
+    const before = [
+      student({ id: "AFI-1", service: 900, retail: 10 }),
+      student({ id: "AFI-2", service: 400, retail: 10 }),
+    ];
+    const snap = snapshotFrozenRanks(before, ["north"]);
+    const after = [
+      student({ id: "AFI-1", service: 100, retail: 10 }),
+      student({ id: "AFI-2", service: 900, retail: 80 }),
+    ];
+    const live = rankStudents(after, { campus: "north", program: "cosmetology" });
+    assert.equal(live[0].id, "AFI-2");
+    const frozen = applyFrozenOrder(after, snap["cycle:north:cosmetology"], {
+      campus: "north",
+      program: "cosmetology",
+    });
+    assert.deepEqual(
+      frozen.map((row) => row.id),
+      ["AFI-1", "AFI-2"],
+    );
+    assert.equal(ranksFrozenFor(["north"], "north", false), true);
+    assert.equal(ranksFrozenFor(["north"], "south", false), false);
+    assert.equal(ranksFrozenFor(["north"], "north", true), false);
+  });
+});
+
+describe("TV type steps", () => {
+  it("keeps the default mid-size row height and only nudges larger/smaller", () => {
+    assert.equal(tvRowHeight(0), 50);
+    assert.equal(tvRowHeight(-1), 48);
+    assert.equal(tvRowHeight(1), 54);
   });
 });
 
