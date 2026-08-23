@@ -103,9 +103,29 @@ describe("panic hide and freeze", () => {
       visible.map((row) => [row.id, row.rank]),
       [
         ["AFI-1", 1],
-        ["AFI-3", 3],
+        ["AFI-3", 2],
       ],
     );
+  });
+
+  it("closes the hole when rank 1 is hidden so the list starts at 1", () => {
+    const ranked = rankStudents(
+      [
+        student({ id: "AFI-2401", service: 900 }),
+        student({ id: "AFI-2", service: 800 }),
+        student({ id: "AFI-3", service: 700 }),
+      ],
+      { program: "cosmetology" },
+    );
+    const visible = omitHiddenStudents(ranked, ["AFI-2401"]);
+    assert.deepEqual(
+      visible.map((row) => [row.id, row.rank]),
+      [
+        ["AFI-2", 1],
+        ["AFI-3", 2],
+      ],
+    );
+    assert.equal(visible[0].highFive, true);
   });
 
   it("keeps the frozen walk-on order after live totals change", () => {

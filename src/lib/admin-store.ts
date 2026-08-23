@@ -1,4 +1,5 @@
 import {
+  CAMPUS_LABELS,
   CAMPUSES,
   PROGRAMS,
   clampTypeStep,
@@ -300,9 +301,19 @@ export function tvMotionHalted(store: AdminStore, now = new Date()) {
   );
 }
 
-export function tvStatusLine(store: AdminStore, now = new Date()) {
-  const slide =
-    store.forceSlide === "auto"
+export function tvStatusLine(
+  store: AdminStore,
+  now = new Date(),
+  session?: StaffSession | null,
+) {
+  const managerCampus = session?.role === "campus-manager" ? session.campus : undefined;
+  const slide = managerCampus
+    ? store.kioskPin === managerCampus
+      ? `kiosk pinned to ${CAMPUS_LABELS[managerCampus]}`
+      : store.forceSlide === managerCampus
+        ? `forced ${CAMPUS_LABELS[managerCampus]}`
+        : `${CAMPUS_LABELS[managerCampus]} board`
+    : store.forceSlide === "auto"
       ? store.kioskPin === "institute"
         ? "auto-rotate (North → South → All Institute, then All-Time)"
         : `kiosk pinned to ${store.kioskPin === "north" ? "North Austin Campus" : "South Austin Campus"}`
@@ -321,11 +332,15 @@ export function tvStatusLine(store: AdminStore, now = new Date()) {
       : store.paused
         ? "paused"
         : "running";
-  const frozen = store.frozenScopes.length
-    ? store.frozenScopes.includes("all")
+  const frozen = managerCampus
+    ? store.frozenScopes.includes("all") || store.frozenScopes.includes(managerCampus)
       ? "ranks frozen"
-      : `ranks frozen (${store.frozenScopes.join(", ")})`
-    : "live ranks";
+      : "live ranks"
+    : store.frozenScopes.length
+      ? store.frozenScopes.includes("all")
+        ? "ranks frozen"
+        : `ranks frozen (${store.frozenScopes.join(", ")})`
+      : "live ranks";
   const ticker = store.tickerEnabled ? "ticker on" : "ticker off";
   return `${slide} · ${motion} · ${frozen} · ${ticker}`;
 }

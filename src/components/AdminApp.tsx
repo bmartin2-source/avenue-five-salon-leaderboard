@@ -344,8 +344,27 @@ function AdminDashboard({
       <section className="admin-status">
         <p className="kicker">What the TV is showing now</p>
         <p>
-          Live cycle: <strong>{formatCycleRange(cycle)}</strong> · {tvStatusLine(store, now)}
+          Live cycle: <strong>{formatCycleRange(cycle)}</strong> · {tvStatusLine(store, now, session)}
         </p>
+        <div className="admin-inline" style={{ marginTop: 10 }}>
+          <p className="kicker" style={{ margin: 0 }}>Type size</p>
+          {(
+            [
+              [-1, "Smaller"],
+              [0, "Default"],
+              [1, "Larger"],
+            ] as Array<[TvTypeStep, string]>
+          ).map(([step, label]) => (
+            <button
+              key={step}
+              className={`chip ${store.typeStep === step ? "on" : ""}`}
+              type="button"
+              onClick={() => save({ ...store, typeStep: clampTypeStep(step) })}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
         <p className="hint">
           Hold {store.pageHoldSeconds}s per list page · All-Time every {store.allTimeAfterSeconds}s
           {store.lastPull
@@ -444,10 +463,15 @@ function AdminDashboard({
             ))}
           </div>
           <p className="hint" style={{ marginTop: 12 }}>
-            Current pin:{" "}
-            {store.kioskPin === "institute"
-              ? "North → South → All Institute"
-              : CAMPUS_LABELS[store.kioskPin]}
+            {institute
+              ? `Current pin: ${
+                  store.kioskPin === "institute"
+                    ? "North → South → All Institute"
+                    : CAMPUS_LABELS[store.kioskPin]
+                }`
+              : store.kioskPin === myCampus
+                ? `Kiosk pinned to ${CAMPUS_LABELS[myCampus ?? "north"]}`
+                : `Unlisted TV is not pinned to ${CAMPUS_LABELS[myCampus ?? "north"]} yet`}
           </p>
         </section>
 
@@ -510,32 +534,6 @@ function AdminDashboard({
               {store.quietDisplay}. Institute admin can change this.
             </p>
           )}
-        </section>
-
-        <section className="admin-card">
-          <h2>Type size</h2>
-          <p className="hint">
-            Bigger or smaller for real TVs. Default is the last clean mid-size board (24px names,
-            reserved name/points columns, HF chip under the rank). No service/retail badges.
-          </p>
-          <div className="admin-chips">
-            {(
-              [
-                [-1, "Smaller"],
-                [0, "Default"],
-                [1, "Larger"],
-              ] as Array<[TvTypeStep, string]>
-            ).map(([step, label]) => (
-              <button
-                key={step}
-                className={`chip ${store.typeStep === step ? "on" : ""}`}
-                type="button"
-                onClick={() => save({ ...store, typeStep: clampTypeStep(step) })}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
         </section>
 
         {institute ? (

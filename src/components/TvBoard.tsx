@@ -1,12 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   CAMPUS_LABELS,
   CAMPUS_SHORT,
   PROGRAM_LABELS,
   campusTotals,
-  cycleWeek,
+  displayCycleWeek,
   formatCycleRange,
   formatMoney,
   formatPoints,
@@ -192,7 +192,7 @@ function CycleChip({
   allTime?: boolean;
   cycle: Cycle;
 }) {
-  const week = cycleWeek(cycle, new Date(`${cycle.endDate}T12:00:00`));
+  const week = displayCycleWeek(cycle);
   if (allTime) {
     return (
       <div className="cycle-chip alltime">
@@ -239,14 +239,18 @@ function InstituteScoreboard({ students }: { students: StudentRecord[] }) {
   );
 }
 
-function SafeScreen({ reason }: { reason: "hidden" | "quiet" }) {
+function SafeScreen({ reason }: { reason: "hidden" | "quiet" | "hold" }) {
   return (
     <div className="tv-safe">
       <div className="mark">A5</div>
       <p className="safe-kicker">Avenue Five Institute</p>
       <h1>High Five Competition</h1>
       <p className="safe-note">
-        {reason === "hidden" ? "Board hidden · staff safe screen" : "Quiet hours · branding hold"}
+        {reason === "hidden"
+          ? "Board hidden · staff safe screen"
+          : reason === "quiet"
+            ? "Quiet hours · branding hold"
+            : "Private"}
       </p>
     </div>
   );
@@ -404,15 +408,61 @@ function useTvStageScale() {
   return scale;
 }
 
+function TvStage({
+  scale,
+  typeStep = 0,
+  quiet,
+  frozen,
+  allTime,
+  children,
+}: {
+  scale: number | null;
+  typeStep?: number;
+  quiet?: boolean;
+  frozen?: boolean;
+  allTime?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className="tv-frame">
+      <div
+        className="tv-stage"
+        style={{
+          width: TV_STAGE_WIDTH,
+          height: TV_STAGE_HEIGHT,
+          ...(scale != null
+            ? { transform: `translate(-50%, -50%) scale(${scale})` }
+            : {}),
+        }}
+      >
+        <main
+          className={`tv-shell ${allTime ? "all-time" : ""}`}
+          data-type={String(typeStep)}
+          data-quiet={quiet ? "1" : "0"}
+          data-frozen={frozen ? "1" : "0"}
+        >
+          {children}
+        </main>
+      </div>
+    </div>
+  );
+}
+
 export function TvBoard({ mode }: { mode: TvMode }) {
   const live = useLiveBoard();
-  const [now, setNow] = useState(() => new Date());
+  const scale = useTvStageScale();
+  const store = live.store;
+  const [now, setNow] = useState(() => new Date("2026-08-21T12:00:00"));
+  const [index, setIndex] = useState(0);
+  const [showAllTime, setShowAllTime] = useState(false);
+
   useEffect(() => {
-    const timer = window.setInterval(() => setNow(new Date()), 30_000);
+    const tick = () => setNow(new Date());
+    tick();
+    const timer = window.setInterval(tick, 30_000);
     return () => window.clearInterval(timer);
   }, []);
 
-  const store = live.store;
   const quiet = isQuietHours(now, store.quietStart, store.quietEnd, store.quietHoursEnabled);
   const holdMotion = store.paused || quiet;
   const safeReason = store.boardHidden ? "hidden" : quiet && store.quietDisplay === "branding" ? "quiet" : null;
@@ -427,8 +477,6 @@ export function TvBoard({ mode }: { mode: TvMode }) {
     return [...campusSlides, { key: "institute" as const, institute: true }];
   }, [mode, live.campuses, store.forceSlide, store.kioskPin]);
 
-  const [index, setIndex] = useState(0);
-  const [showAllTime, setShowAllTime] = useState(false);
   const forced = store.forceSlide;
   const canRotate = forced === "auto" && !holdMotion && !safeReason && !pinned;
   const canReturnFromAllTime = forced === "auto" && !holdMotion && !safeReason;
@@ -483,8 +531,15 @@ export function TvBoard({ mode }: { mode: TvMode }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [slides.length, showAllTime, forced, holdMotion, safeReason]);
 
+  if (!live.ready) {
+    return (
+      <TvStage scale={scale}>
+        <SafeScreen reason="hold" />
+      </TvStage>
+    );
+  }
+
   const slide = slides[index] ?? slides[0];
-  const scale = useTvStageScale();
   const boardProps = {
     students: live.students,
     cycle: live.cycle,
@@ -495,53 +550,41 @@ export function TvBoard({ mode }: { mode: TvMode }) {
   const showSlideshowDots = mode === "slideshow" && !pinned && !safeReason;
 
   return (
-    <div className="tv-frame">
-      <div
-        className="tv-stage"
-        style={{
-          width: TV_STAGE_WIDTH,
-          height: TV_STAGE_HEIGHT,
-          ...(scale != null
-            ? { transform: `translate(-50%, -50%) scale(${scale})` }
-            : {}),
-        }}
-      >
-        <main
-          className={`tv-shell ${showAllTime ? "all-time" : ""}`}
-          data-type={String(store.typeStep)}
-          data-quiet={quiet ? "1" : "0"}
-          data-frozen={store.frozenScopes.length ? "1" : "0"}
-        >
-          {safeReason ? (
-            <SafeScreen reason={safeReason} />
-          ) : showAllTime ? (
-            <Board
-              key="alltime"
-              allTime
-              institute
-              onPageCycle={canReturnFromAllTime ? () => setShowAllTime(false) : undefined}
-              {...boardProps}
-            />
-          ) : (
-            <Board
-              key={slide.key}
-              campus={"campus" in slide ? slide.campus : undefined}
-              institute={"institute" in slide ? slide.institute : undefined}
-              onPageCycle={canRotate ? advanceSlide : undefined}
-              {...boardProps}
-            />
-          )}
-          {showSlideshowDots ? (
-            <div className="tv-dots" aria-hidden>
-              {slides.map((item, slideIndex) => (
-                <span key={item.key} className={`dot ${!showAllTime && slideIndex === index ? "on" : ""}`} />
-              ))}
-              <span className={`dot alltime ${showAllTime ? "on" : ""}`} />
-            </div>
-          ) : null}
-          {safeReason ? null : <SponsorTicker items={live.sponsors} enabled={store.tickerEnabled} />}
-        </main>
-      </div>
-    </div>
+    <TvStage
+      scale={scale}
+      typeStep={store.typeStep}
+      quiet={quiet}
+      frozen={store.frozenScopes.length > 0}
+      allTime={showAllTime}
+    >
+      {safeReason ? (
+        <SafeScreen reason={safeReason} />
+      ) : showAllTime ? (
+        <Board
+          key="alltime"
+          allTime
+          institute
+          onPageCycle={canReturnFromAllTime ? () => setShowAllTime(false) : undefined}
+          {...boardProps}
+        />
+      ) : (
+        <Board
+          key={slide.key}
+          campus={"campus" in slide ? slide.campus : undefined}
+          institute={"institute" in slide ? slide.institute : undefined}
+          onPageCycle={canRotate ? advanceSlide : undefined}
+          {...boardProps}
+        />
+      )}
+      {showSlideshowDots ? (
+        <div className="tv-dots" aria-hidden>
+          {slides.map((item, slideIndex) => (
+            <span key={item.key} className={`dot ${!showAllTime && slideIndex === index ? "on" : ""}`} />
+          ))}
+          <span className={`dot alltime ${showAllTime ? "on" : ""}`} />
+        </div>
+      ) : null}
+      {safeReason ? null : <SponsorTicker items={live.sponsors} enabled={store.tickerEnabled} />}
+    </TvStage>
   );
 }

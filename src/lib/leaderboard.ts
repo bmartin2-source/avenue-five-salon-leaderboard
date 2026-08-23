@@ -291,6 +291,17 @@ export function cycleWeek(cycle: Cycle, today = new Date()): number {
   return Math.min(cycle.weeks, Math.max(1, week));
 }
 
+/** Dummy “today” shared by hub, TV, and student view so the week number matches. */
+export const BOARD_AS_OF = "2026-08-21";
+
+export function boardAsOfDate(asOf = BOARD_AS_OF): Date {
+  return new Date(`${asOf}T12:00:00`);
+}
+
+export function displayCycleWeek(cycle: Cycle, asOf = BOARD_AS_OF): number {
+  return cycleWeek(cycle, boardAsOfDate(asOf));
+}
+
 export function rankStudents(
   students: StudentRecord[],
   scope: BoardScope,
@@ -585,10 +596,26 @@ export function applyFrozenOrder(
   });
 }
 
-export function omitHiddenStudents<T extends { id: string }>(rows: T[], hiddenIds: string[]) {
+export function omitHiddenStudents(
+  rows: RankedStudent[],
+  hiddenIds: string[],
+  highFiveSize = HIGH_FIVE_SIZE,
+): RankedStudent[] {
   if (!hiddenIds.length) return rows;
   const hidden = new Set(hiddenIds);
-  return rows.filter((row) => !hidden.has(row.id));
+  return rows
+    .filter((row) => !hidden.has(row.id))
+    .map((row, index) => {
+      const rank = index + 1;
+      return {
+        ...row,
+        rank,
+        campusRank: rank,
+        rankDelta: row.previousRank - rank,
+        highFive: row.scoreKind === "cycle" && rank <= highFiveSize,
+        allTime: row.scoreKind === "career" && rank <= highFiveSize,
+      };
+    });
 }
 
 export function rankTvPrograms(
@@ -614,7 +641,7 @@ export function rankTvPrograms(
         frozen ? options.frozenRanks[freezeRankKey(score, freezeCampus, program)] : undefined,
         { program, campus, score, highFiveSize: options.highFiveSize },
       );
-      return [program, omitHiddenStudents(ranked, options.hiddenStudentIds)];
+      return [program, omitHiddenStudents(ranked, options.hiddenStudentIds, options.highFiveSize)];
     }),
   ) as Record<Program, RankedStudent[]>;
 }

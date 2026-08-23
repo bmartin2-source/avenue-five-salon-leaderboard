@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import {
   CAMPUS_LABELS,
   PROGRAM_LABELS,
-  cycleWeek,
+  displayCycleWeek,
   displayName,
   findStudent,
   findStudentByLogin,
@@ -253,7 +253,7 @@ export function StudentDashboard() {
   const board = scope === "campus" ? campusBoard : instituteBoard;
   const me = board.find((row) => row.id === student.id);
   const cycle = adminCycle(readAdminStore(data));
-  const week = cycleWeek(cycle, new Date(`${cycle.endDate}T12:00:00`));
+  const week = displayCycleWeek(cycle);
 
   return (
     <main className="student-page">

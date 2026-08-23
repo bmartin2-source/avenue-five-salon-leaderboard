@@ -6,6 +6,7 @@ import {
   ADMIN_EVENT,
   adminCycle,
   composeStudents,
+  defaultAdminStore,
   liveSponsors,
   readAdminStore,
   visibleCampuses,
@@ -22,13 +23,13 @@ export type LiveBoard = {
   sponsors: AdminStore["sponsors"];
   programs: ReturnType<typeof visiblePrograms>;
   campuses: ReturnType<typeof visibleCampuses>;
+  ready: boolean;
 };
 
-export function loadLiveBoard(): LiveBoard {
-  const store = readAdminStore(data);
+function boardFromStore(store: AdminStore, consent: Record<string, boolean> = {}): Omit<LiveBoard, "ready"> {
   return {
     store,
-    students: composeStudents(data.students, store, readConsentOverrides()),
+    students: composeStudents(data.students, store, consent),
     cycle: adminCycle(store),
     sponsors: liveSponsors(store),
     programs: visiblePrograms(store),
@@ -36,15 +37,17 @@ export function loadLiveBoard(): LiveBoard {
   };
 }
 
+/** Same on the server and the first client paint — never reads localStorage. */
+export function seedLiveBoard(): LiveBoard {
+  return { ...boardFromStore(defaultAdminStore(data)), ready: false };
+}
+
+export function loadLiveBoard(): LiveBoard {
+  return { ...boardFromStore(readAdminStore(data), readConsentOverrides()), ready: true };
+}
+
 export function useLiveBoard(): LiveBoard {
-  const [live, setLive] = useState<LiveBoard>(() => ({
-    store: readAdminStore(data),
-    students: composeStudents(data.students, readAdminStore(data), {}),
-    cycle: adminCycle(readAdminStore(data)),
-    sponsors: liveSponsors(readAdminStore(data)),
-    programs: visiblePrograms(readAdminStore(data)),
-    campuses: visibleCampuses(readAdminStore(data)),
-  }));
+  const [live, setLive] = useState<LiveBoard>(seedLiveBoard);
 
   useEffect(() => {
     const refresh = () => setLive(loadLiveBoard());

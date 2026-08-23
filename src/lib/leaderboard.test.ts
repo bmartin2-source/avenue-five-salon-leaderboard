@@ -7,6 +7,7 @@ import {
   campusTotals,
   cycleForDate,
   cycleWeek,
+  displayCycleWeek,
   displayName,
   findStudentByLogin,
   formatCycleRange,
@@ -379,6 +380,8 @@ describe("helpers", () => {
     assert.equal(current.weeks, 6);
     assert.equal(formatCycleRange(current), "July 20 – August 28");
     assert.equal(cycleWeek(current, new Date("2026-08-21T12:00:00")), 5);
+    assert.equal(displayCycleWeek(current), 5);
+    assert.notEqual(cycleWeek(current, new Date(`${current.endDate}T12:00:00`)), displayCycleWeek(current));
   });
 
   it("does not treat the August 31 cycle as current before that start", () => {

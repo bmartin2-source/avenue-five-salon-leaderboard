@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { data } from "@/lib/data";
+import { displayCycleWeek } from "@/lib/leaderboard";
 
 export default function HomePage() {
   return (
@@ -53,7 +55,7 @@ export default function HomePage() {
             <li>Dummy roster is institute totals split unevenly across campuses: Cosmetology 50, Esthetics 70, Barbering 20, Nail Technology 40. Every visible student is opted in (first name + last initial). No Student AFI-xxxx rows.</li>
             <li>TV columns auto-page every ~7 seconds so ranks below the first screen are visible. High Five highlight stays on ranks 1–5 (page 1). Later pages are quieter.</li>
             <li>Rank = points within program only: 1 pt per $1 service, 5 pts per $1 retail. The large number is points (no $). S: and R: under it stay dollars. High Five is top 5 by points. No Most Services / Most Retail badges.</li>
-            <li>Current dummy cycle: July 20 – August 28, week 5 of 6. About every 60 seconds the TV shows ALL-TIME career leaders (institute-wide, same point formula). High Five is this-cycle only; all-time top 5 use an All-Time mark.</li>
+            <li>Current dummy cycle: July 20 – August 28, week {displayCycleWeek(data.cycle)} of {data.cycle.weeks}. About every 60 seconds the TV shows ALL-TIME career leaders (institute-wide, same point formula). High Five is this-cycle only; all-time top 5 use an All-Time mark.</li>
             <li>
               Demo student logins (all opted in) — Jordan: <code>AFI-2401</code> / <code>Reyes</code>.
               Riley: <code>AFI-2402</code> / <code>Cruz</code>.
